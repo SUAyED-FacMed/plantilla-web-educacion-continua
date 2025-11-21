@@ -26,29 +26,25 @@ import ingFacmedImg from "@assets/img/ingFacmed.png";
 
 <!-- unidad titulo -->
 <article class="container fondo-libro">
-  <div class="posicion">
-    <div class="cornisa-wrapper w-100 mb-3">
-      <Image class="cornisa-imgs" src={cornisa} alt="" />
+  <!-- Cornisa + Logos: flex row on md+, stacked on mobile -->
+  <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
+    <!-- Cornisa (left on desktop, top on mobile) -->
+    <div class="w-full md:w-auto md:shrink-0">
+      <Image 
+        class="w-full h-auto object-cover max-h-[70px] md:max-h-[120px]" 
+        src={cornisa} 
+        alt="" 
+      />
     </div>
-    <div class="d-flex flex-row flex-wrap justify-content-center justify-content-md-start ml-md-5 py4 espacio logos-row">
-      <div class="p-2 d-flex align-items-center">
-        <Image class="pagina img-fluid logo" src={unamImg} alt="UNAM" />
-      </div>
-      <div class="p-2 d-flex align-items-center">
-        <Image class="pagina img-fluid logo" src={facmedImg} alt="FacMed" />
-      </div>
-      <div class="p-2 d-flex align-items-center">
-        <Image class="pagina img-fluid logo" src={suayedImg} alt="SUAYED" />
-      </div>
-      <div class="p-2 d-flex align-items-center">
-        <Image class="pagina img-fluid logo" src={ec1Img} alt="EC1" />
-      </div>
-      <div class="p-2 d-flex align-items-center">
-        <Image class="pagina img-fluid logo" src={secyssImg} alt="SecySS" />
-      </div>
-      <div class="p-2 d-flex align-items-center">
-        <Image class="pagina img-fluid logo" src={ingFacmedImg} alt="IngFacMed" />
-      </div>
+    
+    <!-- Logos (right on desktop, bottom on mobile) -->
+    <div class="flex flex-wrap justify-center md:justify-start gap-3 md:gap-4">
+      <Image class="h-auto w-16 sm:w-20 md:w-24 lg:w-28" src={unamImg} alt="UNAM" />
+      <Image class="h-auto w-16 sm:w-20 md:w-24 lg:w-28" src={facmedImg} alt="FacMed" />
+      <Image class="h-auto w-16 sm:w-20 md:w-24 lg:w-28" src={suayedImg} alt="SUAYED" />
+      <Image class="h-auto w-16 sm:w-20 md:w-24 lg:w-28" src={ec1Img} alt="EC1" />
+      <Image class="h-auto w-16 sm:w-20 md:w-24 lg:w-28" src={secyssImg} alt="SecySS" />
+      <Image class="h-auto w-16 sm:w-20 md:w-24 lg:w-28" src={ingFacmedImg} alt="IngFacMed" />
     </div>
   </div>
   <div class="px-3 py-2 mt-5 align-items-center unidadC gradient-unidad">
@@ -89,36 +85,4 @@ import ingFacmedImg from "@assets/img/ingFacmed.png";
 </article>
 </attachment>
 
-<style>
-  .cornisa-wrapper {
-    display: block;
-    width: 100%;
-    overflow: hidden;
-  }
-  .cornisa-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-    max-height: 120px;
-  }
 
-  /* Logos */
-  .logos-row { }
-  .logo {
-    max-width: 110px;
-    height: auto;
-    display: block;
-  }
-
-  @media (max-width: 992px) {
-    .cornisa-img { max-height: 100px; }
-    .logo { max-width: 90px; }
-  }
-
-  @media (max-width: 576px) {
-    .cornisa-img { max-height: 70px; }
-    .logo { max-width: 60px; }
-    .ml-md-5 { margin-left: 0 !important; }
-  }
-</style>
