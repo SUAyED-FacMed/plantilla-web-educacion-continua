@@ -1,0 +1,124 @@
+---
+export interface Props {
+  nombreCurso?: string;
+  unidad?: string;
+  recurso?: string;
+}
+
+import { siteConfig } from "@/config";
+import { Image } from "astro:assets";
+
+export let nombreCurso: string = "";
+export let unidad: string = "";
+export let recurso: string = "";
+const autores = siteConfig.autores ?? [];
+if (!nombreCurso) nombreCurso = siteConfig.nombreCurso ?? "";
+if (!unidad) unidad = siteConfig.unidad ?? "";
+if (!recurso) recurso = siteConfig.recurso ?? "";
+import cornisa from "@assets/img/cornisa.png";
+import unamImg from "@assets/img/unam.png";
+import facmedImg from "@assets/img/facmed.png";
+import suayedImg from "@assets/img/suayed.png";
+import ec1Img from "@assets/img/ec1.png";
+import secyssImg from "@assets/img/secyss.png";
+import ingFacmedImg from "@assets/img/ingFacmed.png";
+---
+
+<!-- unidad titulo -->
+<article class="container fondo-libro">
+  <div class="posicion">
+    <div class="cornisa-wrapper w-100 mb-3">
+      <Image class="cornisa-imgs" src={cornisa} alt="" />
+    </div>
+    <div class="d-flex flex-row flex-wrap justify-content-center justify-content-md-start ml-md-5 py4 espacio logos-row">
+      <div class="p-2 d-flex align-items-center">
+        <Image class="pagina img-fluid logo" src={unamImg} alt="UNAM" />
+      </div>
+      <div class="p-2 d-flex align-items-center">
+        <Image class="pagina img-fluid logo" src={facmedImg} alt="FacMed" />
+      </div>
+      <div class="p-2 d-flex align-items-center">
+        <Image class="pagina img-fluid logo" src={suayedImg} alt="SUAYED" />
+      </div>
+      <div class="p-2 d-flex align-items-center">
+        <Image class="pagina img-fluid logo" src={ec1Img} alt="EC1" />
+      </div>
+      <div class="p-2 d-flex align-items-center">
+        <Image class="pagina img-fluid logo" src={secyssImg} alt="SecySS" />
+      </div>
+      <div class="p-2 d-flex align-items-center">
+        <Image class="pagina img-fluid logo" src={ingFacmedImg} alt="IngFacMed" />
+      </div>
+    </div>
+  </div>
+  <div class="px-3 py-2 mt-5 align-items-center unidadC gradient-unidad">
+    <p class="gap-3 font-weight-bold">
+      {nombreCurso}
+      <br />
+      {unidad}
+    </p>
+  </div>
+  <div class="separacion"></div>
+
+  <div class="ml-5 py-2 mt-5 align-items-center unidadC">
+    <h1 class="px-3 font-weight-bold fsize">
+      {recurso}
+    </h1>
+    <p class="px-3 mt-2 subtitulos font-weight-normal">
+      {
+        autores.map((a) => (
+          <span>
+            {a}
+            <br />
+          </span>
+        ))
+      }
+    </p>
+  </div>
+  <div class="separacion"></div>
+  <div class="separacion"></div>
+  <div class="separacion"></div>
+</article>
+<!-- fin unidad titulo -->
+
+<article>
+  <div class="degradado-gris2">
+    <div class="py-4"></div>
+  </div>
+  <div class="degradado-bottom"></div>
+</article>
+</attachment>
+
+<style>
+  .cornisa-wrapper {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+  .cornisa-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 120px;
+  }
+
+  /* Logos */
+  .logos-row { }
+  .logo {
+    max-width: 110px;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 992px) {
+    .cornisa-img { max-height: 100px; }
+    .logo { max-width: 90px; }
+  }
+
+  @media (max-width: 576px) {
+    .cornisa-img { max-height: 70px; }
+    .logo { max-width: 60px; }
+    .ml-md-5 { margin-left: 0 !important; }
+  }
+</style>

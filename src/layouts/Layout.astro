@@ -1,0 +1,49 @@
+---
+export interface Props {
+  titulo?: string;
+  recurso?: string;
+  nombreCurso?: string;
+}
+
+import { siteConfig } from "@/config";
+export let titulo: string =
+  siteConfig.titulo ?? "Educación Continua SUAYED - Facultad de Medicina UNAM";
+export let recurso: string = siteConfig.recurso ?? '';
+export let nombreCurso: string = siteConfig.nombreCurso ?? '';
+// Build final title: prefer explicit `titulo`, otherwise compose from recurso + nombreCurso + site title
+const tituloFinal = titulo
+  ? titulo
+  : `${recurso ? recurso + ' - ' : ''}${nombreCurso ? nombreCurso + ' - ' : ''}${siteConfig.titulo}`;
+import "@/styles/estilos.css";
+import "@/styles/bootstrap.css";
+import "@/styles/aos.css";
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- estilos importados desde `src/styles` en frontmatter -->
+    <meta name="generator" content={Astro.generator} />
+    <title>{tituloFinal}</title>
+  </head>
+  <body>
+		<main>
+			<slot />
+		</main>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
