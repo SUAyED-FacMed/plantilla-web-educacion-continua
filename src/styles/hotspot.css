@@ -37,7 +37,7 @@ section.hotspot[id^='hotspot'] .all-tooltip {
 	top: 0;
 }
 
-section.hotspot[id^='hotspot'] .tooltip {
+section.hotspot[id^='hotspot'] .hotspot-point {
 	opacity: 1;
 	position: static;
 }
@@ -111,10 +111,45 @@ section.hotspot[id^='hotspot'] .pin:after {
 
 /* Las posiciones de los pins ahora se definen inline via style en el componente */
 
-section.hotspot[id^='hotspot'] .pin:hover~.tooltip-content {
-	opacity: 1;
-	transition-timing-function: linear, step-end, step-end;
-	z-index: 20;
+/* Estilos para los tooltips de Bootstrap */
+.custom-tooltip {
+	--bs-tooltip-bg: #1A2C49;
+	--bs-tooltip-color: #ffffff;
+	--bs-tooltip-max-width: 300px;
+	--bs-tooltip-padding-x: 0.75rem;
+	--bs-tooltip-padding-y: 0.5rem;
+	--bs-tooltip-font-size: 0.95rem;
+	font-family: inherit;
+}
+
+.custom-tooltip .tooltip-inner {
+	text-align: left;
+	max-width: 300px;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.custom-tooltip .tooltip-inner h1 {
+	font-size: 1.1em;
+	font-weight: bold;
+	margin-bottom: 0.5rem;
+	color: #C99335;
+}
+
+.custom-tooltip .tooltip-inner p,
+.custom-tooltip .tooltip-inner ul,
+.custom-tooltip .tooltip-inner ol {
+	margin-bottom: 0.5rem;
+	line-height: 1.4;
+}
+
+.custom-tooltip .tooltip-inner p:last-child,
+.custom-tooltip .tooltip-inner ul:last-child,
+.custom-tooltip .tooltip-inner ol:last-child {
+	margin-bottom: 0;
+}
+
+.custom-tooltip .tooltip-inner li {
+	margin-bottom: 0.25rem;
 }
 
 @-webkit-keyframes efecto-sonar {

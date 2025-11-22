@@ -20,30 +20,46 @@ const { id, imagen, altImagen, puntos } = config;
       sizes="(max-width: 768px) 80vw, 650px"
     />
     <div class="all-tooltip">
-      {puntos.map((punto) => (
-        <div class="tooltip" data-tooltip-id={punto.id}>
-          <div
-            tabindex={punto.id}
-            class="pin"
-            data-bs-toggle="tooltip"
-            data-bs-placement={punto.placement || 'top'}
-            data-bs-custom-class="custom-tooltip"
-            data-bs-html="true"
-            data-bs-title={`<h1>${punto.titulo}</h1>${punto.contenido}`}
-            style={`top: ${punto.top}; left: ${punto.left};`}
-          >
+      {puntos.map((punto) => {
+        const tooltipContent = `<h1>${punto.titulo}</h1>${punto.contenido}`;
+        return (
+          <div class="hotspot-point" data-tooltip-id={punto.id}>
+            <div
+              tabindex={punto.id}
+              class="pin"
+              data-bs-toggle="tooltip"
+              data-bs-placement={punto.placement || 'top'}
+              data-bs-custom-class="custom-tooltip"
+              data-bs-html="true"
+              style={`top: ${punto.top}; left: ${punto.left};`}
+              set:html={`<span style="display:none" data-tooltip-content>${tooltipContent}</span>`}
+            >
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   </div>
 </section>
 
 <script define:vars={{ id }}>
   // Inicializar tooltips de Bootstrap para este hotspot
-  if (typeof bootstrap !== 'undefined') {
-    const tooltipTriggerList = document.querySelectorAll(`section.hotspot#${id} [data-bs-toggle="tooltip"]`);
-    [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-  }
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof bootstrap !== 'undefined') {
+      const hotspot = document.querySelector(`section.hotspot#${id}`);
+      if (hotspot) {
+        const pins = hotspot.querySelectorAll('.pin[data-bs-toggle="tooltip"]');
+        pins.forEach(pin => {
+          // Obtener el contenido del tooltip desde el elemento oculto
+          const contentSpan = pin.querySelector('[data-tooltip-content]');
+          if (contentSpan) {
+            pin.setAttribute('data-bs-title', contentSpan.innerHTML);
+          }
+          // Inicializar el tooltip
+          new bootstrap.Tooltip(pin);
+        });
+      }
+    }
+  });
 </script>
 <!-- fin hotspot -->
