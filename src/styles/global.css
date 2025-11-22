@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+@layer components {
+  section {
+    @apply max-w-6xl mx-auto px-2 md:px-4 xl:px-0;
+  }
+}
