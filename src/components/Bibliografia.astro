@@ -1,0 +1,76 @@
+---
+import { siteConfig } from '@/config';
+import VentanaIcon from "@assets/img/ventana.svg";
+
+const fuentesInformacion = siteConfig.fuentesInformacion ?? [];
+const autores = siteConfig.autores ?? [];
+const nombreCurso = siteConfig.nombreCurso ?? '';
+const recurso = siteConfig.recurso ?? '';
+const añoActual = new Date().getFullYear();
+
+// Construir la cita en formato APA: "Apellido, Iniciales."
+// El último autor debe ir precedido por "y"
+const autoresCita = autores.length > 0 
+  ? autores.map((autor, index) => {
+      // Obtener el primer apellido (primera palabra de apellidos)
+      const primerApellido = autor.apellidos.split(' ')[0];
+      
+      // Crear iniciales de todos los nombres
+      const iniciales = autor.nombres.split(' ')
+        .map(n => n.charAt(0).toUpperCase() + '.')
+        .join(' ');
+      
+      const citaAutor = `${primerApellido}, ${iniciales}`;
+      
+      // Agregar "y" antes del último autor
+      if (index === autores.length - 1 && autores.length > 1) {
+        return `y ${citaAutor}`;
+      }
+      return citaAutor;
+    }).join(', ').replace(', y ', ' y ')
+  : '';
+---
+
+<!-- fuentes de información -->
+
+<section class="container mt-5 pb-10">
+  <h5 class="subtitulosA"><b> Fuentes de información </b></h5>
+  
+  {fuentesInformacion.map((seccion) => (
+    <>
+      <!-- bloque tipo de fuente -->
+      <div class="flex items-center my-3">
+        <VentanaIcon width="18" height="18" />
+        <span class="fuentes mx-3"><em> {seccion.tipo} </em></span>
+      </div>
+      <!-- fin bloque tipo de fuente -->
+      
+      <div class="fuentesI">
+        {seccion.items.map((item) => (
+          <p>
+            <Fragment set:html={item.texto} />
+            {item.url && (
+              <>
+                {' '}
+                <a
+                  href={item.url}
+                  target="_blank"
+                  class="text-break enlace-fuentes"
+                >
+                  {item.url}
+                </a>
+              </>
+            )}
+          </p>
+        ))}
+      </div>
+    </>
+  ))}
+
+  <h5 class="subtitulosA"><b> Cómo citar este documento </b></h5>
+  <div class="resaltar mt-4">
+    {autoresCita} ({añoActual}). {recurso}. <em>{nombreCurso}</em>. Facultad de Medicina-UNAM. (Vínculo)
+  </div>
+</section>
+
+<!-- fin fuentes de información -->

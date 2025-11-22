@@ -1,8 +1,11 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import Hero from '@/components/Hero.astro';
-import { siteConfig } from '@/config';
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/Hero.astro";
+import Bibliografia from "@/components/Bibliografia.astro";
+import { siteConfig } from "@/config";
 ---
+
 <Layout recurso={siteConfig.recurso} nombreCurso={siteConfig.nombreCurso}>
   <Hero />
+  <Bibliografia />
 </Layout>
