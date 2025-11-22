@@ -5,10 +5,17 @@ import Bibliografia from "@/components/Bibliografia.astro";
 import Tarjetas from "@/components/Tarjetas.astro";
 import Imagen from "@/components/Imagen.astro";
 import ImagenClip from "@/components/ImagenClip.astro";
-import { siteConfig } from "@/config";
+import Hotspot from "@/components/Hotspot.astro";
+import { siteConfig, configsHotspot } from "@/config";
 
 import diabetesGes from "@assets/img/diabetesGes.png";
 import diabetesNoDiag from "@assets/img/diabetesNoDiag.png";
+
+// Configurar la imagen del hotspot
+const hotspotEjemplo = {
+  ...configsHotspot.ejemplo1,
+  imagen: diabetesNoDiag
+};
 ---
 
 <Layout recurso={siteConfig.recurso} nombreCurso={siteConfig.nombreCurso}>
@@ -50,7 +57,7 @@ import diabetesNoDiag from "@assets/img/diabetesNoDiag.png";
       title="Desnutrición"
       pie="<em>Desnutrición</em> [Ilustración]."
     />
-  
+
     <ImagenClip
       src={diabetesNoDiag}
       alt="Desnutrición"
@@ -58,6 +65,8 @@ import diabetesNoDiag from "@assets/img/diabetesNoDiag.png";
       pie='<em>Desnutrición</em> [Ilustración]. <span class="text-break">https://www.liderempresarial.com/estos-son-los-mejores-hospitales-del-pais-en-la-ciudad-de-mexico-segun-newsweek/</span>'
     />
   </section>
+
+  <Hotspot config={hotspotEjemplo} />
 
   <Bibliografia />
 </Layout>

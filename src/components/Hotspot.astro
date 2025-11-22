@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import type { ConfigHotspot, PuntoHotspot } from '@/config/hotspots';
+
+interface Props {
+  config: ConfigHotspot;
+}
+
+const { config } = Astro.props;
+const { id, imagen, altImagen, puntos } = config;
+---
+
+<!-- hotspot -->
+<section class="hotspot mb-5" id={id}>
+  <div class="container">
+    <Image
+      src={imagen}
+      alt={altImagen}
+      widths={[400, 600, 800]}
+      sizes="(max-width: 768px) 80vw, 650px"
+    />
+    <div class="all-tooltip">
+      {puntos.map((punto) => (
+        <div class="tooltip" data-tooltip-id={punto.id}>
+          <div
+            tabindex={punto.id}
+            class="pin"
+            data-bs-toggle="tooltip"
+            data-bs-placement={punto.placement || 'top'}
+            data-bs-custom-class="custom-tooltip"
+            data-bs-html="true"
+            data-bs-title={`<h1>${punto.titulo}</h1>${punto.contenido}`}
+            style={`top: ${punto.top}; left: ${punto.left};`}
+          >
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ id }}>
+  // Inicializar tooltips de Bootstrap para este hotspot
+  if (typeof bootstrap !== 'undefined') {
+    const tooltipTriggerList = document.querySelectorAll(`section.hotspot#${id} [data-bs-toggle="tooltip"]`);
+    [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+  }
+</script>
+<!-- fin hotspot -->
