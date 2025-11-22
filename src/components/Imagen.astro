@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  title?: string;
+  pie?: string;
+}
+
+const { src, alt, title, pie } = Astro.props;
+---
+
+<!-- imagen -->
+<article class="fondo--Unidad pt-5">
+  <Image
+    src={src}
+    alt={alt}
+    title={title}
+    class="img-fluid d-block mx-auto img-thumbnail"
+    widths={[400, 600, 800, 1200]}
+    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+  />
+  {pie && (
+    <p class="small text-center py-3 subtitulosA">
+      <Fragment set:html={pie} />
+    </p>
+  )}
+</article>
+<!-- fin imagen -->

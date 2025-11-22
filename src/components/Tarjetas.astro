@@ -1,0 +1,13 @@
+---
+interface Props {
+  titulo: string;
+  colorClase?: 'carta1' | 'carta2' | 'carta3' | 'carta4';
+}
+
+const { titulo, colorClase = '' } = Astro.props;
+---
+
+<article class={`carta ${colorClase}`}>
+  <h4 class="text-center mb-5">{titulo}</h4>
+  <slot />
+</article>

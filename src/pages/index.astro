@@ -2,10 +2,62 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/Hero.astro";
 import Bibliografia from "@/components/Bibliografia.astro";
+import Tarjetas from "@/components/Tarjetas.astro";
+import Imagen from "@/components/Imagen.astro";
+import ImagenClip from "@/components/ImagenClip.astro";
 import { siteConfig } from "@/config";
+
+import diabetesGes from "@assets/img/diabetesGes.png";
+import diabetesNoDiag from "@assets/img/diabetesNoDiag.png";
 ---
 
 <Layout recurso={siteConfig.recurso} nombreCurso={siteConfig.nombreCurso}>
   <Hero />
+
+  <!-- tarjetas -->
+  <section class="tarjetas container mx-auto">
+    <Tarjetas titulo="lorem" colorClase="carta1">
+      <p>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis
+        impedit corrupti animi, tempora ex quibusdam. Cupiditate
+      </p>
+    </Tarjetas>
+    <Tarjetas titulo="lorem" colorClase="carta2">
+      <p>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis
+        impedit corrupti animi, tempora ex quibusdam. Cupiditate
+      </p>
+    </Tarjetas>
+    <Tarjetas titulo="lorem" colorClase="carta3">
+      <p>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis
+        impedit corrupti animi, tempora ex quibusdam. Cupiditate
+      </p>
+    </Tarjetas>
+    <Tarjetas titulo="lorem" colorClase="carta4">
+      <p>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis
+        impedit corrupti animi, tempora ex quibusdam. Cupiditate
+      </p>
+    </Tarjetas>
+  </section>
+  <!-- fin tarjetas -->
+
+  <section>
+    <Imagen
+      src={diabetesGes}
+      alt="Desnutrición"
+      title="Desnutrición"
+      pie="<em>Desnutrición</em> [Ilustración]."
+    />
+  
+    <ImagenClip
+      src={diabetesNoDiag}
+      alt="Desnutrición"
+      title="Desnutrición"
+      pie='<em>Desnutrición</em> [Ilustración]. <span class="text-break">https://www.liderempresarial.com/estos-son-los-mejores-hospitales-del-pais-en-la-ciudad-de-mexico-segun-newsweek/</span>'
+    />
+  </section>
+
   <Bibliografia />
 </Layout>
