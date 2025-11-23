@@ -14,11 +14,6 @@ export let nombreCurso: string = siteConfig.nombreCurso ?? '';
 const tituloFinal = titulo
   ? titulo
   : `${recurso ? recurso + ' - ' : ''}${nombreCurso ? nombreCurso + ' - ' : ''}${siteConfig.titulo}`;
-import "@/styles/global.css";
-import "@/styles/estilos.css";
-import "@/styles/bootstrap.css";
-import "@/styles/aos.css";
-import "@/styles/hotspot.css";
 ---
 
 <!doctype html>
@@ -30,7 +25,13 @@ import "@/styles/hotspot.css";
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- estilos importados desde `src/styles` en frontmatter -->
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <link rel="stylesheet" href="/src/styles/estilos.css" />
+    <link rel="stylesheet" href="/src/styles/bootstrap.css" />
+    <link rel="stylesheet" href="/src/styles/aos.css" />
+    <link rel="stylesheet" href="/src/styles/hotspot.css" />
+    <link rel="stylesheet" href="/src/styles/carrusel.css" />
+    <link rel="stylesheet" href="/src/styles/acordeon.css" />
     <meta name="generator" content={Astro.generator} />
     <title>{tituloFinal}</title>
   </head>

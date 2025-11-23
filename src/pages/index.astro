@@ -7,14 +7,24 @@ import Imagen from "@/components/Imagen.astro";
 import ImagenClip from "@/components/ImagenClip.astro";
 import Hotspot from "@/components/Hotspot.astro";
 import { siteConfig, configsHotspot } from "@/config";
+import Carrusel from "@/components/Carrusel.astro";
+import Acordeon from "@/components/Acordeon.astro";
+
+// Importar imágenes para el carrusel (5 imágenes)
+import img1 from "@assets/img/diabetesGes.png";
+import img2 from "@assets/img/incidencia_diabetes.jpg";
+import img3 from "@assets/img/gasto_sanitario.jpg";
+import img4 from "@assets/img/mortalidad.jpg";
+import img5 from "@assets/img/diabetes.jpg";
 
 import diabetesGes from "@assets/img/diabetesGes.png";
 import diabetesNoDiag from "@assets/img/diabetesNoDiag.png";
+import { object } from "astro:schema";
 
 // Configurar la imagen del hotspot
 const hotspotEjemplo = {
   ...configsHotspot.ejemplo1,
-  imagen: diabetesNoDiag
+  imagen: diabetesNoDiag,
 };
 ---
 
@@ -68,5 +78,40 @@ const hotspotEjemplo = {
 
   <Hotspot config={hotspotEjemplo} />
 
+  <Carrusel
+    id="carrusel-1"
+    slides={[
+      {
+        id: 1,
+        imagen: img1,
+        alt: "Descripción",
+        title: "Título",
+        pie: "Pie de foto",
+        contenido: "<p>Contenido opcional</p>",
+      },
+      {
+        id: 2,
+        imagen: img2,
+        alt: "Otra imagen",
+        title: "Otro título",
+        pie: "Otro pie",
+      },
+    ]}
+  />
+  <Acordeon
+    id="acordeon-vert-1"
+    items={[
+      {
+        id: 1,
+        titulo: "Sección 1",
+        contenido: `<p>Contenido aquí...</p>`,
+      },
+      {
+        id: 2,
+        titulo: "Sección 2",
+        contenido: `<p>Otro contenido...</p>`,
+      },
+    ]}
+  />
   <Bibliografia />
 </Layout>

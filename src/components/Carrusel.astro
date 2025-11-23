@@ -1,0 +1,213 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface SlideCarrusel {
+  id: number;
+  imagen: ImageMetadata;
+  alt: string;
+  title: string;
+  pie: string; // HTML permitido
+  contenido?: string; // HTML permitido
+}
+
+interface Props {
+  id: string;
+  slides: SlideCarrusel[];
+}
+
+const { id, slides } = Astro.props;
+const anchoGaleria = slides.length * 100;
+
+// Validar que todas las imágenes estén asignadas
+if (slides.some(slide => !slide.imagen)) {
+  throw new Error(`Carrusel ${id}: Todas las slides deben tener una imagen asignada.`);
+}
+---
+
+<!-- carrusel -->
+<section class="carrusel container-slider" id={id}>
+  <div class="sliderCarrusel" id="sliderCarrusel">
+    {slides.map((slide, index) => (
+      <div 
+        class={`slider__section ${index === 0 ? 'activo' : ''}`} 
+        id={`slide${slide.id}`}
+      >
+        <div class="imagenPie">
+          <Image
+            src={slide.imagen!}
+            alt={slide.alt}
+            title={slide.title}
+            class="slider__img"
+            widths={[400, 500, 600, 800]}
+            sizes="(max-width: 768px) 90vw, 500px"
+          />
+          <p set:html={slide.pie} />
+        </div>
+        {slide.contenido && (
+          <Fragment set:html={slide.contenido} />
+        )}
+      </div>
+    ))}
+  </div>
+  <div class="slider__btn slider__btn__regresa" id="btn-regresa" tabindex="1">
+    &#60;
+  </div>
+  <div class="slider__btn slider__btn__avanza" id="btn-avanza" tabindex="2">
+    &#62;
+  </div>
+  <ul class="puntos">
+    {slides.map((slide, index) => (
+      <li 
+        class={`punto ${index === 0 ? 'activo' : ''}`} 
+        id={`punto${slide.id}`}
+      />
+    ))}
+  </ul>
+</section>
+
+<script define:vars={{ id, anchoGaleria }}>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tiempoGaleria = 5000;
+    const sliderCarrusel = document.querySelector(`section.carrusel.container-slider#${id} #sliderCarrusel`);
+    const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
+    const puntos = document.querySelectorAll(`section.carrusel.container-slider#${id} .punto`);
+    const listaPuntos = document.querySelector(`section.carrusel.container-slider#${id} .puntos`);
+    const btnRegresa = document.querySelector(`section.carrusel.container-slider#${id} #btn-regresa`);
+    const btnAvanza = document.querySelector(`section.carrusel.container-slider#${id} #btn-avanza`);
+
+    if (!sliderCarrusel || !btnRegresa || !btnAvanza) return;
+
+    const numberOfSlides = sliderSection.length;
+    const anchoGaleriaCalculado = numberOfSlides * 100;
+
+    // Configurar el ancho del carrusel dinámicamente
+    if (sliderCarrusel) {
+      sliderCarrusel.style.width = `${anchoGaleriaCalculado}%`;
+    }
+
+    const sliderSectionLast = sliderSection[sliderSection.length - 1];
+    sliderCarrusel.insertAdjacentElement('afterbegin', sliderSectionLast);
+
+    // Función para ajustar la altura del contenedor al slide activo
+    function ajustarAltura() {
+      const slideActivo = document.querySelector(`section.carrusel.container-slider#${id} .slider__section.activo`);
+      const container = document.querySelector(`section.carrusel.container-slider#${id}`);
+      if (slideActivo && container) {
+        const altura = slideActivo.offsetHeight;
+        container.style.height = altura + 'px';
+        container.style.transition = 'height 0.5s ease';
+      }
+    }
+
+    // Ajustar altura inicial y en cada cambio de ventana
+    ajustarAltura();
+    window.addEventListener('resize', ajustarAltura);
+
+    function avanza() {
+      const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
+      sliderSection.forEach((slide) => slide.classList.remove('activo'));
+      puntos.forEach((punto) => punto.classList.remove('activo'));
+      
+      const sliderSectionFirst = sliderSection[0];
+      sliderCarrusel.style.marginLeft = '-200%';
+      sliderCarrusel.style.transition = 'all 0.5s';
+      
+      setTimeout(function () {
+        sliderCarrusel.style.transition = 'none';
+        sliderCarrusel.insertAdjacentElement('beforeend', sliderSectionFirst);
+        sliderCarrusel.style.marginLeft = '-100%';
+        
+        const actual = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`)[1];
+        const idNum = actual.getAttribute('id').substr(5);
+        actual.classList.add('activo');
+        const punto = document.querySelector(`section.carrusel.container-slider#${id} #punto${idNum}`);
+        if (punto) punto.classList.add('activo');
+        
+        // Ajustar altura después de que el slide esté en su posición
+        setTimeout(ajustarAltura, 50);
+      }, 500);
+    }
+
+    function regresa() {
+      const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
+      sliderSection.forEach((slide) => slide.classList.remove('activo'));
+      puntos.forEach((punto) => punto.classList.remove('activo'));
+      
+      const sliderSectionLast = sliderSection[sliderSection.length - 1];
+      sliderCarrusel.style.marginLeft = '0';
+      sliderCarrusel.style.transition = 'all 0.5s';
+      
+      setTimeout(function () {
+        sliderCarrusel.style.transition = 'none';
+        sliderCarrusel.insertAdjacentElement('afterbegin', sliderSectionLast);
+        sliderCarrusel.style.marginLeft = '-100%';
+        
+        const sliderSectionUpdated = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
+        const actual = sliderSectionUpdated[1];
+        const idNum = actual.getAttribute('id').substr(5);
+        actual.classList.add('activo');
+        const punto = document.querySelector(`section.carrusel.container-slider#${id} #punto${idNum}`);
+        if (punto) punto.classList.add('activo');
+        
+        // Ajustar altura después de que el slide esté en su posición
+        setTimeout(ajustarAltura, 50);
+      }, 500);
+    }
+
+    let bucle;
+    const ciclo = () => {
+      bucle = setInterval(avanza, tiempoGaleria);
+    };
+    
+    ciclo();
+
+    [sliderCarrusel, btnRegresa, btnAvanza, listaPuntos].forEach(el => {
+      el.addEventListener('mouseover', () => clearInterval(bucle));
+      el.addEventListener('mouseout', ciclo);
+    });
+
+    btnRegresa.addEventListener('click', regresa);
+    btnAvanza.addEventListener('click', avanza);
+
+    puntos.forEach((cadaPunto, indicador) => {
+      cadaPunto.addEventListener('click', () => {
+        const listaSlides = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
+        listaSlides.forEach((cadaSlide) => cadaSlide.classList.remove('activo'));
+        puntos.forEach((cadaPunto) => cadaPunto.classList.remove('activo'));
+
+        const actual = document.querySelector(`section.carrusel.container-slider#${id} #slide${indicador}`);
+        if (actual) {
+          actual.classList.add('activo');
+          const punto = document.querySelector(`section.carrusel.container-slider#${id} #punto${indicador}`);
+          if (punto) punto.classList.add('activo');
+
+          let previos = 0;
+          const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
+          while (!sliderSection[previos].classList.contains('activo')) {
+            previos++;
+          }
+
+          sliderCarrusel.style.marginLeft = (previos * -100) + '%';
+          sliderCarrusel.style.transition = 'all 0.5s';
+
+          setTimeout(function () {
+            sliderCarrusel.style.transition = 'none';
+            if (previos == 0) {
+              sliderCarrusel.insertAdjacentElement('afterbegin', sliderSection[sliderSection.length - 1]);
+            } else {
+              for (let ind = 0; ind < (previos - 1); ind++) {
+                sliderCarrusel.insertAdjacentElement('beforeend', sliderSection[ind]);
+              }
+            }
+            sliderCarrusel.style.marginLeft = '-100%';
+            
+            // Ajustar altura después de que el slide esté en su posición
+            setTimeout(ajustarAltura, 50);
+          }, 500);
+        }
+      });
+    });
+  });
+</script>
+<!-- fin carrusel -->
