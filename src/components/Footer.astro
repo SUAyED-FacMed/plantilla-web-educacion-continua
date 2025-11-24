@@ -1,0 +1,96 @@
+---
+import { siteConfig } from '@/config';
+---
+
+<footer class="footer mt-5 py-4 bg-light">
+  <div class="container text-center">
+    <button
+      type="button"
+      class="btn btn-link text-decoration-none"
+      data-bs-toggle="modal"
+      data-bs-target="#creditosModal"
+    >
+      Créditos
+    </button>
+  </div>
+</footer>
+
+<!-- Modal de Créditos -->
+<div
+  class="modal fade"
+  id="creditosModal"
+  tabindex="-1"
+  aria-labelledby="creditosModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="creditosModalLabel">Créditos</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body text-center">
+        <h6 class="fw-bold">{siteConfig.recurso}</h6>
+        <p class="mb-1">Material del curso a distancia</p>
+        <p class="mb-3"><em>{siteConfig.nombreCurso}</em></p>
+
+        <p class="mb-1">
+          Secretaría de Universidad Abierta y Educación a Distancia
+        </p>
+        <p class="mb-3">de la Facultad de Medicina, UNAM</p>
+
+        {siteConfig.edicion && (
+          <p class="mb-3">© {siteConfig.edicion}</p>
+        )}
+
+        <p class="mb-3 fw-bold">Derechos reservados</p>
+
+        <p class="mb-1">Universidad Nacional Autónoma de México</p>
+        <p class="mb-1">Facultad de Medicina</p>
+        <p class="mb-1">
+          Coordinación de Universidad Abierta, Innovación Educativa y Educación
+          a Distancia
+        </p>
+        <p class="mb-1">Ciudad Universitaria, Coyoacán</p>
+        <p class="mb-3">C. P. 04510, Ciudad de México, México</p>
+
+        {siteConfig.registroAutor && (
+          <p class="mb-3">
+            Registro de derechos de autor: {siteConfig.registroAutor}
+          </p>
+        )}
+
+        <p class="mb-3">
+          Prohibida su reproducción total o parcial por cualquier medio, sin la
+          autorización escrita del titular de los derechos patrimoniales.
+        </p>
+
+        <p class="mb-0 fst-italic">Hecho en México</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .footer {
+    border-top: 1px solid #dee2e6;
+  }
+
+  .modal-body h6 {
+    color: #0069d9;
+  }
+
+  .modal-body p {
+    line-height: 1.6;
+  }
+</style>

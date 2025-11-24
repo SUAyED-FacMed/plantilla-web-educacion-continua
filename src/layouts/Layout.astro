@@ -6,6 +6,8 @@ export interface Props {
 }
 
 import { siteConfig } from "@/config";
+import Footer from "@/components/Footer.astro";
+
 export let titulo: string =
   siteConfig.titulo ?? "Educación Continua SUAYED - Facultad de Medicina UNAM";
 export let recurso: string = siteConfig.recurso ?? '';
@@ -39,6 +41,7 @@ const tituloFinal = titulo
 		<main>
 			<slot />
 		</main>
+		<Footer />
 		<script src="/src/assets/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

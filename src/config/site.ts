@@ -23,6 +23,8 @@ export interface SiteConfig {
   unidad?: string;
   recurso?: string;
   fuentesInformacion?: SeccionFuentes[];
+  edicion?: string; // e.g., "Primera edición, 2022"
+  registroAutor?: string; // e.g., "En trámite"
 }
 
 export const siteConfig: SiteConfig = {
@@ -36,7 +38,9 @@ export const siteConfig: SiteConfig = {
   ],
   nombreCurso: 'Curso de Educación Continua',
   unidad: 'Unidad 1 — Introducción',
-  recurso: 'Guía del participante',
+  recurso: 'Fundamentos de Calidad hacia la Mejora Continua',
+  edicion: 'Primera edición, 2022',
+  registroAutor: 'En trámite',
   fuentesInformacion: [
     {
       tipo: 'Bibliografía',
