@@ -1,0 +1,117 @@
+---
+interface ItemFichero {
+  titulo: string;
+  contenido: string; // HTML permitido
+}
+
+interface Props {
+  id: string;
+  items: ItemFichero[];
+}
+
+const { id, items } = Astro.props;
+---
+
+<section class="fichero-hor" id={id}>
+  <section class="fichero-hor-tabs">
+    {
+      items.map((item, index) => (
+        <button
+          class={`fichero-hor-tab ${index === 0 ? "fichero-hor-active" : ""}`}
+          data-actab-group="0"
+          data-actab-id={index}
+        >
+          {item.titulo}
+        </button>
+      ))
+    }
+  </section>
+  <section class="slider p-0 m-0">
+    <div class="indicator"></div>
+  </section>
+  <section class="fichero-hor-content">
+    {
+      items.map((item, index) => (
+        <article
+          class={`fichero-hor-item ${index === 0 ? "fichero-hor-active" : ""}`}
+          data-actab-group="0"
+          data-actab-id={index}
+        >
+          <h4 class="fichero-hor-item__label">
+            {item.titulo}
+            <div class="icon">
+              <i class="fas fa-chevron-down" />
+            </div>
+          </h4>
+          <div class="fichero-hor-item__container" set:html={item.contenido} />
+        </article>
+      ))
+    }
+  </section>
+</section>
+
+<script define:vars={{ id }}>
+  function ficheroHorizontal(idFichero) {
+    const labels = document.querySelectorAll(
+      `section.fichero-hor#${idFichero} .fichero-hor-content .fichero-hor-item__label`
+    );
+    const tabs = document.querySelectorAll(
+      `section.fichero-hor#${idFichero} .fichero-hor-tab`
+    );
+    const slider = document.querySelector(
+      `section.fichero-hor#${idFichero} .slider`
+    );
+
+    if (!slider || tabs.length === 0) return;
+
+    slider.style.setProperty("width", 100 / tabs.length + "%");
+
+    function toggleShow() {
+      const target = this;
+      const item = target.classList.contains("fichero-hor-tab")
+        ? target
+        : target.parentElement;
+      const group = item.dataset.actabGroup;
+      const clickedId = item.dataset.actabId;
+
+      tabs.forEach(function (tab, ind) {
+        if (tab.dataset.actabGroup === group) {
+          if (tab.dataset.actabId === clickedId) {
+            tab.classList.add("fichero-hor-active");
+            slider.style.transform = "translateX(" + 100 * ind + "%)";
+          } else {
+            tab.classList.remove("fichero-hor-active");
+          }
+        }
+      });
+
+      labels.forEach(function (label) {
+        const tabItem = label.parentElement;
+        if (tabItem.dataset.actabGroup === group) {
+          if (tabItem.dataset.actabId === clickedId) {
+            tabItem.classList.add("fichero-hor-active");
+          } else {
+            tabItem.classList.remove("fichero-hor-active");
+          }
+        }
+      });
+    }
+
+    labels.forEach(function (label) {
+      label.addEventListener("click", toggleShow);
+    });
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", toggleShow);
+    });
+  }
+
+  // Inicializar cuando el DOM esté listo
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => ficheroHorizontal(id));
+  } else {
+    ficheroHorizontal(id);
+  }
+</script>
+
+<link rel="stylesheet" href="/src/styles/fichero-horizontal.css" />

@@ -9,6 +9,8 @@ import Hotspot from "@/components/Hotspot.astro";
 import { siteConfig, configsHotspot } from "@/config";
 import Carrusel from "@/components/Carrusel.astro";
 import Acordeon from "@/components/Acordeon.astro";
+import FicheroHorizontal from "@/components/FicheroHorizontal.astro";
+import FicheroVertical from "@/components/FicheroVertical.astro";
 
 // Importar imágenes para el carrusel (5 imágenes)
 import img1 from "@assets/img/diabetesGes.png";
@@ -113,5 +115,51 @@ const hotspotEjemplo = {
       },
     ]}
   />
+  <FicheroHorizontal
+    id="fichero-hor-1"
+    items={[
+      {
+        titulo: "2001-2006",
+        contenido: `
+        <p>Se implementó y se desarrolló por primera vez la "Cruzada Nacional por la Calidad"...</p>
+        <div class="imagenPie">
+          <img src="${img4.src}" alt="Imagen 1" />
+          <p>Pie de imagen...</p>
+        </div>
+      `,
+      },
+      {
+        titulo: "2007-2012",
+        contenido: `<p>Se estableció el programa "Sicalidad"...</p>`,
+      },
+    ]}
+  />
+
+  <FicheroVertical
+    id="fichero-vert-1"
+    items={[
+      {
+        titulo: "Sección 1",
+        contenido: `
+        <p>Contenido...</p>
+        <ul>
+          <li>Item 1</li>
+          <li>Item 2</li>
+        </ul>
+      `,
+      },
+      {
+        titulo: "Sección 2",
+        contenido: `
+        <div class="imagenPie">
+          <img src="${img4.src}" alt="Descripción" />
+          <p>Pie de imagen</p>
+        </div>
+        <p>Más contenido...</p>
+      `,
+      },
+    ]}
+  />
+
   <Bibliografia />
 </Layout>

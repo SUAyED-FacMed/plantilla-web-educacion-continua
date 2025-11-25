@@ -1,0 +1,99 @@
+---
+interface ItemFichero {
+  titulo: string;
+  contenido: string; // HTML permitido
+}
+
+interface Props {
+  id: string;
+  items: ItemFichero[];
+}
+
+const { id, items } = Astro.props;
+---
+
+<section class="fichero-vert" id={id}>
+  <section class="fichero-vert-tabs">
+    {items.map((item, index) => (
+      <button
+        class={`fichero-vert-tab ${index === 0 ? 'fichero-vert-active' : ''}`}
+        data-actab-group="0"
+        data-actab-id={index}
+      >
+        {item.titulo}
+      </button>
+    ))}
+  </section>
+  <section class="fichero-vert-content">
+    {items.map((item, index) => (
+      <article
+        class={`fichero-vert-item ${index === 0 ? 'fichero-vert-active' : ''}`}
+        data-actab-group="0"
+        data-actab-id={index}
+      >
+        <h4 class="fichero-vert-item__label">
+          {item.titulo}
+          <div class="icon">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+        </h4>
+        <div class="fichero-vert-item__container" set:html={item.contenido} />
+      </article>
+    ))}
+  </section>
+</section>
+
+<script define:vars={{ id }}>
+  function ficheroVertical(idFichero) {
+    const labelsVert = document.querySelectorAll(`section.fichero-vert#${idFichero} .fichero-vert-item__label`);
+    const tabsVert = document.querySelectorAll(`section.fichero-vert#${idFichero} .fichero-vert-tab`);
+
+    function toggleShow() {
+      const target = this;
+      const item = target.classList.contains("fichero-vert-tab")
+        ? target
+        : target.parentElement;
+      const group = item.dataset.actabGroup;
+      const clickedId = item.dataset.actabId;
+
+      tabsVert.forEach(function (tab) {
+        if (tab.dataset.actabGroup === group) {
+          if (tab.dataset.actabId === clickedId) {
+            tab.classList.add("fichero-vert-active");
+          } else {
+            tab.classList.remove("fichero-vert-active");
+          }
+        }
+      });
+
+      labelsVert.forEach(function (label) {
+        const tabItem = label.parentElement;
+
+        if (tabItem.dataset.actabGroup === group) {
+          if (tabItem.dataset.actabId === clickedId) {
+            tabItem.classList.add("fichero-vert-active");
+          } else {
+            tabItem.classList.remove("fichero-vert-active");
+          }
+        }
+      });
+    }
+
+    labelsVert.forEach(function (label) {
+      label.addEventListener("click", toggleShow);
+    });
+
+    tabsVert.forEach(function (tab) {
+      tab.addEventListener("click", toggleShow);
+    });
+  }
+
+  // Inicializar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => ficheroVertical(id));
+  } else {
+    ficheroVertical(id);
+  }
+</script>
+
+<link rel="stylesheet" href="/src/styles/fichero-vertical.css" />
