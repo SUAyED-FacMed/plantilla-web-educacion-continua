@@ -173,7 +173,49 @@ npm run preview   # Previsualización local de la build
 
 ## 🚢 Despliegue
 
-La build genera archivos estáticos en `./dist`. Con `base: './'`, todos los assets usan rutas relativas (ideal para Moodle). Sube el contenido de `dist` a tu servidor/LMS.
+### Build para Producción
+
+```bash
+npm run build
+```
+
+Esto genera archivos estáticos en `./dist` con:
+- ✅ CSS bundleado en un solo archivo optimizado
+- ✅ Imágenes optimizadas con rutas relativas (`./assets/...`)
+- ✅ JavaScript (Bootstrap) con rutas relativas (`./js/...`)
+- ✅ Script post-build que convierte todas las rutas absolutas a relativas automáticamente
+
+### Despliegue en Moodle (Recurso Archivo)
+
+1. **Generar el build**:
+   ```bash
+   npm run build
+   ```
+
+2. **Empaquetar el contenido**:
+   ```bash
+   cd dist
+   zip -r ../moodle-recurso.zip .
+   cd ..
+   ```
+
+3. **Subir a Moodle**:
+   - Ve a tu curso en Moodle
+   - "Agregar una actividad o recurso" → **Archivo**
+   - Sube `moodle-recurso.zip`
+   - Descomprime el archivo en Moodle
+   - Selecciona `index-ejemplo.html` (o `index.html`) como **archivo principal**
+   - Guarda los cambios
+
+4. **Verificar localmente** (opcional):
+   ```bash
+   open dist/index-ejemplo.html
+   ```
+   El archivo debe abrir correctamente en tu navegador mostrando todos los estilos e imágenes.
+
+### Despliegue Web Tradicional
+
+Para servidores web estándar, simplemente copia el contenido de `dist/` a tu servidor o hosting.
 
 ## 🔄 Actualizar desde el Template
 

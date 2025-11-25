@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ConfigHotspot, PuntoHotspot } from '@/config/hotspots';
+import '@/styles/hotspot.css';
 
 interface Props {
   config: ConfigHotspot;
@@ -52,7 +53,6 @@ const dimensionClasses = [
   </div>
 </section>
 
-<link rel="stylesheet" href="/src/styles/hotspot.css" />
 
 <script define:vars={{ id }}>
   // Inicializar tooltips de Bootstrap para este hotspot

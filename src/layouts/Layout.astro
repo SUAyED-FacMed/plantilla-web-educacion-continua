@@ -7,6 +7,10 @@ export interface Props {
 
 import { siteConfig } from "@/config";
 import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+import "@/styles/estilos.css";
+import "@/styles/bootstrap.css";
+import "@/styles/aos.css";
 
 export let titulo: string =
   siteConfig.titulo ?? "Educación Continua SUAYED - Facultad de Medicina UNAM";
@@ -27,10 +31,7 @@ const tituloFinal = titulo
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="/src/styles/global.css" />
-    <link rel="stylesheet" href="/src/styles/estilos.css" />
-    <link rel="stylesheet" href="/src/styles/bootstrap.css" />
-    <link rel="stylesheet" href="/src/styles/aos.css" />
+    <!-- CSS importado vía frontmatter y bundleado -->
     <meta name="generator" content={Astro.generator} />
     <title>{tituloFinal}</title>
   </head>
@@ -38,8 +39,8 @@ const tituloFinal = titulo
 		<main>
 			<slot />
 		</main>
-		<Footer />
-		<script src="/src/assets/js/bootstrap.bundle.min.js"></script>
+    <Footer />
+    <script is:inline src="/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
 

@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import '@/styles/carrusel.css';
 
 interface SlideCarrusel {
   id: number;
@@ -211,5 +212,4 @@ if (slides.some(slide => !slide.imagen)) {
   });
 </script>
 
-<link rel="stylesheet" href="/src/styles/carrusel.css" />
 <!-- fin carrusel -->

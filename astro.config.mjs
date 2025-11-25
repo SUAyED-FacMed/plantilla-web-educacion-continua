@@ -7,7 +7,12 @@ import tailwindcss from '@tailwindcss/vite';
 // Use a relative base so the built site can be deployed as a static folder
 // (e.g. inside a Moodle resource) and asset URLs remain working.
 export default defineConfig({
-    base: './',
+    output: 'static',
+    build: {
+        assets: 'assets',
+        inlineStylesheets: 'never',
+        format: 'preserve'
+    },
     image: {
         service: passthroughImageService(),
         responsiveStyles: true,
