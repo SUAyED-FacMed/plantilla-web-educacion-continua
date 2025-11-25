@@ -4,4 +4,10 @@
   section {
     @apply max-w-6xl mx-auto px-2 md:px-4 xl:px-0;
   }
+  ol {
+    @apply list-decimal pl-5;
+  }
+  ul {
+    @apply list-disc pl-5;
+  }
 }

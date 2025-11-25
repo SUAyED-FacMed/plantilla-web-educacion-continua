@@ -15,8 +15,6 @@ section.hotspot[id^='hotspot'] {
 	-ms-user-select: none;
 	-o-user-select: none;
 	user-select: none;
-	width: 80%;
-	max-width: 650px;
 	margin: 2em auto;
 }
 

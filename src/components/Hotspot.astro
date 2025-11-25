@@ -4,14 +4,24 @@ import type { ConfigHotspot, PuntoHotspot } from '@/config/hotspots';
 
 interface Props {
   config: ConfigHotspot;
+  ancho?: string;
+  alto?: string;
+  class?: string;
 }
 
-const { config } = Astro.props;
+const { config, ancho, alto, class: className = '' } = Astro.props;
 const { id, imagen, altImagen, puntos } = config;
+
+// Construir clases de Tailwind para dimensiones
+const dimensionClasses = [
+  ancho || '',
+  alto || '',
+  className
+].filter(Boolean).join(' ');
 ---
 
 <!-- hotspot -->
-<section class="hotspot mb-5" id={id}>
+<section class={`hotspot mb-5 ${dimensionClasses}`} id={id}>
   <div class="container">
     <Image
       src={imagen}
