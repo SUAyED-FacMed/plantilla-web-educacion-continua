@@ -1,12 +1,34 @@
 @import "tailwindcss";
 
+@theme {
+  --color-azul2: #1f3d69;
+  --color-azul3: #234f88;
+  --color-azul4: #2760a8;
+  --color-azul5: #2c71c7;
+  --color-dorado: #C99335;
+  --color-dorado2: #aa7619;
+  --color-dorado3: #b58022;
+  --color-dorado4: #bf892c;
+  --color-dorado5: #c99335;
+}
+
 @layer components {
   section {
     @apply max-w-6xl mx-auto px-2 md:px-4 xl:px-0;
   }
+
   ol {
     @apply list-decimal pl-5;
   }
+
+  ul {
+    @apply list-disc pl-5;
+  }
+
+  ol {
+    @apply list-decimal pl-5;
+  }
+
   ul {
     @apply list-disc pl-5;
   }
