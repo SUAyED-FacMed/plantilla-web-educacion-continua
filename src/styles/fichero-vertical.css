@@ -251,7 +251,7 @@ section.fichero-vert[id^='fichero-vert-'] .fichero-vert+p {
 	}
 
 	section.fichero-vert[id^='fichero-vert-'] .fichero-vert-item__label {
-		color: #d3d3d3;
+		color: #666666;
 	}
 
 	section.fichero-vert[id^='fichero-vert-'] .fichero-vert-active .fichero-vert-item__label {
@@ -283,7 +283,7 @@ section.fichero-vert[id^='fichero-vert-'] .fichero-vert+p {
 
 	section.fichero-vert[id^='fichero-vert-'] .fichero-vert-tabs .fichero-vert-tab {
 		background: #f2f2f2;
-		color: #d3d3d3;
+		color: #666666;
 		font: inherit;
 		flex: 1;
 		border: none;
