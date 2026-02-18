@@ -330,9 +330,21 @@
 		border-radius: 8px;
 	}
 	
-	/* Ocultar navegación de tabs en móviles */
-	.tabs__navigation {
-		display: none;
+	/* Convertir vertical a acordeón */
+	.tabs--vertical {
+		display: block;
+		flex-direction: column;
+	}
+	
+	/* Ocultar navegación de tabs en móviles - AMBOS */
+	.tabs--horizontal .tabs__navigation,
+	.tabs--vertical .tabs__navigation {
+		display: none !important;
+	}
+	
+	/* Ocultar indicador en móviles */
+	.tabs__indicator {
+		display: none !important;
 	}
 	
 	/* Convertir a acordeón */
