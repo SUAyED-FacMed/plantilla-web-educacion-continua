@@ -1,0 +1,420 @@
+/* ============================================
+   TABS COMPONENT - Componente de pestañas moderno
+   ============================================ */
+
+.tabs {
+	--accent-color: #0069d9;
+	--bg-primary: #ffffff;
+	--bg-secondary: #f8f9fa;
+	--text-primary: #2c3e50;
+	--text-secondary: #6c757d;
+	--text-inactive: #666666;
+	--border-color: #e9ecef;
+	--shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+	--transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+	
+	width: min(1100px, 90%);
+	margin: 2.5rem auto;
+	background: var(--bg-primary);
+	border-radius: 12px;
+	box-shadow: var(--shadow-md);
+	overflow: hidden;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ============================================
+   NAVEGACIÓN DE PESTAÑAS
+   ============================================ */
+
+.tabs__navigation {
+	position: relative;
+	background: var(--bg-secondary);
+	border-bottom: 1px solid var(--border-color);
+	user-select: none;
+	-webkit-user-select: none;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scrollbar-width: thin;
+}
+
+.tabs__navigation::-webkit-scrollbar {
+	height: 4px;
+}
+
+.tabs__navigation::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.tabs__navigation::-webkit-scrollbar-thumb {
+	background: var(--border-color);
+	border-radius: 2px;
+}
+
+.tabs__navigation::-webkit-scrollbar-thumb:hover {
+	background: var(--text-secondary);
+}
+
+/* ============================================
+   PESTAÑAS INDIVIDUALES
+   ============================================ */
+
+.tabs__tab {
+	position: relative;
+	background: transparent;
+	border: none;
+	color: var(--text-inactive);
+	font-size: 0.95rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.3s var(--transition-timing);
+	outline: none;
+	z-index: 1;
+}
+
+.tabs__tab:hover {
+	color: var(--text-primary);
+	background: rgba(0, 0, 0, 0.03);
+}
+
+.tabs__tab:focus-visible {
+	box-shadow: inset 0 0 0 2px var(--accent-color);
+	border-radius: 4px;
+}
+
+.tabs__tab--active {
+	color: var(--accent-color);
+	font-weight: 600;
+}
+
+.tabs__tab-text {
+	display: block;
+	transition: transform 0.2s var(--transition-timing);
+}
+
+.tabs__tab:active .tabs__tab-text {
+	transform: scale(0.97);
+}
+
+/* ============================================
+   INDICADOR ANIMADO
+   ============================================ */
+
+.tabs__indicator {
+	position: absolute;
+	background: var(--accent-color);
+	border-radius: 2px;
+	transition: all 0.35s var(--transition-timing);
+	pointer-events: none;
+	z-index: 2;
+}
+
+/* ============================================
+   CONTENIDO DE PESTAÑAS
+   ============================================ */
+
+.tabs__content {
+	position: relative;
+	min-height: 200px;
+}
+
+.tabs__panel {
+	width: 100%;
+	opacity: 0;
+	transform: translateY(8px);
+	transition: opacity 0.3s var(--transition-timing), 
+	            transform 0.3s var(--transition-timing);
+}
+
+.tabs__panel[hidden] {
+	display: none;
+}
+
+.tabs__panel--active {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.tabs__panel-inner {
+	padding: 1.75rem;
+	color: var(--text-primary);
+	line-height: 1.7;
+	animation: fadeIn 0.4s var(--transition-timing);
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Estilos para contenido interno */
+.tabs__panel-inner p {
+	margin-bottom: 1rem;
+}
+
+.tabs__panel-inner p:first-child {
+	margin-top: 0;
+}
+
+.tabs__panel-inner p:last-child {
+	margin-bottom: 0;
+}
+
+.tabs__panel-inner h1,
+.tabs__panel-inner h2,
+.tabs__panel-inner h3,
+.tabs__panel-inner h4,
+.tabs__panel-inner h5,
+.tabs__panel-inner h6 {
+	margin-top: 1.5rem;
+	margin-bottom: 0.75rem;
+	color: var(--text-primary);
+	font-weight: 600;
+}
+
+.tabs__panel-inner h1:first-child,
+.tabs__panel-inner h2:first-child,
+.tabs__panel-inner h3:first-child,
+.tabs__panel-inner h4:first-child,
+.tabs__panel-inner h5:first-child,
+.tabs__panel-inner h6:first-child {
+	margin-top: 0;
+}
+
+.tabs__panel-inner ul,
+.tabs__panel-inner ol {
+	margin: 1rem 0;
+	padding-left: 1.5rem;
+}
+
+.tabs__panel-inner li {
+	margin-bottom: 0.5rem;
+}
+
+.tabs__panel-inner img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+	margin: 1.5rem 0;
+}
+
+.tabs__panel-inner a {
+	color: var(--accent-color);
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+	transition: border-color 0.2s ease;
+}
+
+.tabs__panel-inner a:hover {
+	border-bottom-color: var(--accent-color);
+}
+
+/* ============================================
+   ORIENTACIÓN HORIZONTAL (por defecto)
+   ============================================ */
+
+.tabs--horizontal .tabs__navigation {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 0;
+}
+
+.tabs--horizontal .tabs__tab {
+	padding: 1rem 1.25rem;
+	text-align: center;
+}
+
+.tabs--horizontal .tabs__indicator {
+	bottom: 0;
+	left: 0;
+	height: 3px;
+}
+
+/* ============================================
+   ORIENTACIÓN VERTICAL
+   ============================================ */
+
+.tabs--vertical {
+	display: flex;
+	flex-direction: row;
+}
+
+.tabs--vertical .tabs__navigation {
+	display: flex;
+	flex-direction: column;
+	width: 220px;
+	min-width: 220px;
+	border-bottom: none;
+	border-right: 1px solid var(--border-color);
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.tabs--vertical .tabs__tab {
+	padding: 1rem 1.5rem;
+	text-align: left;
+	border-left: 3px solid transparent;
+}
+
+.tabs--vertical .tabs__tab--active {
+	border-left-color: transparent;
+}
+
+.tabs--vertical .tabs__indicator {
+	top: 0;
+	left: 0;
+	width: 3px;
+}
+
+.tabs--vertical .tabs__content {
+	flex: 1;
+}
+
+/* ============================================
+   RESPONSIVE - TABLETS
+   ============================================ */
+
+@media (max-width: 1024px) {
+	.tabs {
+		width: 94%;
+	}
+	
+	.tabs--horizontal .tabs__navigation {
+		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	}
+	
+	.tabs--vertical .tabs__navigation {
+		width: 180px;
+		min-width: 180px;
+	}
+}
+
+/* ============================================
+   RESPONSIVE - MÓVILES
+   ============================================ */
+
+@media (max-width: 767px) {
+	.tabs {
+		width: 96%;
+		margin: 1.5rem auto;
+		border-radius: 8px;
+	}
+	
+	/* Forzar horizontal en móviles */
+	.tabs--vertical {
+		flex-direction: column;
+	}
+	
+	.tabs--vertical .tabs__navigation {
+		width: 100%;
+		border-right: none;
+		border-bottom: 1px solid var(--border-color);
+		flex-direction: row;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+	
+	.tabs--vertical .tabs__tab {
+		flex-shrink: 0;
+		min-width: 120px;
+		text-align: center;
+		border-left: none;
+		border-bottom: 3px solid transparent;
+	}
+	
+	.tabs--vertical .tabs__indicator {
+		top: auto;
+		bottom: 0;
+		left: 0;
+		width: auto;
+		height: 3px;
+	}
+	
+	.tabs--horizontal .tabs__navigation {
+		display: flex;
+		overflow-x: auto;
+	}
+	
+	.tabs--horizontal .tabs__tab {
+		flex-shrink: 0;
+		min-width: 120px;
+		padding: 0.875rem 1rem;
+		font-size: 0.9rem;
+	}
+	
+	.tabs__panel-inner {
+		padding: 1.25rem;
+		font-size: 0.95rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.tabs {
+		width: 98%;
+		margin: 1rem auto;
+	}
+	
+	.tabs__tab {
+		font-size: 0.875rem;
+		min-width: 100px;
+		padding: 0.75rem 0.875rem;
+	}
+	
+	.tabs__panel-inner {
+		padding: 1rem;
+	}
+}
+
+/* ============================================
+   MODO OSCURO (opcional)
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+	.tabs {
+		--bg-primary: #1e1e1e;
+		--bg-secondary: #2d2d2d;
+		--text-primary: #e4e4e4;
+		--text-secondary: #a0a0a0;
+		--text-inactive: #888888;
+		--border-color: #3a3a3a;
+		--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+	}
+	
+	.tabs__tab:hover {
+		background: rgba(255, 255, 255, 0.05);
+	}
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+	.tabs__tab,
+	.tabs__indicator,
+	.tabs__panel,
+	.tabs__panel-inner,
+	.tabs__tab-text {
+		transition: none;
+		animation: none;
+	}
+}
+
+/* Para lectores de pantalla */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}

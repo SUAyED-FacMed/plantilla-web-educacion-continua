@@ -62,10 +62,33 @@ const { id, items } = Astro.props;
     const slider = document.querySelector(
       `section.fichero-hor#${idFichero} .slider`
     );
+    const tabsContainer = document.querySelector(
+      `section.fichero-hor#${idFichero} .fichero-hor-tabs`
+    );
 
-    if (!slider || tabs.length === 0) return;
+    if (!slider || tabs.length === 0 || !tabsContainer) return;
 
-    slider.style.setProperty("width", 100 / tabs.length + "%");
+    // Función para actualizar la posición del slider basándose en el tab activo
+    function updateSlider(activeTab) {
+      if (!activeTab) return;
+      
+      const containerRect = tabsContainer.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
+      
+      const leftPosition = tabRect.left - containerRect.left;
+      const tabWidth = tabRect.width;
+      
+      slider.style.width = tabWidth + 'px';
+      slider.style.transform = `translateX(${leftPosition}px)`;
+    }
+
+    // Inicializar el slider con el tab activo
+    const initialActiveTab = document.querySelector(
+      `section.fichero-hor#${idFichero} .fichero-hor-tab.fichero-hor-active`
+    );
+    if (initialActiveTab) {
+      updateSlider(initialActiveTab);
+    }
 
     function toggleShow() {
       const target = this;
@@ -75,11 +98,13 @@ const { id, items } = Astro.props;
       const group = item.dataset.actabGroup;
       const clickedId = item.dataset.actabId;
 
-      tabs.forEach(function (tab, ind) {
+      let activeTab = null;
+
+      tabs.forEach(function (tab) {
         if (tab.dataset.actabGroup === group) {
           if (tab.dataset.actabId === clickedId) {
             tab.classList.add("fichero-hor-active");
-            slider.style.transform = "translateX(" + 100 * ind + "%)";
+            activeTab = tab;
           } else {
             tab.classList.remove("fichero-hor-active");
           }
@@ -96,6 +121,11 @@ const { id, items } = Astro.props;
           }
         }
       });
+
+      // Actualizar posición del slider
+      if (activeTab) {
+        updateSlider(activeTab);
+      }
     }
 
     labels.forEach(function (label) {
@@ -104,6 +134,20 @@ const { id, items } = Astro.props;
 
     tabs.forEach(function (tab) {
       tab.addEventListener("click", toggleShow);
+    });
+
+    // Actualizar slider en resize para mantener la posición correcta
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        const currentActive = document.querySelector(
+          `section.fichero-hor#${idFichero} .fichero-hor-tab.fichero-hor-active`
+        );
+        if (currentActive) {
+          updateSlider(currentActive);
+        }
+      }, 250);
     });
   }
 

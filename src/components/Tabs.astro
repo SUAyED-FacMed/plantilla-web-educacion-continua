@@ -1,0 +1,203 @@
+---
+import '@/styles/tabs.css';
+
+interface TabItem {
+  titulo: string;
+  contenido: string; // HTML permitido
+}
+
+interface Props {
+  id: string;
+  items: TabItem[];
+  orientation?: 'horizontal' | 'vertical'; // Por defecto: horizontal
+  accentColor?: string; // Color de acento personalizado
+}
+
+const { id, items, orientation = 'horizontal', accentColor } = Astro.props;
+const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizontal';
+---
+
+<section 
+  class={`tabs ${tabsClass}`} 
+  id={id}
+  style={accentColor ? `--accent-color: ${accentColor}` : ''}
+  data-orientation={orientation}
+>
+  <div class="tabs__navigation" role="tablist" aria-label="Contenido en pestañas">
+    {items.map((item, index) => (
+      <button
+        class={`tabs__tab ${index === 0 ? 'tabs__tab--active' : ''}`}
+        role="tab"
+        aria-selected={index === 0 ? 'true' : 'false'}
+        aria-controls={`${id}-panel-${index}`}
+        id={`${id}-tab-${index}`}
+        tabindex={index === 0 ? '0' : '-1'}
+        data-index={index}
+      >
+        <span class="tabs__tab-text">{item.titulo}</span>
+      </button>
+    ))}
+    <div class="tabs__indicator" aria-hidden="true"></div>
+  </div>
+  
+  <div class="tabs__content">
+    {items.map((item, index) => (
+      <div
+        class={`tabs__panel ${index === 0 ? 'tabs__panel--active' : ''}`}
+        role="tabpanel"
+        aria-labelledby={`${id}-tab-${index}`}
+        id={`${id}-panel-${index}`}
+        tabindex="0"
+        hidden={index !== 0}
+      >
+        <div class="tabs__panel-inner" set:html={item.contenido} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<script is:inline>
+  class TabsComponent {
+    constructor(container) {
+      this.container = container;
+      this.tabList = container.querySelector('.tabs__navigation');
+      this.tabs = Array.from(container.querySelectorAll('.tabs__tab'));
+      this.panels = Array.from(container.querySelectorAll('.tabs__panel'));
+      this.indicator = container.querySelector('.tabs__indicator');
+      this.orientation = container.dataset.orientation || 'horizontal';
+      
+      this.init();
+    }
+    
+    init() {
+      this.tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => this.handleTabClick(e));
+        tab.addEventListener('keydown', (e) => this.handleKeyDown(e));
+      });
+      
+      // Posicionar indicador inicial
+      requestAnimationFrame(() => this.updateIndicator(this.tabs[0]));
+      
+      // Actualizar indicador en resize
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const activeTab = this.tabs.find(tab => 
+            tab.classList.contains('tabs__tab--active')
+          );
+          if (activeTab) this.updateIndicator(activeTab, false);
+        }, 150);
+      });
+    }
+    
+    handleTabClick(e) {
+      const clickedTab = e.currentTarget;
+      const index = parseInt(clickedTab.dataset.index);
+      this.activateTab(index);
+    }
+    
+    handleKeyDown(e) {
+      const currentIndex = this.tabs.findIndex(tab => tab === e.currentTarget);
+      let nextIndex;
+      
+      switch(e.key) {
+        case 'ArrowRight':
+        case 'ArrowDown':
+          e.preventDefault();
+          nextIndex = currentIndex + 1;
+          if (nextIndex >= this.tabs.length) nextIndex = 0;
+          this.activateTab(nextIndex);
+          this.tabs[nextIndex].focus();
+          break;
+          
+        case 'ArrowLeft':
+        case 'ArrowUp':
+          e.preventDefault();
+          nextIndex = currentIndex - 1;
+          if (nextIndex < 0) nextIndex = this.tabs.length - 1;
+          this.activateTab(nextIndex);
+          this.tabs[nextIndex].focus();
+          break;
+          
+        case 'Home':
+          e.preventDefault();
+          this.activateTab(0);
+          this.tabs[0].focus();
+          break;
+          
+        case 'End':
+          e.preventDefault();
+          nextIndex = this.tabs.length - 1;
+          this.activateTab(nextIndex);
+          this.tabs[nextIndex].focus();
+          break;
+      }
+    }
+    
+    activateTab(index) {
+      // Desactivar tabs actuales
+      this.tabs.forEach((tab, i) => {
+        const isActive = i === index;
+        tab.classList.toggle('tabs__tab--active', isActive);
+        tab.setAttribute('aria-selected', isActive);
+        tab.setAttribute('tabindex', isActive ? '0' : '-1');
+      });
+      
+      // Desactivar panels actuales
+      this.panels.forEach((panel, i) => {
+        const isActive = i === index;
+        panel.classList.toggle('tabs__panel--active', isActive);
+        panel.hidden = !isActive;
+      });
+      
+      // Actualizar indicador
+      this.updateIndicator(this.tabs[index]);
+    }
+    
+    updateIndicator(activeTab, animated = true) {
+      if (!this.indicator || !activeTab) return;
+      
+      const containerRect = this.tabList.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
+      
+      if (this.orientation === 'vertical') {
+        const top = tabRect.top - containerRect.top;
+        const height = tabRect.height;
+        
+        this.indicator.style.transform = `translateY(${top}px)`;
+        this.indicator.style.width = '3px';
+        this.indicator.style.height = `${height}px`;
+      } else {
+        const left = tabRect.left - containerRect.left;
+        const width = tabRect.width;
+        
+        this.indicator.style.transform = `translateX(${left}px)`;
+        this.indicator.style.width = `${width}px`;
+        this.indicator.style.height = '3px';
+      }
+      
+      if (!animated) {
+        this.indicator.style.transition = 'none';
+        requestAnimationFrame(() => {
+          this.indicator.style.transition = '';
+        });
+      }
+    }
+  }
+  
+  // Inicializar todos los componentes de tabs en la página
+  function initializeTabs() {
+    const tabsElements = document.querySelectorAll('.tabs');
+    tabsElements.forEach(element => {
+      new TabsComponent(element);
+    });
+  }
+  
+  // Inicializar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTabs);
+  } else {
+    initializeTabs();
+  }
+</script>
