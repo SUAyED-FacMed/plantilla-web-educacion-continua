@@ -1,0 +1,319 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/tablas.css';
+---
+
+<Layout title="Ejemplo de Tablas - Plantilla Educación Continua">
+	<main>
+		<article style="padding: 2rem;">
+			<h1>Ejemplos de Tablas Modernas</h1>
+			
+			<section style="margin-bottom: 4rem;">
+				<h2>Tabla Médica: Complicaciones de Tuberculosis</h2>
+				<p>Ejemplo con datos médicos complejos, listas y énfasis.</p>
+				
+				<div class="tabla-container">
+					<table class="tabla-moderna">
+						<thead>
+							<tr>
+								<th>Tipo</th>
+								<th>Complicaciones principales</th>
+								<th>Fisiopatología resumida</th>
+								<th>Incidencia/datos clave</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Agudas</strong></td>
+								<td>
+									-Hemoptisis masiva<br>
+									-Neumotórax espontáneo<br>
+									-Broncopleural fístula/Empiema tuberculoso<br>
+									-SDRA/Insuficiencia respiratoria<br>
+									-Sobreinfección bacteriana o micótica
+								</td>
+								<td>
+									Destrucción cavitaria de vasos pulmonares, ruptura de cavidad 
+									subpleural, necrosis caseosa que abre a pleura y diseminación 
+									hematógena aguda.
+								</td>
+								<td>
+									Hemoptisis clínicamente significativa en 5-15 % y <em>masiva</em> 
+									—>200 ml/24 h— en 1-3 % de los casos; neumotórax asociado a TB 
+									en 1-2 % de personas adultas.
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<strong>Crónicas/secuelares</strong> —enfermedad pulmonar 
+									postuberculosis, <strong>PTLD</strong>, por sus siglas en inglés—
+								</td>
+								<td>
+									-Bronquiectasias y obstrucción irreversible<br>
+									-Fibrocavitación residual<br>
+									-Aspergiloma/Aspergilosis pulmonar crónica (APC)<br>
+									-Hipertensión pulmonar y <em>cor pulmonale</em><br>
+									-Disfunción ventilatoria mixta —patrón obstructivo-restrictivo—
+								</td>
+								<td>
+									Remodelado bronquial y destrucción parénquima, colonización de 
+									cavidades por <em>Aspergillus</em> y fibrosis parenquimatosa y 
+									vascular.
+								</td>
+								<td>
+									Hasta 50 % de las pacientes y los pacientes curados presentan 
+									algún grado de PTLD; CPA prevalece en ≈9 % durante o después del 
+									tratamiento anti-TB.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section style="margin-bottom: 4rem;">
+				<h2>Tabla Compacta</h2>
+				<p>Para tablas con mucha información en menos espacio.</p>
+				
+				<div class="tabla-container">
+					<table class="tabla-moderna tabla-compacta">
+						<thead>
+							<tr>
+								<th>Medicamento</th>
+								<th>Dosis</th>
+								<th>Frecuencia</th>
+								<th>Duración</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Isoniazida</strong></td>
+								<td>300 mg/día</td>
+								<td>Diaria</td>
+								<td>6-9 meses</td>
+							</tr>
+							<tr>
+								<td><strong>Rifampicina</strong></td>
+								<td>600 mg/día</td>
+								<td>Diaria</td>
+								<td>6-9 meses</td>
+							</tr>
+							<tr>
+								<td><strong>Pirazinamida</strong></td>
+								<td>25 mg/kg/día</td>
+								<td>Diaria</td>
+								<td>2 meses</td>
+							</tr>
+							<tr>
+								<td><strong>Etambutol</strong></td>
+								<td>15 mg/kg/día</td>
+								<td>Diaria</td>
+								<td>2 meses</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section style="margin-bottom: 4rem;">
+				<h2>Tabla Simple - Dos Columnas</h2>
+				<p>Definiciones o conceptos clave.</p>
+				
+				<div class="tabla-container">
+					<table class="tabla-moderna">
+						<thead>
+							<tr>
+								<th>Término</th>
+								<th>Definición</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Hemoptisis</strong></td>
+								<td>Expectoración de sangre procedente del tracto respiratorio bajo.</td>
+							</tr>
+							<tr>
+								<td><strong>Neumotórax</strong></td>
+								<td>Presencia de aire en la cavidad pleural que provoca colapso pulmonar.</td>
+							</tr>
+							<tr>
+								<td><strong>Bronquiectasia</strong></td>
+								<td>Dilatación irreversible y patológica de los bronquios.</td>
+							</tr>
+							<tr>
+								<td><strong>Aspergiloma</strong></td>
+								<td>Colonización por <em>Aspergillus</em> en cavidades pulmonares preexistentes.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section style="margin-bottom: 4rem;">
+				<h2>Tabla con Listas HTML</h2>
+				<p>Para contenido estructurado dentro de celdas.</p>
+				
+				<div class="tabla-container">
+					<table class="tabla-moderna">
+						<thead>
+							<tr>
+								<th>Categoría</th>
+								<th>Síntomas</th>
+								<th>Signos</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Respiratorios</strong></td>
+								<td>
+									<ul>
+										<li>Tos persistente (>3 semanas)</li>
+										<li>Disnea progresiva</li>
+										<li>Dolor torácico</li>
+										<li>Hemoptisis</li>
+									</ul>
+								</td>
+								<td>
+									<ul>
+										<li>Estertores crepitantes</li>
+										<li>Disminución del murmullo vesicular</li>
+										<li>Matidez a la percusión</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<td><strong>Sistémicos</strong></td>
+								<td>
+									<ul>
+										<li>Fiebre vespertina</li>
+										<li>Sudoración nocturna</li>
+										<li>Pérdida de peso</li>
+										<li>Astenia y adinamia</li>
+									</ul>
+								</td>
+								<td>
+									<ul>
+										<li>Taquicardia</li>
+										<li>Desnutrición</li>
+										<li>Palidez</li>
+									</ul>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section style="margin-bottom: 4rem;">
+				<h2>Tabla sin Bordes</h2>
+				<p>Diseño más limpio para lectura rápida.</p>
+				
+				<div class="tabla-container">
+					<table class="tabla-moderna tabla-sin-bordes">
+						<thead>
+							<tr>
+								<th>Fase</th>
+								<th>Medicamentos</th>
+								<th>Duración</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Inicial (Intensiva)</strong></td>
+								<td>Isoniazida + Rifampicina + Pirazinamida + Etambutol</td>
+								<td>2 meses</td>
+							</tr>
+							<tr>
+								<td><strong>Continuación</strong></td>
+								<td>Isoniazida + Rifampicina</td>
+								<td>4-7 meses</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section style="margin-bottom: 4rem;">
+				<h2>Tabla con Bordes Completos</h2>
+				<p>Separación clara de todas las celdas.</p>
+				
+				<div class="tabla-container">
+					<table class="tabla-moderna tabla-bordes-completos">
+						<thead>
+							<tr>
+								<th>Examen</th>
+								<th>Positivo</th>
+								<th>Negativo</th>
+								<th>Sensibilidad</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>Baciloscopía</strong></td>
+								<td>Confirma TB activa</td>
+								<td>No descarta TB</td>
+								<td>50-80%</td>
+							</tr>
+							<tr>
+								<td><strong>Cultivo</strong></td>
+								<td>Gold standard</td>
+								<td>Descarta TB con alta probabilidad</td>
+								<td>80-90%</td>
+							</tr>
+							<tr>
+								<td><strong>GeneXpert</strong></td>
+								<td>Diagnóstico rápido</td>
+								<td>Puede dar falsos negativos</td>
+								<td>88-98%</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-top: 3rem;">
+				<h3>📖 Documentación</h3>
+				<p>Revisa el archivo <code>TABLAS-GUIA.md</code> para la guía completa de uso, personalización y ejemplos adicionales.</p>
+			</div>
+		</article>
+	</main>
+</Layout>
+
+<style>
+	main {
+		background: #ffffff;
+		min-height: 100vh;
+	}
+	
+	h1 {
+		color: #1a252f;
+		margin-bottom: 2rem;
+		font-size: 2.5rem;
+	}
+	
+	h2 {
+		color: #2c3e50;
+		margin-bottom: 1rem;
+		font-size: 1.75rem;
+		margin-top: 2rem;
+	}
+	
+	h3 {
+		margin: 0 0 0.5rem 0;
+		color: #2c3e50;
+	}
+	
+	section p {
+		color: #6c757d;
+		margin-bottom: 1.5rem;
+		font-size: 1rem;
+	}
+	
+	code {
+		background: #e9ecef;
+		padding: 0.2rem 0.4rem;
+		border-radius: 4px;
+		font-family: 'Courier New', monospace;
+		color: #0069d9;
+	}
+</style>

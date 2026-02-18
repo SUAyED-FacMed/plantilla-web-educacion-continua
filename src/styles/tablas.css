@@ -1,0 +1,296 @@
+/* ============================================
+   TABLAS - Estilos modernos para tablas HTML
+   ============================================ */
+
+/* Variables */
+:root {
+	--table-border-color: #ced4da;
+	--table-header-bg: #2c3e50;
+	--table-header-text: #ffffff;
+	--table-row-even-bg: #f8f9fa;
+	--table-row-hover-bg: #e9ecef;
+	--table-text-color: #2c3e50;
+	--table-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   CONTENEDOR DE TABLA
+   ============================================ */
+
+.tabla-container {
+	width: min(1100px, 90%);
+	margin: 2rem auto;
+	overflow-x: auto;
+	border-radius: 8px;
+	box-shadow: var(--table-shadow);
+	background: #ffffff;
+}
+
+/* Scroll horizontal suave en móviles */
+.tabla-container {
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: thin;
+	scrollbar-color: #ced4da #f8f9fa;
+}
+
+.tabla-container::-webkit-scrollbar {
+	height: 8px;
+}
+
+.tabla-container::-webkit-scrollbar-track {
+	background: #f8f9fa;
+	border-radius: 4px;
+}
+
+.tabla-container::-webkit-scrollbar-thumb {
+	background: #ced4da;
+	border-radius: 4px;
+}
+
+.tabla-container::-webkit-scrollbar-thumb:hover {
+	background: #adb5bd;
+}
+
+/* ============================================
+   ESTILOS DE TABLA
+   ============================================ */
+
+.tabla-moderna {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 0.95rem;
+	color: var(--table-text-color);
+	background: #ffffff;
+}
+
+/* ============================================
+   ENCABEZADO (THEAD)
+   ============================================ */
+
+.tabla-moderna thead {
+	background: var(--table-header-bg);
+	color: var(--table-header-text);
+	font-weight: 600;
+	text-transform: uppercase;
+	font-size: 0.85rem;
+	letter-spacing: 0.5px;
+}
+
+.tabla-moderna thead th {
+	padding: 1rem 1.25rem;
+	text-align: left;
+	border-bottom: 3px solid #1a252f;
+	position: sticky;
+	top: 0;
+	background: var(--table-header-bg);
+	z-index: 10;
+}
+
+/* Alineación de texto en encabezados */
+.tabla-moderna thead th:first-child {
+	border-top-left-radius: 8px;
+}
+
+.tabla-moderna thead th:last-child {
+	border-top-right-radius: 8px;
+}
+
+/* ============================================
+   CUERPO (TBODY)
+   ============================================ */
+
+.tabla-moderna tbody tr {
+	border-bottom: 1px solid var(--table-border-color);
+	transition: background-color 0.2s ease;
+}
+
+.tabla-moderna tbody tr:last-child {
+	border-bottom: none;
+}
+
+/* Filas alternadas (zebra striping) */
+.tabla-moderna tbody tr:nth-child(even) {
+	background-color: var(--table-row-even-bg);
+}
+
+/* Hover en filas */
+.tabla-moderna tbody tr:hover {
+	background-color: var(--table-row-hover-bg);
+	cursor: pointer;
+}
+
+/* ============================================
+   CELDAS (TD)
+   ============================================ */
+
+.tabla-moderna td {
+	padding: 1rem 1.25rem;
+	line-height: 1.6;
+	vertical-align: top;
+}
+
+/* Énfasis en primera columna */
+.tabla-moderna tbody td:first-child {
+	font-weight: 600;
+	color: #1a252f;
+}
+
+/* Soporte para listas dentro de celdas */
+.tabla-moderna td ul,
+.tabla-moderna td ol {
+	margin: 0.5rem 0;
+	padding-left: 1.25rem;
+}
+
+.tabla-moderna td li {
+	margin-bottom: 0.25rem;
+}
+
+/* Links dentro de tablas */
+.tabla-moderna td a {
+	color: #0069d9;
+	text-decoration: none;
+	border-bottom: 1px solid transparent;
+	transition: border-color 0.2s ease;
+}
+
+.tabla-moderna td a:hover {
+	border-bottom-color: #0069d9;
+}
+
+/* Texto en cursiva (em) */
+.tabla-moderna td em {
+	font-style: italic;
+	color: #6c757d;
+}
+
+/* Texto en negrita (strong) */
+.tabla-moderna td strong {
+	font-weight: 700;
+	color: #1a252f;
+}
+
+/* ============================================
+   VARIANTES DE TABLA
+   ============================================ */
+
+/* Tabla compacta */
+.tabla-compacta thead th,
+.tabla-compacta td {
+	padding: 0.75rem 1rem;
+	font-size: 0.9rem;
+}
+
+/* Tabla sin bordes */
+.tabla-sin-bordes tbody tr {
+	border-bottom: none;
+}
+
+/* Tabla con bordes completos */
+.tabla-bordes-completos {
+	border: 1px solid var(--table-border-color);
+}
+
+.tabla-bordes-completos th,
+.tabla-bordes-completos td {
+	border: 1px solid var(--table-border-color);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+	.tabla-container {
+		width: 94%;
+	}
+	
+	.tabla-moderna {
+		font-size: 0.9rem;
+	}
+	
+	.tabla-moderna thead th,
+	.tabla-moderna td {
+		padding: 0.875rem 1rem;
+	}
+}
+
+@media (max-width: 767px) {
+	.tabla-container {
+		width: 96%;
+		margin: 1.5rem auto;
+		border-radius: 6px;
+	}
+	
+	.tabla-moderna {
+		font-size: 0.85rem;
+	}
+	
+	.tabla-moderna thead {
+		font-size: 0.8rem;
+	}
+	
+	.tabla-moderna thead th,
+	.tabla-moderna td {
+		padding: 0.75rem 0.875rem;
+	}
+	
+	/* Mostrar scroll hint en móviles */
+	.tabla-container::after {
+		content: '← Desliza para ver más →';
+		display: block;
+		text-align: center;
+		padding: 0.5rem;
+		font-size: 0.75rem;
+		color: #6c757d;
+		background: #f8f9fa;
+		border-top: 1px solid var(--table-border-color);
+	}
+	
+	.tabla-container:has(.tabla-moderna:not([style*="overflow"])):after {
+		display: none;
+	}
+}
+
+@media (max-width: 480px) {
+	.tabla-container {
+		width: 98%;
+		margin: 1rem auto;
+	}
+	
+	.tabla-moderna {
+		font-size: 0.8rem;
+	}
+	
+	.tabla-moderna thead th,
+	.tabla-moderna td {
+		padding: 0.625rem 0.75rem;
+	}
+}
+
+/* ============================================
+   ACCESIBILIDAD
+   ============================================ */
+
+/* Focus para navegación por teclado */
+.tabla-moderna tbody tr:focus-within {
+	outline: 2px solid #0069d9;
+	outline-offset: -2px;
+}
+
+/* Imprimir */
+@media print {
+	.tabla-container {
+		box-shadow: none;
+		overflow: visible;
+	}
+	
+	.tabla-moderna tbody tr:hover {
+		background-color: transparent;
+	}
+	
+	.tabla-container::after {
+		display: none !important;
+	}
+}
