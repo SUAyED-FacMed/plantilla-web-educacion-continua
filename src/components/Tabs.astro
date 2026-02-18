@@ -44,7 +44,12 @@ const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizon
         id={`${id}-panel-${index}`}
         tabindex="0"
         hidden={index !== 0}
+        data-index={index}
       >
+        <h4 class="tabs__panel-title" data-index={index}>
+          {item.titulo}
+          <div class="tabs__panel-icon"></div>
+        </h4>
         <div class="tabs__panel-inner" set:html={item.contenido} />
       </div>
     ))}
@@ -58,6 +63,7 @@ const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizon
       this.tabList = container.querySelector('.tabs__navigation');
       this.tabs = Array.from(container.querySelectorAll('.tabs__tab'));
       this.panels = Array.from(container.querySelectorAll('.tabs__panel'));
+      this.panelTitles = Array.from(container.querySelectorAll('.tabs__panel-title'));
       this.indicator = container.querySelector('.tabs__indicator');
       this.orientation = container.dataset.orientation || 'horizontal';
       
@@ -65,13 +71,21 @@ const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizon
     }
     
     init() {
+      // Event listeners para tabs de navegación
       this.tabs.forEach(tab => {
         tab.addEventListener('click', (e) => this.handleTabClick(e));
         tab.addEventListener('keydown', (e) => this.handleKeyDown(e));
       });
       
+      // Event listeners para títulos de paneles (modo acordeón móvil)
+      this.panelTitles.forEach(title => {
+        title.addEventListener('click', (e) => this.handlePanelTitleClick(e));
+      });
+      
       // Posicionar indicador inicial
-      requestAnimationFrame(() => this.updateIndicator(this.tabs[0]));
+      if (this.tabs[0]) {
+        requestAnimationFrame(() => this.updateIndicator(this.tabs[0]));
+      }
       
       // Actualizar indicador en resize
       let resizeTimer;
@@ -89,6 +103,12 @@ const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizon
     handleTabClick(e) {
       const clickedTab = e.currentTarget;
       const index = parseInt(clickedTab.dataset.index);
+      this.activateTab(index);
+    }
+    
+    handlePanelTitleClick(e) {
+      const clickedTitle = e.currentTarget;
+      const index = parseInt(clickedTitle.dataset.index);
       this.activateTab(index);
     }
     

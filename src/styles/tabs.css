@@ -115,7 +115,6 @@
 
 .tabs__content {
 	position: relative;
-	min-height: 200px;
 }
 
 .tabs__panel {
@@ -215,6 +214,31 @@
 	border-bottom-color: var(--accent-color);
 }
 
+/* Título del panel para modo acordeón móvil */
+.tabs__panel-title {
+	display: none;
+}
+
+.tabs__panel-icon {
+	display: flex;
+	align-items: center;
+	width: 12px;
+	height: 12px;
+	position: relative;
+	transform: rotate(0deg);
+	transition: transform 0.3s ease;
+}
+
+.tabs__panel-icon::after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-top: 6px solid currentColor;
+}
+
 /* ============================================
    ORIENTACIÓN HORIZONTAL (por defecto)
    ============================================ */
@@ -306,51 +330,74 @@
 		border-radius: 8px;
 	}
 	
-	/* Forzar horizontal en móviles */
-	.tabs--vertical {
-		flex-direction: column;
+	/* Ocultar navegación de tabs en móviles */
+	.tabs__navigation {
+		display: none;
 	}
 	
-	.tabs--vertical .tabs__navigation {
-		width: 100%;
-		border-right: none;
+	/* Convertir a acordeón */
+	.tabs__content {
+		display: block;
+	}
+	
+	.tabs__panel {
+		display: block !important;
+		opacity: 1 !important;
+		transform: none !important;
+		position: relative;
 		border-bottom: 1px solid var(--border-color);
-		flex-direction: row;
-		overflow-x: auto;
-		overflow-y: hidden;
 	}
 	
-	.tabs--vertical .tabs__tab {
-		flex-shrink: 0;
-		min-width: 120px;
-		text-align: center;
-		border-left: none;
-		border-bottom: 3px solid transparent;
+	.tabs__panel:last-child {
+		border-bottom: none;
 	}
 	
-	.tabs--vertical .tabs__indicator {
-		top: auto;
-		bottom: 0;
-		left: 0;
-		width: auto;
-		height: 3px;
+	.tabs__panel[hidden] {
+		display: block !important;
 	}
 	
-	.tabs--horizontal .tabs__navigation {
+	/* Mostrar título del panel */
+	.tabs__panel-title {
 		display: flex;
-		overflow-x: auto;
+		justify-content: space-between;
+		align-items: center;
+		margin: 0;
+		padding: 1rem 1.25rem;
+		cursor: pointer;
+		color: var(--text-inactive);
+		font-size: 1rem;
+		font-weight: 500;
+		transition: all 0.3s ease;
+		user-select: none;
 	}
 	
-	.tabs--horizontal .tabs__tab {
-		flex-shrink: 0;
-		min-width: 120px;
-		padding: 0.875rem 1rem;
-		font-size: 0.9rem;
+	.tabs__panel-title:hover {
+		background: rgba(0, 105, 217, 0.05);
 	}
 	
+	/* Panel activo en acordeón */
+	.tabs__panel--active .tabs__panel-title {
+		color: #ffffff;
+		background-color: var(--accent-color);
+	}
+	
+	.tabs__panel--active .tabs__panel-icon {
+		transform: rotate(180deg);
+	}
+	
+	/* Contenido del panel */
 	.tabs__panel-inner {
+		padding: 0 1.25rem;
+		height: 0;
+		opacity: 0;
+		overflow: hidden;
+		transition: all 0.3s ease;
+	}
+	
+	.tabs__panel--active .tabs__panel-inner {
 		padding: 1.25rem;
-		font-size: 0.95rem;
+		height: auto;
+		opacity: 1;
 	}
 }
 
@@ -360,13 +407,16 @@
 		margin: 1rem auto;
 	}
 	
-	.tabs__tab {
-		font-size: 0.875rem;
-		min-width: 100px;
-		padding: 0.75rem 0.875rem;
+	.tabs__panel-title {
+		font-size: 0.9rem;
+		padding: 0.875rem 1rem;
 	}
 	
 	.tabs__panel-inner {
+		font-size: 0.95rem;
+	}
+	
+	.tabs__panel--active .tabs__panel-inner {
 		padding: 1rem;
 	}
 }
