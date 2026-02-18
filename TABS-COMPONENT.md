@@ -10,28 +10,34 @@ Componente moderno de pestañas (tabs) con soporte para orientación horizontal 
 - 📱 Completamente responsive
 - 🎯 Orientación horizontal y vertical
 - ⌨️ Navegación por teclado (flechas, Home, End)
-- 🌓 Soporte para modo oscuro
-- 🎭 Respeta las preferencias de movimiento reducido del usuario
+-  Respeta las preferencias de movimiento reducido del usuario
 
 ## Uso Básico
+
+Puedes escribir el contenido directamente en las props sin necesidad de declarar constantes arriba:
 
 ```astro
 ---
 import Tabs from '@/components/Tabs.astro';
-import Tab from '@/components/Tab.astro';
 ---
 
-<Tabs id="mi-tabs">
-  <Tab titulo="Pestaña 1">
-    <p>Contenido de la primera pestaña</p>
-  </Tab>
-  <Tab titulo="Pestaña 2">
-    <p>Contenido de la segunda pestaña</p>
-  </Tab>
-  <Tab titulo="Pestaña 3">
-    <p>Contenido de la tercera pestaña</p>
-  </Tab>
-</Tabs>
+<Tabs 
+  id="mi-tabs"
+  items={[
+    {
+      titulo: 'Pestaña 1',
+      contenido: '<p>Contenido de la primera pestaña</p>'
+    },
+    {
+      titulo: 'Pestaña 2',
+      contenido: '<p>Contenido de la segunda pestaña</p>'
+    },
+    {
+      titulo: 'Pestaña 3',
+      contenido: '<p>Contenido de la tercera pestaña</p>'
+    }
+  ]}
+/>
 ```
 
 ## Props de Tabs
@@ -39,76 +45,77 @@ import Tab from '@/components/Tab.astro';
 | Prop | Tipo | Requerido | Default | Descripción |
 |------|------|-----------|---------|-------------|
 | `id` | `string` | ✅ Sí | - | Identificador único del componente |
+| `items` | `Array<{titulo: string, contenido: string}>` | ✅ Sí | - | Array de objetos con `titulo` y `contenido` (HTML) |
 | `orientation` | `'horizontal' \| 'vertical'` | ❌ No | `'horizontal'` | Orientación de las pestañas |
 | `accentColor` | `string` | ❌ No | `#0069d9` | Color de acento para el indicador y elementos activos |
-
-## Props de Tab
-
-| Prop | Tipo | Requerido | Descripción |
-|------|------|-----------|-------------|
-| `titulo` | `string` | ✅ Sí | Título de la pestaña |
 
 ## Ejemplos
 
 ### Tabs Horizontal (por defecto)
 
 ```astro
-<Tabs id="tabs-horizontal">
-  <Tab titulo="Introducción">
-    <p>Contenido de introducción</p>
-  </Tab>
-  <Tab titulo="Desarrollo">
-    <p>Contenido de desarrollo</p>
-  </Tab>
-  <Tab titulo="Conclusión">
-    <p>Contenido de conclusión</p>
-  </Tab>
-</Tabs>
+<Tabs 
+  id="tabs-horizontal"
+  items={[
+    { titulo: 'Introducción', contenido: '<p>Contenido de introducción</p>' },
+    { titulo: 'Desarrollo', contenido: '<p>Contenido de desarrollo</p>' },
+    { titulo: 'Conclusión', contenido: '<p>Contenido de conclusión</p>' }
+  ]}
+/>
 ```
 
 ### Tabs Vertical
 
 ```astro
-<Tabs id="tabs-vertical" orientation="vertical">
-  <Tab titulo="Sección 1">
-    <p>Contenido de la sección 1</p>
-  </Tab>
-  <Tab titulo="Sección 2">
-    <p>Contenido de la sección 2</p>
-  </Tab>
-</Tabs>
+<Tabs 
+  id="tabs-vertical" 
+  orientation="vertical"
+  items={[
+    { titulo: 'Sección 1', contenido: '<p>Contenido de la sección 1</p>' },
+    { titulo: 'Sección 2', contenido: '<p>Contenido de la sección 2</p>' }
+  ]}
+/>
 ```
 
 ### Con Color Personalizado
 
 ```astro
-<Tabs id="tabs-custom" accentColor="#fe7a20">
-  <Tab titulo="Tab 1">
-    <p>Contenido del tab 1</p>
-  </Tab>
-  <Tab titulo="Tab 2">
-    <p>Contenido del tab 2</p>
-  </Tab>
-</Tabs>
+<Tabs 
+  id="tabs-custom" 
+  accentColor="#fe7a20"
+  items={[
+    { titulo: 'Tab 1', contenido: '<p>Contenido del tab 1</p>' },
+    { titulo: 'Tab 2', contenido: '<p>Contenido del tab 2</p>' }
+  ]}
+/>
 ```
 
 ### Contenido con HTML Rico
 
 ```astro
-<Tabs id="tabs-ricos">
-  <Tab titulo="Introducción">
-    <h3>Título de la sección</h3>
-    <p>Este es un párrafo con contenido.</p>
-    <ul>
-      <li>Elemento de lista 1</li>
-      <li>Elemento de lista 2</li>
-    </ul>
-  </Tab>
-  <Tab titulo="Imágenes">
-    <img src="/imagen.jpg" alt="Descripción" />
-    <p>Pie de imagen</p>
-  </Tab>
-</Tabs>
+<Tabs 
+  id="tabs-ricos"
+  items={[
+    {
+      titulo: 'Introducción',
+      contenido: `
+        <h3>Título de la sección</h3>
+        <p>Este es un párrafo con contenido.</p>
+        <ul>
+          <li>Elemento de lista 1</li>
+          <li>Elemento de lista 2</li>
+        </ul>
+      `
+    },
+    {
+      titulo: 'Imágenes',
+      contenido: `
+        <img src="/imagen.jpg" alt="Descripción" />
+        <p>Pie de imagen</p>
+      `
+    }
+  ]}
+/>
 ```
 
 ## Navegación por Teclado
@@ -166,7 +173,6 @@ Puedes sobrescribir las variables CSS para personalizar completamente el compone
 5. **Responsive**: Mejor manejo en dispositivos móviles con scroll horizontal
 6. **Flexibilidad**: Un solo componente para ambas orientaciones
 7. **Personalización**: Sistema de variables CSS y prop de color
-8. **Modo oscuro**: Soporte automático basado en preferencias del sistema
 
 ## Rendimiento
 

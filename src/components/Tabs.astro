@@ -5,23 +5,11 @@ interface Props {
   id: string;
   orientation?: 'horizontal' | 'vertical'; // Por defecto: horizontal
   accentColor?: string; // Color de acento personalizado
+  items: Array<{ titulo: string; contenido: string }>;
 }
 
-const { id, orientation = 'horizontal', accentColor } = Astro.props;
+const { id, items, orientation = 'horizontal', accentColor } = Astro.props;
 const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizontal';
-
-// Procesar los slots para extraer títulos y contenido
-const defaultSlot = await Astro.slots.render('default');
-const tabsRegex = /<tab-item\s+data-titulo="([^"]+)">([\s\S]*?)<\/tab-item>/gi;
-const items: Array<{ titulo: string; contenido: string }> = [];
-
-let match;
-while ((match = tabsRegex.exec(defaultSlot)) !== null) {
-  items.push({
-    titulo: match[1],
-    contenido: match[2]
-  });
-}
 ---
 
 <section 
