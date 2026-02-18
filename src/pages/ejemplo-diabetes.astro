@@ -1,0 +1,56 @@
+---
+/**
+ * Ejemplo de página con configuración personalizada.
+ * Cada página puede tener su propia configuración sin afectar a otras páginas.
+ */
+
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/Hero.astro";
+import Bibliografia from "@/components/Bibliografia.astro";
+import { createSimplePageConfig } from "@/config/pages";
+
+// Configuración específica para ESTA página
+const pageConfig = createSimplePageConfig({
+  nombreCurso: "Curso de Diabetes Mellitus",
+  unidad: "Unidad 3 — Tratamiento Integral",
+  recurso: "Estrategias de Control Glucémico",
+  autores: [
+    { nombres: "María José", apellidos: "González Martínez" },
+    { nombres: "Carlos", apellidos: "Ramírez López" }
+  ],
+  fuentesInformacion: [
+    {
+      tipo: 'Bibliografía',
+      items: [
+        {
+          texto: 'American Diabetes Association. (2023). <em>Standards of Medical Care in Diabetes</em>.'
+        }
+      ]
+    }
+  ]
+});
+---
+
+<Layout 
+  recurso={pageConfig.recurso} 
+  nombreCurso={pageConfig.nombreCurso}
+>
+  <!-- Pasamos la configuración específica como props -->
+  <Hero 
+    nombreCurso={pageConfig.nombreCurso}
+    unidad={pageConfig.unidad}
+    recurso={pageConfig.recurso}
+    autores={pageConfig.autores}
+  />
+
+  <!-- Contenido específico de esta página -->
+  <section class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-4">Introducción</h2>
+    <p class="mb-4">
+      El control glucémico es fundamental en el manejo de la diabetes mellitus...
+    </p>
+  </section>
+
+  <!-- Bibliografía con fuentes específicas de esta página -->
+  <Bibliografia fuentes={pageConfig.fuentesInformacion} />
+</Layout>

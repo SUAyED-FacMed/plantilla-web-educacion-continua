@@ -1,11 +1,23 @@
 ---
+import type { SeccionFuentes, Autor } from '@/config/site';
 import { siteConfig } from '@/config';
 import VentanaIcon from "@assets/img/ventana.svg";
 
-const fuentesInformacion = siteConfig.fuentesInformacion ?? [];
-const autores = siteConfig.autores ?? [];
-const nombreCurso = siteConfig.nombreCurso ?? '';
-const recurso = siteConfig.recurso ?? '';
+export interface Props {
+  fuentes?: SeccionFuentes[];
+  autores?: Autor[];
+  nombreCurso?: string;
+  recurso?: string;
+}
+
+const { 
+  fuentes = siteConfig.fuentesInformacion ?? [],
+  autores = siteConfig.autores ?? [],
+  nombreCurso = siteConfig.nombreCurso ?? '',
+  recurso = siteConfig.recurso ?? ''
+} = Astro.props;
+
+const fuentesInformacion = fuentes;
 const añoActual = new Date().getFullYear();
 
 // Construir la cita en formato APA: "Apellido, Iniciales."

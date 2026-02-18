@@ -1,0 +1,46 @@
+---
+/**
+ * Ejemplo SIMPLE de página con configuración inline.
+ * Ideal para crear páginas rápidamente sin archivos de config separados.
+ */
+
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/Hero.astro";
+import Bibliografia from "@/components/Bibliografia.astro";
+
+// Config inline - súper simple
+const miConfig = {
+  nombreCurso: "Curso de Nutrición Clínica",
+  unidad: "Unidad 1 — Fundamentos",
+  recurso: "Evaluación del Estado Nutricional",
+  autores: [
+    { nombres: "Isabel", apellidos: "Rodríguez Méndez" }
+  ],
+  fuentesInformacion: [
+    {
+      tipo: 'Bibliografía',
+      items: [
+        { texto: 'Mahan, L. K. (2021). <em>Dietoterapia de Krause</em>. Elsevier.' }
+      ]
+    }
+  ]
+};
+---
+
+<Layout recurso={miConfig.recurso} nombreCurso={miConfig.nombreCurso}>
+  <!-- Pasamos toda la config con spread operator -->
+  <Hero {...miConfig} />
+
+  <!-- Tu contenido aquí -->
+  <section class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-4 unidadC">Objetivos de Aprendizaje</h2>
+    <ul class="list-disc list-inside space-y-2">
+      <li>Comprender los métodos de evaluación nutricional</li>
+      <li>Aplicar herramientas de diagnóstico nutricional</li>
+      <li>Interpretar índices antropométricos</li>
+    </ul>
+  </section>
+
+  <!-- Bibliografía con la misma config -->
+  <Bibliografia {...miConfig} />
+</Layout>

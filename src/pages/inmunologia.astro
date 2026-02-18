@@ -1,0 +1,68 @@
+---
+/**
+ * Ejemplo de página que usa una configuración externa.
+ * Útil cuando tienes configs complejas o que quieres reutilizar.
+ */
+
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/Hero.astro";
+import Bibliografia from "@/components/Bibliografia.astro";
+import { inmunologiaConfig } from "@/config/pages/inmunologia";
+---
+
+<Layout 
+  recurso={inmunologiaConfig.recurso} 
+  nombreCurso={inmunologiaConfig.nombreCurso}
+>
+  <Hero {...inmunologiaConfig} />
+
+  <!-- Contenido del curso -->
+  <section class="container mx-auto px-4 py-8 max-w-4xl">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6 unidadC">
+      Introducción a la Respuesta Inmune
+    </h2>
+    
+    <div class="prose max-w-none">
+      <p class="mb-4">
+        El sistema inmunitario es un conjunto complejo de células, tejidos y moléculas 
+        que trabajan coordinadamente para defender al organismo contra agentes patógenos.
+      </p>
+
+      <h3 class="text-xl font-semibold mt-6 mb-3 unidadC">
+        Tipos de Inmunidad
+      </h3>
+      
+      <div class="grid md:grid-cols-2 gap-4 mb-6">
+        <div class="border-l-4 border-blue-500 pl-4 py-2">
+          <h4 class="font-semibold mb-2">Inmunidad Innata</h4>
+          <ul class="list-disc list-inside space-y-1 text-sm">
+            <li>Respuesta inmediata</li>
+            <li>No específica</li>
+            <li>Sin memoria inmunológica</li>
+          </ul>
+        </div>
+        
+        <div class="border-l-4 border-amber-600 pl-4 py-2">
+          <h4 class="font-semibold mb-2">Inmunidad Adaptativa</h4>
+          <ul class="list-disc list-inside space-y-1 text-sm">
+            <li>Respuesta tardía</li>
+            <li>Altamente específica</li>
+            <li>Con memoria inmunológica</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="text-xl font-semibold mt-6 mb-3 unidadC">
+        Objetivos de Aprendizaje
+      </h3>
+      <ol class="list-decimal list-inside space-y-2">
+        <li>Describir los componentes del sistema inmune innato y adaptativo</li>
+        <li>Explicar los mecanismos de reconocimiento de patógenos</li>
+        <li>Analizar la respuesta inmune celular y humoral</li>
+        <li>Comprender los procesos de activación linfocitaria</li>
+      </ol>
+    </div>
+  </section>
+
+  <Bibliografia {...inmunologiaConfig} />
+</Layout>

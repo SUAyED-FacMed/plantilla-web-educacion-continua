@@ -1,20 +1,23 @@
 ---
+import type { Autor } from "@/config/site";
+
 export interface Props {
   nombreCurso?: string;
   unidad?: string;
   recurso?: string;
+  autores?: Autor[];
 }
 
 import { siteConfig } from "@/config";
 import { Image } from "astro:assets";
 
-export let nombreCurso: string = "";
-export let unidad: string = "";
-export let recurso: string = "";
-const autores = siteConfig.autores ?? [];
-if (!nombreCurso) nombreCurso = siteConfig.nombreCurso ?? "";
-if (!unidad) unidad = siteConfig.unidad ?? "";
-if (!recurso) recurso = siteConfig.recurso ?? "";
+const { 
+  nombreCurso = siteConfig.nombreCurso ?? "",
+  unidad = siteConfig.unidad ?? "",
+  recurso = siteConfig.recurso ?? "",
+  autores = siteConfig.autores ?? []
+} = Astro.props;
+
 import cornisa from "@assets/img/cornisa.png";
 import unamImg from "@assets/img/unam.png";
 import facmedImg from "@assets/img/facmed.png";
