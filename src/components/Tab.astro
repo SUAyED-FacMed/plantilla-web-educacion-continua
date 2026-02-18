@@ -1,0 +1,12 @@
+---
+// Componente auxiliar para usar con Tabs
+// Este componente se renderiza como un elemento personalizado que Tabs procesará
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+---
+<tab-item data-titulo={titulo}>
+  <slot />
+</tab-item>

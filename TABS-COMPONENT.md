@@ -18,100 +18,97 @@ Componente moderno de pestañas (tabs) con soporte para orientación horizontal 
 ```astro
 ---
 import Tabs from '@/components/Tabs.astro';
-
-const items = [
-  {
-    titulo: 'Pestaña 1',
-    contenido: '<p>Contenido de la primera pestaña</p>'
-  },
-  {
-    titulo: 'Pestaña 2',
-    contenido: '<p>Contenido de la segunda pestaña</p>'
-  },
-  {
-    titulo: 'Pestaña 3',
-    contenido: '<p>Contenido de la tercera pestaña</p>'
-  }
-];
+import Tab from '@/components/Tab.astro';
 ---
 
-<Tabs 
-  id="mi-tabs"
-  items={items}
-/>
+<Tabs id="mi-tabs">
+  <Tab titulo="Pestaña 1">
+    <p>Contenido de la primera pestaña</p>
+  </Tab>
+  <Tab titulo="Pestaña 2">
+    <p>Contenido de la segunda pestaña</p>
+  </Tab>
+  <Tab titulo="Pestaña 3">
+    <p>Contenido de la tercera pestaña</p>
+  </Tab>
+</Tabs>
 ```
 
-## Props
+## Props de Tabs
 
 | Prop | Tipo | Requerido | Default | Descripción |
 |------|------|-----------|---------|-------------|
 | `id` | `string` | ✅ Sí | - | Identificador único del componente |
-| `items` | `TabItem[]` | ✅ Sí | - | Array de objetos con `titulo` y `contenido` |
 | `orientation` | `'horizontal' \| 'vertical'` | ❌ No | `'horizontal'` | Orientación de las pestañas |
 | `accentColor` | `string` | ❌ No | `#0069d9` | Color de acento para el indicador y elementos activos |
 
-### Tipo TabItem
+## Props de Tab
 
-```typescript
-interface TabItem {
-  titulo: string;      // Título de la pestaña
-  contenido: string;   // Contenido HTML de la pestaña
-}
-```
+| Prop | Tipo | Requerido | Descripción |
+|------|------|-----------|-------------|
+| `titulo` | `string` | ✅ Sí | Título de la pestaña |
 
 ## Ejemplos
 
 ### Tabs Horizontal (por defecto)
 
 ```astro
-<Tabs 
-  id="tabs-horizontal"
-  items={items}
-/>
+<Tabs id="tabs-horizontal">
+  <Tab titulo="Introducción">
+    <p>Contenido de introducción</p>
+  </Tab>
+  <Tab titulo="Desarrollo">
+    <p>Contenido de desarrollo</p>
+  </Tab>
+  <Tab titulo="Conclusión">
+    <p>Contenido de conclusión</p>
+  </Tab>
+</Tabs>
 ```
 
 ### Tabs Vertical
 
 ```astro
-<Tabs 
-  id="tabs-vertical"
-  items={items}
-  orientation="vertical"
-/>
+<Tabs id="tabs-vertical" orientation="vertical">
+  <Tab titulo="Sección 1">
+    <p>Contenido de la sección 1</p>
+  </Tab>
+  <Tab titulo="Sección 2">
+    <p>Contenido de la sección 2</p>
+  </Tab>
+</Tabs>
 ```
 
 ### Con Color Personalizado
 
 ```astro
-<Tabs 
-  id="tabs-custom"
-  items={items}
-  accentColor="#fe7a20"
-/>
+<Tabs id="tabs-custom" accentColor="#fe7a20">
+  <Tab titulo="Tab 1">
+    <p>Contenido del tab 1</p>
+  </Tab>
+  <Tab titulo="Tab 2">
+    <p>Contenido del tab 2</p>
+  </Tab>
+</Tabs>
 ```
 
 ### Contenido con HTML Rico
 
 ```astro
----
-const itemsRicos = [
-  {
-    titulo: 'Introducción',
-    contenido: `
-      <h3>Título de la sección</h3>
-      <p>Este es un párrafo con contenido.</p>
-      <ul>
-        <li>Elemento de lista 1</li>
-        <li>Elemento de lista 2</li>
-      </ul>
-      <img src="/imagen.jpg" alt="Descripción" />
-    `
-  },
-  // más items...
-];
----
-
-<Tabs id="tabs-ricos" items={itemsRicos} />
+<Tabs id="tabs-ricos">
+  <Tab titulo="Introducción">
+    <h3>Título de la sección</h3>
+    <p>Este es un párrafo con contenido.</p>
+    <ul>
+      <li>Elemento de lista 1</li>
+      <li>Elemento de lista 2</li>
+    </ul>
+  </Tab>
+  <Tab titulo="Imágenes">
+    <img src="/imagen.jpg" alt="Descripción" />
+    <p>Pie de imagen</p>
+  </Tab>
+</Tabs>
 ```
 
 ## Navegación por Teclado
