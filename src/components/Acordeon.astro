@@ -1,62 +1,102 @@
 ---
 import '@/styles/acordeon.css';
-interface ItemAcordeon {
-  id: number;
-  titulo: string;
-  contenido: string; // HTML permitido
-}
 
 interface Props {
-  id: string;
-  items: ItemAcordeon[];
+  items: Array<{ titulo: string; contenido: string }>;
+  accentColor?: string; // Color de acento personalizado
+  allowMultiple?: boolean; // Permitir múltiples paneles abiertos a la vez
 }
 
-const { id, items } = Astro.props;
+const { items, accentColor, allowMultiple = false } = Astro.props;
+
+// Generar un ID único para este acordeón
+const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
 ---
 
-<section class="acordeon-vertical" id={id}>
-  {items.map((item) => (
-    <div class="accordion-item">
-      <div class="accordion-item-header">
-        {item.titulo}
-        <div class="icon">
-          <i class="fas fa-chevron-down"></i>
-        </div>
-      </div>
-      <div class="accordion-item-body">
-        <div class="accordion-item-body-content" set:html={item.contenido} />
+<section 
+  class="acordeon" 
+  id={uniqueId}
+  style={accentColor ? `--accent-color: ${accentColor}` : ''}
+  data-allow-multiple={allowMultiple}
+>
+  {items.map((item, index) => (
+    <div class="acordeon__item" data-index={index}>
+      <button class="acordeon__header" type="button" aria-expanded="false">
+        <span class="acordeon__title">{item.titulo}</span>
+        <span class="acordeon__icon" aria-hidden="true"></span>
+      </button>
+      <div class="acordeon__body">
+        <div class="acordeon__content" set:html={item.contenido} />
       </div>
     </div>
   ))}
 </section>
 
-<script define:vars={{ id }}>
-  function acordeonVertical(idAcordeon) {
-    const accordionItemHeaders = document.querySelectorAll(`section.acordeon-vertical#${idAcordeon} .accordion-item-header`);
-    accordionItemHeaders.forEach(accordionItemHeader => {
-      accordionItemHeader.addEventListener('click', event => {
-        const currentlyActiveAccordionItemHeader = document.querySelector(`section.acordeon-vertical#${idAcordeon} .accordion-item-header.active`);
-        if (currentlyActiveAccordionItemHeader && currentlyActiveAccordionItemHeader !== accordionItemHeader) {
-          currentlyActiveAccordionItemHeader.classList.toggle('active');
-          currentlyActiveAccordionItemHeader.nextElementSibling.style.maxHeight = 0;
-        }
-        accordionItemHeader.classList.toggle('active');
-        const accordionItemBody = accordionItemHeader.nextElementSibling;
-        if (accordionItemHeader.classList.contains('active')) {
-          accordionItemBody.style.maxHeight = accordionItemBody.scrollHeight + 'px';
-        }
-        else {
-          accordionItemBody.style.maxHeight = 0;
-        }
+<script is:inline>
+  class AcordeonComponent {
+    constructor(container) {
+      this.container = container;
+      this.allowMultiple = container.dataset.allowMultiple === 'true';
+      this.headers = Array.from(container.querySelectorAll('.acordeon__header'));
+      this.init();
+    }
+    
+    init() {
+      this.headers.forEach(header => {
+        header.addEventListener('click', () => this.handleClick(header));
       });
+    }
+    
+    handleClick(clickedHeader) {
+      const item = clickedHeader.parentElement;
+      const body = clickedHeader.nextElementSibling;
+      const isActive = clickedHeader.getAttribute('aria-expanded') === 'true';
+      
+      // Cerrar otros items si no se permite múltiple
+      if (!this.allowMultiple) {
+        this.headers.forEach(header => {
+          if (header !== clickedHeader) {
+            this.closeItem(header);
+          }
+        });
+      }
+      
+      // Toggle el item clickeado
+      if (isActive) {
+        this.closeItem(clickedHeader);
+      } else {
+        this.openItem(clickedHeader);
+      }
+    }
+    
+    openItem(header) {
+      const body = header.nextElementSibling;
+      header.setAttribute('aria-expanded', 'true');
+      header.classList.add('acordeon__header--active');
+      body.style.maxHeight = body.scrollHeight + 'px';
+    }
+    
+    closeItem(header) {
+      const body = header.nextElementSibling;
+      header.setAttribute('aria-expanded', 'false');
+      header.classList.remove('acordeon__header--active');
+      body.style.maxHeight = '0';
+    }
+  }
+  
+  // Inicializar todos los acordeones
+  function initAcordeons() {
+    const acordeons = document.querySelectorAll('.acordeon');
+    acordeons.forEach(acordeon => {
+      new AcordeonComponent(acordeon);
     });
   }
-
+  
   // Inicializar cuando el DOM esté listo
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => acordeonVertical(id));
+    document.addEventListener('DOMContentLoaded', initAcordeons);
   } else {
-    acordeonVertical(id);
+    initAcordeons();
   }
 </script>
 
