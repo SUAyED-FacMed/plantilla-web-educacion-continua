@@ -2,7 +2,7 @@
 import '@/styles/acordeon.css';
 
 interface Props {
-  items: Array<{ titulo: string; contenido?: string; slotName?: string }>;
+  items: Array<{ titulo: string; contenido: string }>;
   accentColor?: string; // Color de acento personalizado
   allowMultiple?: boolean; // Permitir múltiples paneles abiertos a la vez
 }
@@ -26,13 +26,7 @@ const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
         <span class="acordeon__icon" aria-hidden="true"></span>
       </button>
       <div class="acordeon__body">
-        <div class="acordeon__content">
-          {item.contenido ? (
-            <Fragment set:html={item.contenido} />
-          ) : (
-            <slot name={item.slotName || `item-${index}`} />
-          )}
-        </div>
+        <div class="acordeon__content" set:html={item.contenido} />
       </div>
     </div>
   ))}
