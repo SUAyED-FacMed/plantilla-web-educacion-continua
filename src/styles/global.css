@@ -17,19 +17,232 @@
     @apply max-w-6xl mx-auto px-2 md:px-4 xl:px-0;
   }
 
-  ol {
-    @apply list-decimal pl-5;
-  }
-
+  /* Estilos para listas principales */
   ul {
-    @apply list-disc pl-5;
+    @apply list-none pl-0 my-4 space-y-2;
+  }
+
+  ul li {
+    @apply relative pl-6 leading-relaxed;
+  }
+
+  ul li::before {
+    content: "●";
+    @apply absolute left-0;
+    color: var(--color-dorado);
+    font-size: 0.7em;
+    line-height: 1.8;
+    top: 0.4em;
   }
 
   ol {
-    @apply list-decimal pl-5;
+    @apply list-none pl-0 my-4 space-y-2;
+    counter-reset: item;
   }
 
-  ul {
-    @apply list-disc pl-5;
+  ol li {
+    @apply relative pl-6 leading-relaxed;
+    counter-increment: item;
+  }
+
+  ol li::before {
+    content: counter(item) ".";
+    @apply absolute left-0 font-bold;
+    color: var(--color-azul3);
+    font-weight: 600;
+  }
+
+  /* Listas anidadas - segundo nivel */
+  ul li ul {
+    @apply mt-2 mb-0;
+  }
+
+  ul li ul li::before {
+    content: "○";
+    color: var(--color-dorado3);
+    opacity: 0.7;
+    font-size: 0.8em;
+    top: 0.35em;
+  }
+
+  ol li ol {
+    @apply mt-2 mb-0;
+    counter-reset: subitem;
+  }
+
+  ol li ol li {
+    counter-increment: subitem;
+  }
+
+  ol li ol li::before {
+    content: counter(item) "." counter(subitem);
+    color: var(--color-azul4);
+    opacity: 0.85;
+  }
+
+  /* Listas anidadas - tercer nivel */
+  ul li ul li ul li::before {
+    content: "▪";
+    color: var(--color-dorado4);
+    opacity: 0.6;
+    font-size: 0.7em;
+    top: 0.4em;
+  }
+
+  ol li ol li ol {
+    counter-reset: subsubitem;
+  }
+
+  ol li ol li ol li {
+    counter-increment: subsubitem;
+  }
+
+  ol li ol li ol li::before {
+    content: counter(item) "." counter(subitem) "." counter(subsubitem);
+    color: var(--color-azul5);
+    font-size: 0.9em;
+  }
+
+  /* Clases especiales para listas con letras */
+  .lista-letras {
+    list-style: none;
+    counter-reset: letra;
+  }
+
+  .lista-letras li {
+    counter-increment: letra;
+  }
+
+  .lista-letras li::before {
+    content: counter(letra, lower-alpha) ") ";
+    color: var(--color-dorado2);
+    font-weight: 600;
+  }
+
+  .lista-letras-mayusculas {
+    list-style: none;
+    counter-reset: letra-may;
+  }
+
+  .lista-letras-mayusculas li {
+    counter-increment: letra-may;
+  }
+
+  .lista-letras-mayusculas li::before {
+    content: counter(letra-may, upper-alpha) ") ";
+    color: var(--color-azul3);
+    font-weight: 600;
+  }
+
+  /* Clases especiales para listas con números romanos */
+  .lista-romanos {
+    list-style: none;
+    counter-reset: romano;
+  }
+
+  .lista-romanos li {
+    counter-increment: romano;
+  }
+
+  .lista-romanos li::before {
+    content: counter(romano, lower-roman) ". ";
+    color: var(--color-dorado3);
+    font-weight: 600;
+  }
+
+  .lista-romanos-mayusculas {
+    list-style: none;
+    counter-reset: romano-may;
+  }
+
+  .lista-romanos-mayusculas li {
+    counter-increment: romano-may;
+  }
+
+  .lista-romanos-mayusculas li::before {
+    content: counter(romano-may, upper-roman) ". ";
+    color: var(--color-azul3);
+    font-weight: 600;
+  }
+
+  /* Lista sin viñetas (útil para casos especiales) */
+  .lista-sin-viñetas {
+    @apply list-none pl-0;
+  }
+
+  .lista-sin-viñetas li::before {
+    content: none;
+  }
+
+  /* Lista con checkmarks */
+  .lista-checks li::before {
+    content: "✓";
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  /* Hover effects para listas interactivas */
+  ul li:hover,
+  ol li:hover {
+    @apply transition-all duration-200;
+    padding-left: 2rem;
+  }
+
+  /* Estilos para tablas de contenido */
+  .tabla-contenido {
+    @apply w-full border-collapse my-6 shadow-lg rounded-lg overflow-hidden;
+  }
+
+  .tabla-contenido thead {
+    background-color: var(--color-azul3);
+    @apply text-white;
+  }
+
+  .tabla-contenido thead th {
+    @apply px-4 py-3 text-left font-semibold text-sm md:text-base;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .tabla-contenido thead th:last-child {
+    border-right: none;
+  }
+
+  .tabla-contenido tbody tr {
+    @apply border-b border-gray-200;
+  }
+
+  .tabla-contenido tbody tr:nth-child(even) {
+    @apply bg-gray-50;
+  }
+
+  .tabla-contenido tbody tr:hover {
+    @apply bg-blue-50 transition-colors duration-200;
+  }
+
+  .tabla-contenido tbody td {
+    @apply px-4 py-3 text-sm md:text-base align-top;
+    border-right: 1px solid #e5e7eb;
+  }
+
+  .tabla-contenido tbody td:last-child {
+    border-right: none;
+  }
+
+  .tabla-contenido tbody td strong {
+    color: var(--color-azul3);
+    @apply font-semibold;
+  }
+
+  /* Responsividad para tablas */
+  @media screen and (max-width: 768px) {
+    .tabla-contenido {
+      @apply text-xs;
+    }
+    
+    .tabla-contenido thead th,
+    .tabla-contenido tbody td {
+      @apply px-2 py-2;
+    }
   }
 }
