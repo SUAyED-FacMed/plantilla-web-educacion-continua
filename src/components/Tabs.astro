@@ -5,7 +5,7 @@ interface Props {
   id: string;
   orientation?: 'horizontal' | 'vertical'; // Por defecto: horizontal
   accentColor?: string; // Color de acento personalizado
-  items: Array<{ titulo: string; contenido: string }>;
+  items: Array<{ titulo: string; contenido?: string; slotName?: string }>;
 }
 
 const { id, items, orientation = 'horizontal', accentColor } = Astro.props;
@@ -50,7 +50,13 @@ const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizon
           {item.titulo}
           <div class="tabs__panel-icon"></div>
         </h4>
-        <div class="tabs__panel-inner" set:html={item.contenido} />
+        <div class="tabs__panel-inner">
+          {item.contenido ? (
+            <Fragment set:html={item.contenido} />
+          ) : (
+            <slot name={item.slotName || `item-${index}`} />
+          )}
+        </div>
       </div>
     ))}
   </div>
