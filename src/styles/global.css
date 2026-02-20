@@ -37,16 +37,16 @@
 
   ol {
     @apply list-none pl-0 my-4 space-y-2;
-    counter-reset: item;
+    counter-reset: ol-counter;
   }
 
-  ol li {
+  ol > li {
     @apply relative pl-6 leading-relaxed;
-    counter-increment: item;
+    counter-increment: ol-counter;
   }
 
-  ol li::before {
-    content: counter(item) ".";
+  ol > li::before {
+    content: counter(ol-counter) ".";
     @apply absolute left-0 font-bold;
     color: var(--color-azul3);
     font-weight: 600;
@@ -67,15 +67,15 @@
 
   ol li ol {
     @apply mt-2 mb-0;
-    counter-reset: subitem;
+    counter-reset: ol-subcounter;
   }
 
-  ol li ol li {
-    counter-increment: subitem;
+  ol li ol > li {
+    counter-increment: ol-subcounter;
   }
 
-  ol li ol li::before {
-    content: counter(item) "." counter(subitem);
+  ol li ol > li::before {
+    content: counter(ol-counter) "." counter(ol-subcounter);
     color: var(--color-azul4);
     opacity: 0.85;
   }
@@ -90,15 +90,15 @@
   }
 
   ol li ol li ol {
-    counter-reset: subsubitem;
+    counter-reset: ol-subsubcounter;
   }
 
-  ol li ol li ol li {
-    counter-increment: subsubitem;
+  ol li ol li ol > li {
+    counter-increment: ol-subsubcounter;
   }
 
-  ol li ol li ol li::before {
-    content: counter(item) "." counter(subitem) "." counter(subsubitem);
+  ol li ol li ol > li::before {
+    content: counter(ol-counter) "." counter(ol-subcounter) "." counter(ol-subsubcounter);
     color: var(--color-azul5);
     font-size: 0.9em;
   }
@@ -182,11 +182,70 @@
     font-size: 1.2em;
   }
 
-  /* Hover effects para listas interactivas */
-  ul li:hover,
-  ol li:hover {
+  /* Lista interactiva (opt-in para efecto hover) */
+  .lista-interactiva li {
     @apply transition-all duration-200;
+  }
+
+  .lista-interactiva li:hover {
     padding-left: 2rem;
+  }
+
+  /* Estilos para tablas de contenido */
+  .tabla-contenido {
+    @apply w-full border-collapse my-6 shadow-lg rounded-lg overflow-hidden;
+  }
+
+  .tabla-contenido thead {
+    background-color: var(--color-azul3);
+    @apply text-white;
+  }
+
+  .tabla-contenido thead th {
+    @apply px-4 py-3 text-left font-semibold text-sm md:text-base;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .tabla-contenido thead th:last-child {
+    border-right: none;
+  }
+
+  .tabla-contenido tbody tr {
+    @apply border-b border-gray-200;
+  }
+
+  .tabla-contenido tbody tr:nth-child(even) {
+    @apply bg-gray-50;
+  }
+
+  .tabla-contenido tbody tr:hover {
+    @apply bg-blue-50 transition-colors duration-200;
+  }
+
+  .tabla-contenido tbody td {
+    @apply px-4 py-3 text-sm md:text-base align-top;
+    border-right: 1px solid #e5e7eb;
+  }
+
+  .tabla-contenido tbody td:last-child {
+    border-right: none;
+  }
+
+  .tabla-contenido tbody td strong {
+    color: var(--color-azul3);
+    @apply font-semibold;
+  }
+
+  /* Responsividad para tablas */
+  @media screen and (max-width: 768px) {
+    .tabla-contenido {
+      @apply text-xs;
+    }
+    
+    .tabla-contenido thead th,
+    .tabla-contenido tbody td {
+      @apply px-2 py-2;
+    }
   }
 
   /* Estilos para tablas de contenido */
