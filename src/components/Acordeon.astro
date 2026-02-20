@@ -22,7 +22,7 @@ const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
   {items.map((item, index) => (
     <div class="acordeon__item" data-index={index}>
       <button class="acordeon__header" type="button" aria-expanded="false">
-        <span class="acordeon__title">{item.titulo}</span>
+        <span class="acordeon__title" set:html={item.titulo}></span>
         <span class="acordeon__icon" aria-hidden="true"></span>
       </button>
       <div class="acordeon__body">

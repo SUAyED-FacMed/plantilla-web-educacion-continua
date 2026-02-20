@@ -29,7 +29,7 @@ const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizon
         tabindex={index === 0 ? '0' : '-1'}
         data-index={index}
       >
-        <span class="tabs__tab-text">{item.titulo}</span>
+        <span class="tabs__tab-text" set:html={item.titulo}></span>
       </button>
     ))}
     <div class="tabs__indicator" aria-hidden="true"></div>
@@ -47,7 +47,7 @@ const tabsClass = orientation === 'vertical' ? 'tabs--vertical' : 'tabs--horizon
         data-index={index}
       >
         <h4 class="tabs__panel-title" data-index={index}>
-          {item.titulo}
+          <span set:html={item.titulo}></span>
           <div class="tabs__panel-icon"></div>
         </h4>
         <div class="tabs__panel-inner" set:html={item.contenido} />
