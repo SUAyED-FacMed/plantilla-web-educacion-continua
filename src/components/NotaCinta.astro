@@ -1,0 +1,79 @@
+---
+interface Props {
+  titulo?: string;
+  colorCinta?: string;
+  class?: string;
+}
+
+const { titulo, colorCinta = '#f57c00', class: className = '' } = Astro.props;
+---
+
+<div class={`cuadro-definicion ${className}`} style={`--color-cinta: ${colorCinta}`}>
+  {titulo && <h5>{titulo}</h5>}
+  <slot />
+</div>
+
+<style>
+.cuadro-definicion {
+  position: relative;
+  background: #fff8e1;
+  border-left: 4px solid var(--color-cinta, #f57c00);
+  padding: 25px 20px;
+  margin: 30px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.cuadro-definicion::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  width: 60px;
+  height: 25px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+  transform: rotate(-2deg);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.cuadro-definicion :global(p) {
+  margin: 0 0 15px 0;
+  line-height: 1.7;
+  color: #333;
+  font-size: 1rem;
+}
+
+.cuadro-definicion :global(p:last-child) {
+  margin-bottom: 0;
+}
+
+.cuadro-definicion h5 {
+  margin: 0 0 15px 0;
+  color: var(--color-cinta, #f57c00);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.cuadro-definicion :global(img) {
+  max-width: 100%;
+  height: auto;
+  margin: 15px 0;
+  border-radius: 4px;
+}
+
+.cuadro-definicion :global(ul),
+.cuadro-definicion :global(ol) {
+  margin: 15px 0;
+}
+
+@media (max-width: 767px) {
+  .cuadro-definicion {
+    padding: 20px 15px;
+    margin: 20px 10px;
+  }
+}
+</style>
