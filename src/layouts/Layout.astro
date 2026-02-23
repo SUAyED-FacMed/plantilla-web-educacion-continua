@@ -16,10 +16,14 @@ export let titulo: string =
   siteConfig.titulo ?? "Educación Continua SUAYED - Facultad de Medicina UNAM";
 export let recurso: string = siteConfig.recurso ?? '';
 export let nombreCurso: string = siteConfig.nombreCurso ?? '';
+
+// Función para quitar HTML tags del título (para el <title> que no acepta HTML)
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
+
 // Build final title: prefer explicit `titulo`, otherwise compose from recurso + nombreCurso + site title
 const tituloFinal = titulo
-  ? titulo
-  : `${recurso ? recurso + ' - ' : ''}${nombreCurso ? nombreCurso + ' - ' : ''}${siteConfig.titulo}`;
+  ? stripHtml(titulo)
+  : `${recurso ? stripHtml(recurso) + ' - ' : ''}${nombreCurso ? stripHtml(nombreCurso) + ' - ' : ''}${siteConfig.titulo}`;
 ---
 
 <!doctype html>

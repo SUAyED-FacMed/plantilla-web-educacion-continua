@@ -81,7 +81,7 @@ const autoresCita = autores.length > 0
 
   <h5 class="subtitulosA"><b> Cómo citar este documento </b></h5>
   <div class="resaltar mt-4">
-    {autoresCita} ({añoActual}). {recurso}. <em>{nombreCurso}</em>. Facultad de Medicina-UNAM. (Vínculo)
+    {autoresCita} ({añoActual}). <Fragment set:html={recurso} />. <em><Fragment set:html={nombreCurso} /></em>. Facultad de Medicina-UNAM. (Vínculo)
   </div>
 </section>
 
