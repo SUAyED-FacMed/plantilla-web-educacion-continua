@@ -72,7 +72,6 @@
 	background: var(--table-header-bg);
 	color: var(--table-header-text);
 	font-weight: 600;
-	text-transform: uppercase;
 	font-size: 0.85rem;
 	letter-spacing: 0.5px;
 }
