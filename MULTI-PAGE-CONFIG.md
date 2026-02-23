@@ -150,7 +150,7 @@ Todos estos componentes ahora aceptan configuración personalizada:
 - `autores`
 
 ### `<Bibliografia />`
-- `fuentes`
+- `fuentesInformacion`
 - `autores`
 - `nombreCurso`
 - `recurso`

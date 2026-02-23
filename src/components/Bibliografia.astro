@@ -4,20 +4,18 @@ import { siteConfig } from '@/config';
 import VentanaIcon from "@assets/img/ventana.svg";
 
 export interface Props {
-  fuentes?: SeccionFuentes[];
+  fuentesInformacion?: SeccionFuentes[];
   autores?: Autor[];
   nombreCurso?: string;
   recurso?: string;
 }
 
 const { 
-  fuentes = siteConfig.fuentesInformacion ?? [],
+  fuentesInformacion = siteConfig.fuentesInformacion ?? [],
   autores = siteConfig.autores ?? [],
   nombreCurso = siteConfig.nombreCurso ?? '',
   recurso = siteConfig.recurso ?? ''
 } = Astro.props;
-
-const fuentesInformacion = fuentes;
 const añoActual = new Date().getFullYear();
 
 // Construir la cita en formato APA: "Apellido, Iniciales."
