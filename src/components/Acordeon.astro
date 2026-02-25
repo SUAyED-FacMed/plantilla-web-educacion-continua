@@ -78,15 +78,26 @@ const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
       if (isActive) {
         this.closeItem(clickedHeader);
       } else {
-        this.openItem(clickedHeader);
+        this.openItem(clickedHeader, true);
       }
     }
     
-    openItem(header) {
+    openItem(header, shouldScroll = false) {
       const body = header.nextElementSibling;
       header.setAttribute('aria-expanded', 'true');
       header.classList.add('acordeon__header--active');
       body.style.maxHeight = body.scrollHeight + 'px';
+      
+      // Hacer scroll al header cuando se abre (solo en clicks del usuario)
+      if (shouldScroll) {
+        setTimeout(() => {
+          header.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start',
+            inline: 'nearest'
+          });
+        }, 100);
+      }
     }
     
     closeItem(header) {

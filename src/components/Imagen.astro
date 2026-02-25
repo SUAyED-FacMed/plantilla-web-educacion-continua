@@ -22,6 +22,6 @@ const { src, alt, title, pie, className = '' } = Astro.props;
     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
   />
   {pie && (
-    <figcaption class="text-center text-sm text-gray-600 mt-3 px-4 break-words max-w-full overflow-hidden" set:html={pie} />
+    <figcaption class="text-center text-sm text-gray-600 mt-3 px-6 warp-break-words max-w-full overflow-hidden" set:html={pie} />
   )}
 </figure>
