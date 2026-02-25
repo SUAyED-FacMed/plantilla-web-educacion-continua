@@ -90,13 +90,37 @@ const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
       
       // Hacer scroll al header cuando se abre (solo en clicks del usuario)
       if (shouldScroll) {
-        setTimeout(() => {
-          header.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start',
-            inline: 'nearest'
+        // Esperar a que termine la transición de apertura
+        const scrollToItem = () => {
+          const headerRect = header.getBoundingClientRect();
+          const offset = 20; // Margen superior en px
+          
+          window.scrollTo({
+            top: window.pageYOffset + headerRect.top - offset,
+            behavior: 'smooth'
           });
-        }, 100);
+        };
+        
+        // Usar transitionend para scroll más preciso, con fallback de timeout
+        let scrolled = false;
+        const handleTransitionEnd = () => {
+          if (!scrolled) {
+            scrolled = true;
+            scrollToItem();
+            body.removeEventListener('transitionend', handleTransitionEnd);
+          }
+        };
+        
+        body.addEventListener('transitionend', handleTransitionEnd);
+        
+        // Fallback por si la transición no se dispara o toma mucho tiempo
+        setTimeout(() => {
+          if (!scrolled) {
+            scrolled = true;
+            scrollToItem();
+            body.removeEventListener('transitionend', handleTransitionEnd);
+          }
+        }, 500);
       }
     }
     
