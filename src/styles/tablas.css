@@ -116,7 +116,6 @@
 /* Hover en filas */
 .tabla-moderna tbody tr:hover {
 	background-color: var(--table-row-hover-bg);
-	cursor: pointer;
 }
 
 /* ============================================

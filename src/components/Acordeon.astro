@@ -5,9 +5,10 @@ interface Props {
   items: Array<{ titulo: string; contenido: string }>;
   accentColor?: string; // Color de acento personalizado
   allowMultiple?: boolean; // Permitir múltiples paneles abiertos a la vez
+  openFirst?: boolean; // Abrir el primer item por defecto
 }
 
-const { items, accentColor, allowMultiple = false } = Astro.props;
+const { items, accentColor, allowMultiple = false, openFirst = true } = Astro.props;
 
 // Generar un ID único para este acordeón
 const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
@@ -18,14 +19,15 @@ const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
   id={uniqueId}
   style={accentColor ? `--accent-color: ${accentColor}` : ''}
   data-allow-multiple={allowMultiple}
+  data-open-first={openFirst}
 >
   {items.map((item, index) => (
     <div class="acordeon__item" data-index={index}>
-      <button class="acordeon__header" type="button" aria-expanded="false">
+      <button class="acordeon__header" type="button" aria-expanded={openFirst && index === 0 ? "true" : "false"} class={openFirst && index === 0 ? "acordeon__header--active" : ""}>
         <span class="acordeon__title" set:html={item.titulo}></span>
         <span class="acordeon__icon" aria-hidden="true"></span>
       </button>
-      <div class="acordeon__body">
+      <div class="acordeon__body" style={openFirst && index === 0 ? "max-height: fit-content" : ""}>
         <div class="acordeon__content" set:html={item.contenido} />
       </div>
     </div>
@@ -37,6 +39,7 @@ const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
     constructor(container) {
       this.container = container;
       this.allowMultiple = container.dataset.allowMultiple === 'true';
+      this.openFirst = container.dataset.openFirst === 'true';
       this.headers = Array.from(container.querySelectorAll('.acordeon__header'));
       this.init();
     }
@@ -45,6 +48,16 @@ const uniqueId = `acordeon-${Math.random().toString(36).substring(2, 9)}`;
       this.headers.forEach(header => {
         header.addEventListener('click', () => this.handleClick(header));
       });
+      
+      // Abrir el primer item si openFirst es true
+      if (this.openFirst && this.headers.length > 0) {
+        const firstHeader = this.headers[0];
+        const firstBody = firstHeader.nextElementSibling;
+        // Solo abrir si no está ya abierto
+        if (firstHeader.getAttribute('aria-expanded') === 'true') {
+          firstBody.style.maxHeight = firstBody.scrollHeight + 'px';
+        }
+      }
     }
     
     handleClick(clickedHeader) {
