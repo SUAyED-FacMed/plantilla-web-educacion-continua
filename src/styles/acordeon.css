@@ -18,7 +18,6 @@
 	margin: 2.5rem auto;
 	background: transparent;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-	user-select: none;
 }
 
 /* ============================================
@@ -61,6 +60,7 @@
 	cursor: pointer;
 	transition: all 0.3s var(--transition-timing);
 	outline: none;
+	user-select: none;
 }
 
 .acordeon__header:hover {
