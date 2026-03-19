@@ -1,7 +1,14 @@
 ---
 import { siteConfig } from '@/config';
+
+interface Props {
+  creditos?: boolean;
+}
+
+const { creditos = true } = Astro.props;
 ---
 
+{creditos && (
 <footer class="footer mt-5 py-4 bg-light">
   <div class="container text-center">
     <button
@@ -14,7 +21,9 @@ import { siteConfig } from '@/config';
     </button>
   </div>
 </footer>
+)}
 
+{creditos && (
 <!-- Modal de Créditos -->
 <div
   class="modal fade"
@@ -80,6 +89,7 @@ import { siteConfig } from '@/config';
     </div>
   </div>
 </div>
+)}
 
 <style>
   .footer {
