@@ -218,9 +218,12 @@ body ol > li {
 
 body ol > li::before {
   content: counter(ol-counter) ".";
-  @apply absolute left-0 font-bold;
+  @apply absolute left-0;
   color: var(--color-azul3);
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.05em;
+  top: 0.1em;
+  line-height: 1;
 }
 
 /* Listas anidadas - segundo nivel */
