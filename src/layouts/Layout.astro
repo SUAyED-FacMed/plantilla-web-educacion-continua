@@ -17,7 +17,7 @@ export let titulo: string =
   siteConfig.titulo ?? "Educación Continua SUAYED - Facultad de Medicina UNAM";
 export let recurso: string = siteConfig.recurso ?? '';
 export let nombreCurso: string = siteConfig.nombreCurso ?? '';
-const { creditos = true } = Astro.props;
+const { creditos = false } = Astro.props;
 
 // Función para quitar HTML tags del título (para el <title> que no acepta HTML)
 const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
