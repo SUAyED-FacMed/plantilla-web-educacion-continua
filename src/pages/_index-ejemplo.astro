@@ -3,6 +3,7 @@ import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/Hero.astro";
 import Bibliografia from "@/components/Bibliografia.astro";
 import Tarjetas from "@/components/Tarjetas.astro";
+import TarjetasGiratorias from "@/components/TarjetasGiratorias.astro";
 import Imagen from "@/components/Imagen.astro";
 import ImagenClip from "@/components/ImagenClip.astro";
 import Hotspot from "@/components/Hotspot.astro";
@@ -21,6 +22,7 @@ import img5 from "@assets/img/diabetes.jpg";
 
 import diabetesGes from "@assets/img/diabetesGes.png";
 import diabetesNoDiag from "@assets/img/diabetesNoDiag.png";
+import tlalocU2 from "@assets/img/tlaloc_u2.png";
 import { object } from "astro:schema";
 
 // Configurar la imagen del hotspot
@@ -65,6 +67,29 @@ const hotspotEjemplo = {
     </Tarjetas>
   </section>
   <!-- fin tarjetas -->
+
+  <TarjetasGiratorias
+    id="tarjetas-giratorias-prehispanico"
+    tarjetas={[
+      {
+        id: "mexico-prehispanico",
+        variante: "carta1",
+        frente: {
+          subtitulo: "México prehispánico",
+          titulo: "Tláloc y la salud",
+          imagen: tlalocU2,
+          alt: "Glifo de Tláloc",
+          pie: "Wikimedia. (2011). <em>Tláloc</em> [imagen]. Tomada de https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Tlaloc_glyph.svg/500px-Tlaloc_glyph.svg.png",
+        },
+        vuelta: {
+          titulo: "Deidades asociadas a padecimientos",
+          contenido: `
+            <p>Entre los mexicas, Tláloc estaba vinculado a las enfermedades relacionadas con el agua; por ejemplo, hidropesía. Xipe Tótec, deidad de la renovación de la naturaleza en la primavera, estaba asociado a los padecimientos dermatológicos. Ixtlilton era el protector de niñas y niños.</p>
+          `,
+        },
+      },
+    ]}
+  />
 
   <section>
     <Imagen

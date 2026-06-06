@@ -1,0 +1,284 @@
+.tarjetas-giratorias {
+    --tg-azul: #1A2C49;
+    --tg-azul-2: #1f3d69;
+    --tg-dorado: #C99335;
+    --tg-dorado-2: #aa7619;
+    --tg-papel: #f7f9fb;
+    --tg-tinta: #17233a;
+    --tg-muted: #42516b;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    align-items: stretch;
+    margin-block: 2rem;
+}
+
+.tg-card-wrap {
+    position: relative;
+    min-height: clamp(31rem, 45vw, 36rem);
+    perspective: 1200px;
+}
+
+.tg-card__toggle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.tg-card {
+    --tg-face-bg: #1A2C49;
+    --tg-face-fg: #ffffff;
+    --tg-face-muted: #e7edf7;
+    --tg-face-border: rgba(217, 171, 88, 0.58);
+    --tg-back-bg: #f7f9fb;
+    --tg-back-fg: #17233a;
+    --tg-back-muted: #31425f;
+    --tg-accent: #d9ab58;
+
+    height: 100%;
+    margin: 0;
+}
+
+.tg-card__inner {
+    position: relative;
+    min-height: inherit;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tg-card__toggle:checked + .tg-card .tg-card__inner {
+    transform: rotateY(180deg);
+}
+
+.tg-card__toggle:focus-visible + .tg-card .tg-card__face {
+    outline: 3px solid color-mix(in srgb, var(--tg-accent) 82%, white);
+    outline-offset: 4px;
+}
+
+.tg-card__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: inherit;
+    padding: clamp(1.1rem, 1rem + 0.8vw, 1.55rem);
+    border: 1px solid var(--tg-face-border);
+    border-radius: 8px;
+    overflow: hidden;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: 0 14px 32px rgba(26, 44, 73, 0.14);
+}
+
+.tg-card__face--front {
+    background-color: var(--tg-face-bg);
+    color: var(--tg-face-fg);
+}
+
+.tg-card__face--back {
+    border-color: color-mix(in srgb, var(--tg-accent) 42%, var(--tg-back-bg));
+    background-color: var(--tg-back-bg);
+    color: var(--tg-back-fg);
+    transform: rotateY(180deg);
+}
+
+.tg-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.tarjetas-giratorias .tg-card__eyebrow {
+    width: fit-content;
+    margin: 0;
+    padding: 0.18rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--tg-accent) 55%, transparent);
+    border-radius: 999px;
+    color: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.tarjetas-giratorias .tg-card__title {
+    margin: 0;
+    color: inherit;
+    font-size: clamp(1.18rem, 1rem + 0.75vw, 1.55rem);
+    font-style: normal;
+    font-weight: 750;
+    line-height: 1.18;
+    letter-spacing: 0;
+}
+
+.tarjetas-giratorias .tg-card__title::before {
+    content: none;
+}
+
+.tarjetas-giratorias .tg-card__body :where(p, ul, ol) {
+    margin-block: 0;
+    color: var(--tg-face-muted);
+    font-size: clamp(0.98rem, 0.95rem + 0.18vw, 1.05rem);
+    line-height: 1.65;
+}
+
+.tarjetas-giratorias .tg-card__face--back .tg-card__body :where(p, ul, ol) {
+    color: var(--tg-back-muted);
+}
+
+.tarjetas-giratorias .tg-card__body :where(strong, b) {
+    color: inherit;
+}
+
+.tarjetas-giratorias .tg-card__body :where(ul, ol) {
+    padding-left: 1.1rem;
+}
+
+.tarjetas-giratorias .tg-card__body :where(li) {
+    padding-left: 0.2rem;
+}
+
+.tarjetas-giratorias .tg-card__body li::before {
+    content: none;
+}
+
+.tg-card__figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0;
+}
+
+.tg-card__figure img {
+    width: min(100%, 13.5rem);
+    max-height: 13rem;
+    object-fit: contain;
+}
+
+.tg-card__figure figcaption {
+    max-width: 100%;
+    color: color-mix(in srgb, currentColor 74%, transparent);
+    font-size: 0.74rem;
+    line-height: 1.35;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.tg-card__control {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 0.5rem;
+    min-height: 2.35rem;
+    padding: 0.42rem 0.72rem;
+    border: 1px solid color-mix(in srgb, var(--tg-accent) 68%, transparent);
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--tg-accent) 10%, transparent);
+    color: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tg-card__control:hover {
+    background-color: color-mix(in srgb, var(--tg-accent) 18%, transparent);
+}
+
+.tg-card__face--back .tg-card__control {
+    border-color: color-mix(in srgb, currentColor 48%, transparent);
+    background-color: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.tg-card__face--back .tg-card__control:hover {
+    background-color: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.tg-card__control-icon {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
+    fill: currentColor;
+}
+
+.tg-card__control--back .tg-card__control-icon {
+    transform: scaleX(-1);
+}
+
+.tg-card--carta1,
+.tg-card--azul {
+    --tg-face-bg: #1A2C49;
+    --tg-face-fg: #ffffff;
+    --tg-face-muted: #e7edf7;
+    --tg-face-border: rgba(217, 171, 88, 0.58);
+    --tg-back-bg: #f7f9fb;
+    --tg-back-fg: #17233a;
+    --tg-back-muted: #31425f;
+    --tg-accent: #d9ab58;
+}
+
+.tg-card--carta2,
+.tg-card--dorado {
+    --tg-face-bg: #fff7e9;
+    --tg-face-fg: #1A2C49;
+    --tg-face-muted: #33415a;
+    --tg-face-border: rgba(170, 118, 25, 0.34);
+    --tg-back-bg: #1A2C49;
+    --tg-back-fg: #ffffff;
+    --tg-back-muted: #e7edf7;
+    --tg-accent: #1A2C49;
+}
+
+.tg-card--carta3 {
+    --tg-face-bg: #7d4f0f;
+    --tg-face-fg: #ffffff;
+    --tg-face-muted: #fff3dd;
+    --tg-face-border: rgba(255, 232, 188, 0.5);
+    --tg-back-bg: #fff7e9;
+    --tg-back-fg: #573505;
+    --tg-back-muted: #6b4710;
+    --tg-accent: #f3cc7d;
+}
+
+.tg-card--carta4,
+.tg-card--neutra {
+    --tg-face-bg: #f4f5f6;
+    --tg-face-fg: #20242a;
+    --tg-face-muted: #464f5d;
+    --tg-face-border: rgba(32, 36, 42, 0.18);
+    --tg-back-bg: #2b2f36;
+    --tg-back-fg: #ffffff;
+    --tg-back-muted: #edf1f5;
+    --tg-accent: var(--tg-dorado);
+}
+
+@media (max-width: 640px) {
+    .tarjetas-giratorias {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .tg-card-wrap {
+        min-height: 34rem;
+    }
+
+    .tg-card__figure img {
+        width: min(100%, 11.5rem);
+        max-height: 11.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tg-card__inner {
+        transition: none;
+    }
+}
