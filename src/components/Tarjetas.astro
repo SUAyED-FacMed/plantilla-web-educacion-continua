@@ -2,12 +2,19 @@
 interface Props {
   titulo: string;
   colorClase?: 'carta1' | 'carta2' | 'carta3' | 'carta4';
+  class?: string;
 }
 
-const { titulo, colorClase = '' } = Astro.props;
+const { titulo, colorClase = '', class: className = '' } = Astro.props;
 ---
 
-<article class={`carta ${colorClase}`}>
-  <h4 class="text-center mb-5">{titulo}</h4>
-  <slot />
+<article class:list={['carta', colorClase, className]}>
+  <header class="carta__encabezado">
+    <h4 class="carta__titulo">{titulo}</h4>
+    <span class="carta__icono" aria-hidden="true"></span>
+  </header>
+  <div class="carta__contenido">
+    <slot />
+  </div>
 </article>
+  
