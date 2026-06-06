@@ -17,180 +17,6 @@
     @apply max-w-6xl mx-auto px-2 md:px-4 xl:px-0;
   }
 
-  /* Estilos para listas principales */
-  ul {
-    @apply list-none pl-0 my-4 space-y-2;
-  }
-
-  ul li {
-    @apply relative pl-6 leading-relaxed;
-  }
-
-  ul li::before {
-    content: "●";
-    @apply absolute left-0;
-    color: var(--color-dorado);
-    font-size: 0.7em;
-    line-height: 1.8;
-    top: 0.4em;
-  }
-
-  ol {
-    @apply list-none pl-0 my-4 space-y-2;
-    counter-reset: ol-counter;
-  }
-
-  ol > li {
-    @apply relative pl-6 leading-relaxed;
-    counter-increment: ol-counter;
-  }
-
-  ol > li::before {
-    content: counter(ol-counter) ".";
-    @apply absolute left-0 font-bold;
-    color: var(--color-azul3);
-    font-weight: 600;
-  }
-
-  /* Listas anidadas - segundo nivel */
-  ul li ul {
-    @apply mt-2 mb-0;
-  }
-
-  ul li ul li::before {
-    content: "○";
-    color: var(--color-dorado3);
-    opacity: 0.7;
-    font-size: 0.8em;
-    top: 0.35em;
-  }
-
-  ol li ol {
-    @apply mt-2 mb-0;
-    counter-reset: ol-subcounter;
-  }
-
-  ol li ol > li {
-    counter-increment: ol-subcounter;
-  }
-
-  ol li ol > li::before {
-    content: counter(ol-counter) "." counter(ol-subcounter);
-    color: var(--color-azul4);
-    opacity: 0.85;
-  }
-
-  /* Listas anidadas - tercer nivel */
-  ul li ul li ul li::before {
-    content: "▪";
-    color: var(--color-dorado4);
-    opacity: 0.6;
-    font-size: 0.7em;
-    top: 0.4em;
-  }
-
-  ol li ol li ol {
-    counter-reset: ol-subsubcounter;
-  }
-
-  ol li ol li ol > li {
-    counter-increment: ol-subsubcounter;
-  }
-
-  ol li ol li ol > li::before {
-    content: counter(ol-counter) "." counter(ol-subcounter) "." counter(ol-subsubcounter);
-    color: var(--color-azul5);
-    font-size: 0.9em;
-  }
-
-  /* Clases especiales para listas con letras */
-  .lista-letras {
-    list-style: none;
-    counter-reset: letra;
-  }
-
-  .lista-letras li {
-    counter-increment: letra;
-  }
-
-  .lista-letras li::before {
-    content: counter(letra, lower-alpha) ") ";
-    color: var(--color-dorado2);
-    font-weight: 600;
-  }
-
-  .lista-letras-mayusculas {
-    list-style: none;
-    counter-reset: letra-may;
-  }
-
-  .lista-letras-mayusculas li {
-    counter-increment: letra-may;
-  }
-
-  .lista-letras-mayusculas li::before {
-    content: counter(letra-may, upper-alpha) ") ";
-    color: var(--color-azul3);
-    font-weight: 600;
-  }
-
-  /* Clases especiales para listas con números romanos */
-  .lista-romanos {
-    list-style: none;
-    counter-reset: romano;
-  }
-
-  .lista-romanos li {
-    counter-increment: romano;
-  }
-
-  .lista-romanos li::before {
-    content: counter(romano, lower-roman) ". ";
-    color: var(--color-dorado3);
-    font-weight: 600;
-  }
-
-  .lista-romanos-mayusculas {
-    list-style: none;
-    counter-reset: romano-may;
-  }
-
-  .lista-romanos-mayusculas li {
-    counter-increment: romano-may;
-  }
-
-  .lista-romanos-mayusculas li::before {
-    content: counter(romano-may, upper-roman) ". ";
-    color: var(--color-azul3);
-    font-weight: 600;
-  }
-
-  /* Lista sin viñetas (útil para casos especiales) */
-  .lista-sin-viñetas {
-    @apply list-none pl-0;
-  }
-
-  .lista-sin-viñetas li::before {
-    content: none;
-  }
-
-  /* Lista con checkmarks */
-  .lista-checks li::before {
-    content: "✓";
-    color: #16a34a;
-    font-weight: bold;
-    font-size: 1.2em;
-  }
-
-  /* Lista interactiva (opt-in para efecto hover) */
-  .lista-interactiva li {
-    @apply transition-all duration-200;
-  }
-
-  .lista-interactiva li:hover {
-    padding-left: 2rem;
-  }
-
   /* Estilos para tablas de contenido */
   .tabla-contenido {
     @apply w-full border-collapse my-6 shadow-lg rounded-lg overflow-hidden;
@@ -304,4 +130,237 @@
       @apply px-2 py-2;
     }
   }
+
+}
+
+/* ── Jerarquía de títulos ── fuera de @layer para ganar a Bootstrap */
+body h1 {
+  color: var(--color-azul2);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+body h2 {
+  color: var(--color-dorado);
+  font-size: clamp(1.375rem, 3vw, 1.875rem);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+body h3 {
+  color: var(--color-azul4);
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.35;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+body h4 {
+  color: var(--color-azul2);
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+body h4::before {
+  content: "» ";
+  color: var(--color-dorado);
+}
+
+body h5 {
+  color: #6b7280;
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-bottom: 0.25rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1.5px solid #d1d5db;
+}
+
+/* ── Estilos de listas ── fuera de @layer para ganar a Bootstrap y CSS de componentes */
+body ul {
+  @apply list-none pl-0 my-4 space-y-2;
+}
+
+body ul li {
+  @apply relative pl-6 leading-relaxed;
+}
+
+body ul li::before {
+  content: "●";
+  @apply absolute left-0;
+  color: var(--color-dorado);
+  font-size: 0.7em;
+  line-height: 1.8;
+  top: 0.4em;
+}
+
+body ol {
+  @apply list-none pl-0 my-4 space-y-2;
+  counter-reset: ol-counter;
+}
+
+body ol > li {
+  @apply relative pl-6 leading-relaxed;
+  counter-increment: ol-counter;
+}
+
+body ol > li::before {
+  content: counter(ol-counter) ".";
+  @apply absolute left-0;
+  color: var(--color-azul3);
+  font-weight: 900;
+  font-size: 1.1em;
+  top: 0.15em;
+  line-height: 1;
+}
+
+/* Listas anidadas - segundo nivel */
+body ul li ul {
+  @apply mt-2 mb-0;
+}
+
+body ul li ul li::before {
+  content: "○";
+  color: var(--color-dorado3);
+  opacity: 0.7;
+  font-size: 0.8em;
+  top: 0.35em;
+}
+
+body ol li ol {
+  @apply mt-2 mb-0;
+  counter-reset: ol-subcounter;
+}
+
+body ol li ol > li {
+  counter-increment: ol-subcounter;
+}
+
+body ol li ol > li::before {
+  content: counter(ol-counter) "." counter(ol-subcounter);
+  color: var(--color-azul4);
+  opacity: 0.85;
+}
+
+/* Listas anidadas - tercer nivel */
+body ul li ul li ul li::before {
+  content: "▪";
+  color: var(--color-dorado4);
+  opacity: 0.6;
+  font-size: 0.7em;
+  top: 0.4em;
+}
+
+body ol li ol li ol {
+  counter-reset: ol-subsubcounter;
+}
+
+body ol li ol li ol > li {
+  counter-increment: ol-subsubcounter;
+}
+
+body ol li ol li ol > li::before {
+  content: counter(ol-counter) "." counter(ol-subcounter) "." counter(ol-subsubcounter);
+  color: var(--color-azul5);
+  font-size: 0.9em;
+}
+
+/* Clases especiales para listas con letras */
+.lista-letras {
+  list-style: none;
+  counter-reset: letra;
+}
+
+.lista-letras li {
+  counter-increment: letra;
+}
+
+.lista-letras li::before {
+  content: counter(letra, lower-alpha) ") ";
+  color: var(--color-dorado2);
+  font-weight: 600;
+}
+
+.lista-letras-mayusculas {
+  list-style: none;
+  counter-reset: letra-may;
+}
+
+.lista-letras-mayusculas li {
+  counter-increment: letra-may;
+}
+
+.lista-letras-mayusculas li::before {
+  content: counter(letra-may, upper-alpha) ") ";
+  color: var(--color-azul3);
+  font-weight: 600;
+}
+
+/* Clases especiales para listas con números romanos */
+.lista-romanos {
+  list-style: none;
+  counter-reset: romano;
+}
+
+.lista-romanos li {
+  counter-increment: romano;
+}
+
+.lista-romanos li::before {
+  content: counter(romano, lower-roman) ". ";
+  color: var(--color-dorado3);
+  font-weight: 600;
+}
+
+.lista-romanos-mayusculas {
+  list-style: none;
+  counter-reset: romano-may;
+}
+
+.lista-romanos-mayusculas li {
+  counter-increment: romano-may;
+}
+
+.lista-romanos-mayusculas li::before {
+  content: counter(romano-may, upper-roman) ". ";
+  color: var(--color-azul3);
+  font-weight: 600;
+}
+
+/* Lista sin viñetas (útil para casos especiales) */
+.lista-sin-viñetas {
+  @apply list-none pl-0;
+}
+
+.lista-sin-viñetas li::before {
+  content: none;
+}
+
+/* Lista con checkmarks */
+.lista-checks li::before {
+  content: "✓";
+  color: #16a34a;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+/* Lista interactiva (opt-in para efecto hover) */
+.lista-interactiva li {
+  @apply transition-all duration-200;
+}
+
+.lista-interactiva li:hover {
+  padding-left: 2rem;
 }

@@ -10,6 +10,20 @@ interface Props {
 }
 
 const { src, alt, title, pie, className = '' } = Astro.props;
+
+// Función para envolver URLs en spans con clase específica
+function wrapUrlsInSpans(html: string): string {
+  if (!html) return html;
+  
+  // Regex para detectar URLs (http://, https://, www., ftp://)
+  const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+|www\.[^\s<>"{}|\\^`\[\]]+|ftp:\/\/[^\s<>"{}|\\^`\[\]]+)/gi;
+  
+  return html.replace(urlRegex, (url) => {
+    return `<span class="url-wrapper">${url}</span>`;
+  });
+}
+
+const processedPie = pie ? wrapUrlsInSpans(pie) : '';
 ---
 
 <figure class={`my-8 ${className}`}>
@@ -22,6 +36,30 @@ const { src, alt, title, pie, className = '' } = Astro.props;
     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
   />
   {pie && (
-    <figcaption class="text-center text-sm text-gray-600 mt-3 px-6 warp-break-words max-w-full overflow-hidden" set:html={pie} />
+    <figcaption class="imagen-caption" set:html={processedPie} />
   )}
 </figure>
+
+<style>
+  .imagen-caption {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-top: 0.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .imagen-caption :global(.url-wrapper) {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+    color: #2563eb;
+    text-decoration: underline;
+  }
+</style>

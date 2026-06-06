@@ -3,6 +3,7 @@ export interface Props {
   titulo?: string;
   recurso?: string;
   nombreCurso?: string;
+  creditos?: boolean;
 }
 
 import { siteConfig } from "@/config";
@@ -16,6 +17,7 @@ export let titulo: string =
   siteConfig.titulo ?? "Educación Continua SUAYED - Facultad de Medicina UNAM";
 export let recurso: string = siteConfig.recurso ?? '';
 export let nombreCurso: string = siteConfig.nombreCurso ?? '';
+const { creditos = false } = Astro.props;
 
 // Función para quitar HTML tags del título (para el <title> que no acepta HTML)
 const stripHtml = (html: string) => html.replace(/<[^>]*>/g, '');
@@ -43,7 +45,7 @@ const tituloFinal = titulo
 		<main>
 			<slot />
 		</main>
-    <Footer />
+    <Footer creditos={creditos} />
     <script is:inline src="/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
