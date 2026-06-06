@@ -1,0 +1,215 @@
+---
+import '@/styles/linea-tiempo.css';
+
+interface ItemLineaTiempo {
+  fecha?: string;
+  titulo: string;
+  contenido: string;
+}
+
+interface Props {
+  id: string;
+  items: ItemLineaTiempo[];
+  orientation?: 'horizontal' | 'vertical';
+  accentColor?: string;
+  initialIndex?: number;
+  ariaLabel?: string;
+}
+
+const {
+  id,
+  items,
+  orientation = 'vertical',
+  accentColor,
+  initialIndex = 0,
+  ariaLabel = 'Linea del tiempo',
+} = Astro.props;
+
+const safeInitialIndex = Math.min(Math.max(initialIndex, 0), Math.max(items.length - 1, 0));
+const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' : 'linea-tiempo--vertical';
+---
+
+<section
+  class={`linea-tiempo ${timelineClass}`}
+  id={id}
+  style={accentColor ? `--timeline-accent: ${accentColor}` : ''}
+  data-orientation={orientation}
+  data-initial-index={safeInitialIndex}
+  aria-label={ariaLabel}
+>
+  {orientation === 'horizontal' && (
+    <div class="linea-tiempo__toolbar" aria-label="Controles de navegacion">
+      <button class="linea-tiempo__control linea-tiempo__control--prev" type="button" aria-label="Ver evento anterior">
+        <span aria-hidden="true">&#8592;</span>
+      </button>
+      <div class="linea-tiempo__progress" aria-hidden="true">
+        <span class="linea-tiempo__progress-bar"></span>
+      </div>
+      <button class="linea-tiempo__control linea-tiempo__control--next" type="button" aria-label="Ver evento siguiente">
+        <span aria-hidden="true">&#8594;</span>
+      </button>
+    </div>
+  )}
+
+  <ol class="linea-tiempo__track" tabindex={orientation === 'horizontal' ? '0' : undefined}>
+    {items.map((item, index) => (
+      <li class={`linea-tiempo__item ${index === safeInitialIndex ? 'linea-tiempo__item--active' : ''}`} data-index={index}>
+        <div class="linea-tiempo__marker" aria-hidden="true">
+          <span class="linea-tiempo__dot"></span>
+        </div>
+        <article class="linea-tiempo__card" tabindex="-1">
+          {item.fecha && <p class="linea-tiempo__date">{item.fecha}</p>}
+          <h4 class="linea-tiempo__title" set:html={item.titulo}></h4>
+          <div class="linea-tiempo__content" set:html={item.contenido}></div>
+        </article>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<script is:inline>
+  class LineaTiempoComponent {
+    constructor(container) {
+      if (container.dataset.timelineReady === 'true') return;
+
+      this.container = container;
+      this.orientation = container.dataset.orientation || 'vertical';
+      this.initialIndex = Number.parseInt(container.dataset.initialIndex || '0', 10);
+      this.track = container.querySelector('.linea-tiempo__track');
+      this.items = Array.from(container.querySelectorAll('.linea-tiempo__item'));
+      this.prevButton = container.querySelector('.linea-tiempo__control--prev');
+      this.nextButton = container.querySelector('.linea-tiempo__control--next');
+      this.progressBar = container.querySelector('.linea-tiempo__progress-bar');
+      this.activeIndex = 0;
+      this.frame = null;
+
+      container.dataset.timelineReady = 'true';
+      this.init();
+    }
+
+    init() {
+      if (!this.track || this.items.length === 0) return;
+
+      this.setActiveIndex(this.initialIndex);
+
+      if (this.orientation !== 'horizontal') return;
+
+      this.prevButton?.addEventListener('click', () => this.scrollToIndex(this.activeIndex - 1));
+      this.nextButton?.addEventListener('click', () => this.scrollToIndex(this.activeIndex + 1));
+      this.track.addEventListener('scroll', () => this.requestUpdate(), { passive: true });
+      this.track.addEventListener('keydown', (event) => this.handleKeyDown(event));
+
+      window.addEventListener('resize', () => this.requestUpdate(), { passive: true });
+
+      requestAnimationFrame(() => {
+        this.scrollToIndex(this.initialIndex, false, false);
+        this.updateFromScroll();
+      });
+    }
+
+    handleKeyDown(event) {
+      const keys = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
+      if (!keys.includes(event.key)) return;
+
+      event.preventDefault();
+
+      if (event.key === 'ArrowRight') this.scrollToIndex(this.activeIndex + 1);
+      if (event.key === 'ArrowLeft') this.scrollToIndex(this.activeIndex - 1);
+      if (event.key === 'Home') this.scrollToIndex(0);
+      if (event.key === 'End') this.scrollToIndex(this.items.length - 1);
+    }
+
+    scrollToIndex(index, moveFocus = false, animated = true) {
+      const nextIndex = Math.min(Math.max(index, 0), this.items.length - 1);
+      const item = this.items[nextIndex];
+      if (!item) return;
+
+      item.scrollIntoView({
+        behavior: animated && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto',
+        block: 'nearest',
+        inline: 'center'
+      });
+
+      this.setActiveIndex(nextIndex);
+
+      if (moveFocus) {
+        const card = item.querySelector('.linea-tiempo__card');
+        card?.focus({ preventScroll: true });
+      }
+    }
+
+    requestUpdate() {
+      if (this.frame) return;
+      this.frame = requestAnimationFrame(() => {
+        this.frame = null;
+        this.updateFromScroll();
+      });
+    }
+
+    updateFromScroll() {
+      const index = this.getNearestIndex();
+      this.setActiveIndex(index);
+      this.updateProgress();
+    }
+
+    getNearestIndex() {
+      const trackRect = this.track.getBoundingClientRect();
+      const center = trackRect.left + trackRect.width / 2;
+      let nearestIndex = this.activeIndex;
+      let nearestDistance = Number.POSITIVE_INFINITY;
+
+      this.items.forEach((item, index) => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.left + itemRect.width / 2;
+        const distance = Math.abs(center - itemCenter);
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestIndex = index;
+        }
+      });
+
+      return nearestIndex;
+    }
+
+    setActiveIndex(index) {
+      const nextIndex = Math.min(Math.max(index, 0), this.items.length - 1);
+      this.activeIndex = nextIndex;
+
+      this.items.forEach((item, itemIndex) => {
+        const isActive = itemIndex === nextIndex;
+        item.classList.toggle('linea-tiempo__item--active', isActive);
+        item.setAttribute('aria-current', isActive ? 'step' : 'false');
+      });
+
+      this.updateControls();
+    }
+
+    updateControls() {
+      if (!this.prevButton || !this.nextButton) return;
+
+      this.prevButton.disabled = this.activeIndex === 0;
+      this.nextButton.disabled = this.activeIndex === this.items.length - 1;
+    }
+
+    updateProgress() {
+      if (!this.progressBar || !this.track) return;
+
+      const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+      const progress = maxScroll <= 0 ? 100 : (this.track.scrollLeft / maxScroll) * 100;
+      this.progressBar.style.width = `${Math.max(0, Math.min(progress, 100))}%`;
+    }
+  }
+
+  function initLineasTiempo() {
+    document.querySelectorAll('.linea-tiempo').forEach((container) => {
+      new LineaTiempoComponent(container);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLineasTiempo);
+  } else {
+    initLineasTiempo();
+  }
+</script>

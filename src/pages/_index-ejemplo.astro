@@ -12,6 +12,7 @@ import Carrusel from "@/components/Carrusel.astro";
 import Acordeon from "@/components/Acordeon.astro";
 import FicheroHorizontal from "@/components/FicheroHorizontal.astro";
 import FicheroVertical from "@/components/FicheroVertical.astro";
+import LineaTiempo from "@/components/LineaTiempo.astro";
 
 // Importar imágenes para el carrusel (5 imágenes)
 import img1 from "@assets/img/diabetesGes.png";
@@ -186,6 +187,57 @@ const hotspotEjemplo = {
         </div>
         <p>Más contenido...</p>
       `,
+      },
+    ]}
+  />
+
+  <LineaTiempo
+    id="linea-tiempo-horizontal-1"
+    orientation="horizontal"
+    accentColor="#0069d9"
+    items={[
+      {
+        fecha: "2001-2006",
+        titulo: "Cruzada Nacional por la Calidad",
+        contenido: `<p>Se implemento una estrategia nacional para impulsar procesos de mejora continua en los servicios de salud.</p>`,
+      },
+      {
+        fecha: "2007-2012",
+        titulo: "Programa Sicalidad",
+        contenido: `<p>Se consolidaron acciones para medir, documentar y fortalecer la calidad de la atencion.</p>`,
+      },
+      {
+        fecha: "2013-2018",
+        titulo: "Seguimiento institucional",
+        contenido: `<p>Los indicadores de calidad comenzaron a utilizarse como apoyo para la toma de decisiones.</p>`,
+      },
+      {
+        fecha: "2019-2024",
+        titulo: "Actualizacion de procesos",
+        contenido: `<p>Los equipos incorporaron herramientas digitales para acompanar la gestion y el seguimiento.</p>`,
+      },
+    ]}
+  />
+
+  <LineaTiempo
+    id="linea-tiempo-vertical-1"
+    orientation="vertical"
+    accentColor="#C99335"
+    items={[
+      {
+        fecha: "Paso 1",
+        titulo: "Identificar el problema",
+        contenido: `<p>Definir con claridad que proceso necesita observarse antes de proponer una mejora.</p>`,
+      },
+      {
+        fecha: "Paso 2",
+        titulo: "Analizar evidencias",
+        contenido: `<p>Revisar datos, fuentes y observaciones para tomar decisiones basadas en informacion.</p>`,
+      },
+      {
+        fecha: "Paso 3",
+        titulo: "Aplicar ajustes",
+        contenido: `<p>Implementar cambios controlados y documentar los resultados obtenidos.</p>`,
       },
     ]}
   />

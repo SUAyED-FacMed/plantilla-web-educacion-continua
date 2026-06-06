@@ -140,6 +140,37 @@ import img2 from '@/assets/img/imagen2.jpg';
 />
 ```
 
+### LineaTiempo
+
+- Recibe `id`, `items`, `orientation` y `accentColor`.
+- `orientation` acepta `horizontal` o `vertical`.
+- En horizontal usa scroll con `scroll-snap`, botones anterior/siguiente y barra de progreso. No funciona como slide cerrado: el usuario puede desplazarse con trackpad, touch, teclado o controles.
+- `contenido` acepta HTML.
+
+```astro
+---
+import LineaTiempo from '@/components/LineaTiempo.astro';
+---
+
+<LineaTiempo
+  id="linea-tiempo-1"
+  orientation="horizontal"
+  accentColor="#0069d9"
+  items={[
+    {
+      fecha: '2001-2006',
+      titulo: 'Cruzada Nacional por la Calidad',
+      contenido: '<p>Contenido del evento.</p>'
+    },
+    {
+      fecha: '2007-2012',
+      titulo: 'Programa Sicalidad',
+      contenido: '<p>Contenido del evento.</p>'
+    }
+  ]}
+/>
+```
+
 ### Acordeón Vertical
 
 - Recibe `id` y `items` como props. `contenido` acepta HTML.
