@@ -173,6 +173,31 @@ body .linea-tiempo__title::before {
 	line-height: 1.7;
 }
 
+.linea-tiempo__figure {
+	display: grid;
+	gap: 0.65rem;
+	margin: 0 0 1rem;
+}
+
+.linea-tiempo__figure:last-child {
+	margin-bottom: 0;
+}
+
+.linea-tiempo__figure img {
+	display: block;
+	width: 100%;
+	max-height: 15rem;
+	border-radius: 8px;
+	object-fit: cover;
+}
+
+.linea-tiempo__figure figcaption {
+	color: var(--timeline-muted);
+	font-size: 0.78rem;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+}
+
 .linea-tiempo__content > :first-child {
 	margin-top: 0;
 }

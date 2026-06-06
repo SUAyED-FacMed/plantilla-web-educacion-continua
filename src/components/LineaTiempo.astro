@@ -1,10 +1,17 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import '@/styles/linea-tiempo.css';
+
+type ImagenLineaTiempo = ImageMetadata | string;
 
 interface ItemLineaTiempo {
   fecha?: string;
-  titulo: string;
-  contenido: string;
+  titulo?: string;
+  contenido?: string;
+  imagen?: ImagenLineaTiempo;
+  alt?: string;
+  pie?: string;
 }
 
 interface Props {
@@ -60,8 +67,23 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
         </div>
         <article class="linea-tiempo__card" tabindex="-1">
           {item.fecha && <p class="linea-tiempo__date">{item.fecha}</p>}
-          <h4 class="linea-tiempo__title" set:html={item.titulo}></h4>
-          <div class="linea-tiempo__content" set:html={item.contenido}></div>
+          {item.titulo && <h4 class="linea-tiempo__title" set:html={item.titulo}></h4>}
+          {item.imagen && (
+            <figure class="linea-tiempo__figure">
+              {typeof item.imagen === 'string' ? (
+                <img src={item.imagen} alt={item.alt ?? ''} loading="lazy" />
+              ) : (
+                <Image
+                  src={item.imagen}
+                  alt={item.alt ?? ''}
+                  widths={[320, 520, 760]}
+                  sizes="(max-width: 767px) 82vw, 360px"
+                />
+              )}
+              {item.pie && <figcaption set:html={item.pie} />}
+            </figure>
+          )}
+          {item.contenido && <div class="linea-tiempo__content" set:html={item.contenido}></div>}
         </article>
       </li>
     ))}

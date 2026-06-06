@@ -19,12 +19,10 @@ import img1 from "@assets/img/diabetesGes.png";
 import img2 from "@assets/img/incidencia_diabetes.jpg";
 import img3 from "@assets/img/gasto_sanitario.jpg";
 import img4 from "@assets/img/mortalidad.jpg";
-import img5 from "@assets/img/diabetes.jpg";
 
 import diabetesGes from "@assets/img/diabetesGes.png";
 import diabetesNoDiag from "@assets/img/diabetesNoDiag.png";
 import tlalocU2 from "@assets/img/tlaloc_u2.png";
-import { object } from "astro:schema";
 
 // Configurar la imagen del hotspot
 const hotspotEjemplo = {
@@ -131,15 +129,12 @@ const hotspotEjemplo = {
     ]}
   />
   <Acordeon
-    id="acordeon-vert-1"
     items={[
       {
-        id: 1,
         titulo: "Sección 1",
         contenido: `<p>Contenido aquí...</p>`,
       },
       {
-        id: 2,
         titulo: "Sección 2",
         contenido: `<p>Otro contenido...</p>`,
       },
@@ -208,7 +203,9 @@ const hotspotEjemplo = {
       },
       {
         fecha: "2013-2018",
-        titulo: "Seguimiento institucional",
+        imagen: img3,
+        alt: "Personal medico revisando informacion de seguimiento",
+        pie: "Imagen de apoyo para el periodo 2013-2018.",
         contenido: `<p>Los indicadores de calidad comenzaron a utilizarse como apoyo para la toma de decisiones.</p>`,
       },
       {
