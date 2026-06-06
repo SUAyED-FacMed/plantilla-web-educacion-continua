@@ -56,6 +56,7 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       <li class={`linea-tiempo__item ${index === safeInitialIndex ? 'linea-tiempo__item--active' : ''}`} data-index={index}>
         <div class="linea-tiempo__marker" aria-hidden="true">
           <span class="linea-tiempo__dot"></span>
+          <span class="linea-tiempo__marker-label">{item.fecha ?? index + 1}</span>
         </div>
         <article class="linea-tiempo__card" tabindex="-1">
           {item.fecha && <p class="linea-tiempo__date">{item.fecha}</p>}
@@ -81,7 +82,10 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       this.nextButton = container.querySelector('.linea-tiempo__control--next');
       this.progressBar = container.querySelector('.linea-tiempo__progress-bar');
       this.activeIndex = 0;
+      this.targetIndex = 0;
       this.frame = null;
+      this.isProgrammaticScroll = false;
+      this.scrollEndTimer = null;
 
       container.dataset.timelineReady = 'true';
       this.init();
@@ -94,14 +98,19 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
 
       if (this.orientation !== 'horizontal') return;
 
-      this.prevButton?.addEventListener('click', () => this.scrollToIndex(this.activeIndex - 1));
-      this.nextButton?.addEventListener('click', () => this.scrollToIndex(this.activeIndex + 1));
+      this.prevButton?.addEventListener('click', () => this.scrollToIndex(this.targetIndex - 1));
+      this.nextButton?.addEventListener('click', () => this.scrollToIndex(this.targetIndex + 1));
       this.track.addEventListener('scroll', () => this.requestUpdate(), { passive: true });
       this.track.addEventListener('keydown', (event) => this.handleKeyDown(event));
 
-      window.addEventListener('resize', () => this.requestUpdate(), { passive: true });
+      window.addEventListener('resize', () => {
+        this.updateHorizontalLine();
+        this.requestUpdate();
+      }, { passive: true });
+      window.addEventListener('load', () => this.updateHorizontalLine(), { once: true });
 
       requestAnimationFrame(() => {
+        this.updateHorizontalLine();
         this.scrollToIndex(this.initialIndex, false, false);
         this.updateFromScroll();
       });
@@ -113,8 +122,8 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
 
       event.preventDefault();
 
-      if (event.key === 'ArrowRight') this.scrollToIndex(this.activeIndex + 1);
-      if (event.key === 'ArrowLeft') this.scrollToIndex(this.activeIndex - 1);
+      if (event.key === 'ArrowRight') this.scrollToIndex(this.targetIndex + 1);
+      if (event.key === 'ArrowLeft') this.scrollToIndex(this.targetIndex - 1);
       if (event.key === 'Home') this.scrollToIndex(0);
       if (event.key === 'End') this.scrollToIndex(this.items.length - 1);
     }
@@ -124,13 +133,17 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       const item = this.items[nextIndex];
       if (!item) return;
 
-      item.scrollIntoView({
+      this.targetIndex = nextIndex;
+      this.isProgrammaticScroll = true;
+      this.container.classList.add('linea-tiempo--scrolling');
+
+      this.track.scrollTo({
+        left: this.getScrollLeftForIndex(nextIndex),
         behavior: animated && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'smooth' : 'auto',
-        block: 'nearest',
-        inline: 'center'
       });
 
       this.setActiveIndex(nextIndex);
+      this.finishProgrammaticScroll(animated);
 
       if (moveFocus) {
         const card = item.querySelector('.linea-tiempo__card');
@@ -142,8 +155,49 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       if (this.frame) return;
       this.frame = requestAnimationFrame(() => {
         this.frame = null;
+        if (this.isProgrammaticScroll) {
+          this.updateProgress();
+          return;
+        }
         this.updateFromScroll();
       });
+    }
+
+    getScrollLeftForIndex(index) {
+      const item = this.items[index];
+      if (!item || !this.track) return 0;
+
+      const centeredLeft = item.offsetLeft - (this.track.clientWidth - item.offsetWidth) / 2;
+      const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+      return Math.max(0, Math.min(centeredLeft, maxScroll));
+    }
+
+    updateHorizontalLine() {
+      if (!this.track || this.items.length < 2) return;
+
+      const firstMarker = this.items[0].querySelector('.linea-tiempo__marker');
+      const lastMarker = this.items[this.items.length - 1].querySelector('.linea-tiempo__marker');
+      if (!firstMarker || !lastMarker) return;
+
+      const trackRect = this.track.getBoundingClientRect();
+      const firstRect = firstMarker.getBoundingClientRect();
+      const lastRect = lastMarker.getBoundingClientRect();
+      const firstCenter = firstRect.left - trackRect.left + this.track.scrollLeft + firstRect.width / 2;
+      const lastCenter = lastRect.left - trackRect.left + this.track.scrollLeft + lastRect.width / 2;
+
+      this.track.style.setProperty('--timeline-line-left', `${Math.min(firstCenter, lastCenter)}px`);
+      this.track.style.setProperty('--timeline-line-width', `${Math.abs(lastCenter - firstCenter)}px`);
+    }
+
+    finishProgrammaticScroll(animated) {
+      clearTimeout(this.scrollEndTimer);
+
+      const delay = animated && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 420 : 0;
+      this.scrollEndTimer = setTimeout(() => {
+        this.isProgrammaticScroll = false;
+        this.container.classList.remove('linea-tiempo--scrolling');
+        this.updateProgress();
+      }, delay);
     }
 
     updateFromScroll() {
@@ -175,6 +229,7 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
     setActiveIndex(index) {
       const nextIndex = Math.min(Math.max(index, 0), this.items.length - 1);
       this.activeIndex = nextIndex;
+      this.targetIndex = nextIndex;
 
       this.items.forEach((item, itemIndex) => {
         const isActive = itemIndex === nextIndex;
