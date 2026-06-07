@@ -3,213 +3,364 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import '@/styles/carrusel.css';
 
+type ImagenCarrusel = ImageMetadata | string;
+type VarianteCarrusel = 'carta1' | 'carta2' | 'carta3' | 'carta4' | 'azul' | 'dorado' | 'neutra';
+type AjusteImagen = 'contain' | 'cover';
+
+interface AccionCarrusel {
+  href: string;
+  label: string;
+  target?: '_blank' | '_self';
+}
+
 interface SlideCarrusel {
-  id: number;
-  imagen: ImageMetadata;
-  alt: string;
-  title: string;
-  pie: string; // HTML permitido
-  contenido?: string; // HTML permitido
+  id?: string | number;
+  titulo?: string;
+  subtitulo?: string;
+  texto?: string;
+  contenido?: string;
+  imagen?: ImagenCarrusel;
+  alt?: string;
+  title?: string;
+  pie?: string;
+  variante?: VarianteCarrusel;
+  accion?: AccionCarrusel;
 }
 
 interface Props {
-  id: string;
-  slides: SlideCarrusel[];
+  id?: string;
+  slides?: SlideCarrusel[];
+  titulo?: string;
+  descripcion?: string;
+  ariaLabel?: string;
+  variante?: VarianteCarrusel;
+  ajusteImagen?: AjusteImagen;
+  mostrarControles?: boolean;
+  mostrarIndicadores?: boolean;
+  loop?: boolean;
+  autoPlay?: boolean;
+  intervalo?: number;
+  class?: string;
 }
 
-const { id, slides } = Astro.props;
-const anchoGaleria = slides.length * 100;
+const {
+  id,
+  slides = [],
+  titulo,
+  descripcion,
+  ariaLabel = titulo ?? 'Carrusel de contenido',
+  variante = 'carta1',
+  ajusteImagen = 'contain',
+  mostrarControles = true,
+  mostrarIndicadores = true,
+  loop = false,
+  autoPlay = false,
+  intervalo = 7000,
+  class: className = '',
+} = Astro.props;
 
-// Validar que todas las imágenes estén asignadas
-if (slides.some(slide => !slide.imagen)) {
-  throw new Error(`Carrusel ${id}: Todas las slides deben tener una imagen asignada.`);
-}
+const uid = id ?? `carrusel-${Math.random().toString(36).slice(2, 9)}`;
+const totalSlides = slides.length;
+const hasStructuredSlides = totalSlides > 0;
 ---
 
-<!-- carrusel -->
-<section class="carrusel container-slider" id={id}>
-  <div class="sliderCarrusel" id="sliderCarrusel">
-    {slides.map((slide, index) => (
-      <div 
-        class={`slider__section ${index === 0 ? 'activo' : ''}`} 
-        id={`slide${slide.id}`}
-      >
-        <div class="imagenPie">
-          <Image
-            src={slide.imagen!}
-            alt={slide.alt}
-            title={slide.title}
-            class="slider__img"
-            widths={[400, 500, 600, 800]}
-            sizes="(max-width: 768px) 90vw, 500px"
-          />
-          <p set:html={slide.pie} />
-        </div>
-        {slide.contenido && (
-          <Fragment set:html={slide.contenido} />
-        )}
+<section
+  class:list={['carrusel', `carrusel--${variante}`, className]}
+  id={uid}
+  role="region"
+  aria-roledescription="carrusel"
+  aria-label={ariaLabel}
+  data-carrusel
+  data-loop={loop ? 'true' : 'false'}
+  data-autoplay={autoPlay ? 'true' : 'false'}
+  data-intervalo={intervalo}
+>
+  {(titulo || descripcion) && (
+    <header class="carrusel__header">
+      {titulo && <h2 class="carrusel__titulo">{titulo}</h2>}
+      {descripcion && <p class="carrusel__descripcion">{descripcion}</p>}
+    </header>
+  )}
+
+  <div class="carrusel__shell">
+    <div class="carrusel__viewport" id={`${uid}-viewport`} tabindex="0">
+      <div class="carrusel__track">
+        {slides.map((slide, index) => {
+          const slideId = `${uid}-slide-${slide.id ?? index + 1}`;
+          const slideTitle = slide.titulo ?? `Diapositiva ${index + 1}`;
+          const slideVariant = slide.variante ?? variante;
+
+          return (
+            <article
+              class:list={[
+                'carrusel__slide',
+                'slider__section',
+                `carrusel__slide--${slideVariant}`,
+                index === 0 && 'is-active',
+                index === 0 && 'activo',
+              ]}
+              id={slideId}
+              aria-roledescription="diapositiva"
+              aria-label={`${index + 1} de ${totalSlides}`}
+              data-carrusel-slide
+            >
+              <div class:list={['carrusel__slide-grid', slide.imagen && 'has-media']}>
+                {slide.imagen && (
+                  <figure class:list={['carrusel__media', `carrusel__media--${ajusteImagen}`]}>
+                    {typeof slide.imagen === 'string' ? (
+                      <img
+                        src={slide.imagen}
+                        alt={slide.alt ?? ''}
+                        title={slide.title}
+                        loading="lazy"
+                        class="carrusel__img slider__img"
+                      />
+                    ) : (
+                      <Image
+                        src={slide.imagen}
+                        alt={slide.alt ?? ''}
+                        title={slide.title}
+                        widths={[360, 520, 720, 960]}
+                        sizes="(max-width: 720px) 88vw, 44vw"
+                        loading="lazy"
+                        class="carrusel__img slider__img"
+                      />
+                    )}
+                    {slide.pie && <figcaption set:html={slide.pie} />}
+                  </figure>
+                )}
+
+                <div class="carrusel__content">
+                  {slide.subtitulo && <p class="carrusel__subtitulo">{slide.subtitulo}</p>}
+                  {slide.titulo && <h3 class="carrusel__slide-title">{slide.titulo}</h3>}
+                  {slide.texto && <p class="carrusel__texto">{slide.texto}</p>}
+                  {slide.contenido && <div class="carrusel__html" set:html={slide.contenido} />}
+                  {slide.accion && (
+                    <a
+                      class="carrusel__accion"
+                      href={slide.accion.href}
+                      target={slide.accion.target}
+                      rel={slide.accion.target === '_blank' ? 'noopener noreferrer' : undefined}
+                    >
+                      {slide.accion.label}
+                    </a>
+                  )}
+                  {!slide.titulo && !slide.texto && !slide.contenido && !slide.accion && (
+                    <span class="sr-only">{slideTitle}</span>
+                  )}
+                </div>
+              </div>
+            </article>
+          );
+        })}
+
+        {!hasStructuredSlides && <slot />}
       </div>
-    ))}
+    </div>
+
+    {mostrarControles && (
+      <div class="carrusel__controls" aria-label="Controles del carrusel">
+        <button
+          class="carrusel__control carrusel__control--prev slider__btn slider__btn__regresa"
+          type="button"
+          aria-label="Ver diapositiva anterior"
+          aria-controls={`${uid}-viewport`}
+          data-carrusel-prev
+          disabled={!loop && totalSlides <= 1}
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M14.7 5.3a1 1 0 0 1 0 1.4L9.42 12l5.3 5.3a1 1 0 0 1-1.42 1.4l-6-6a1 1 0 0 1 0-1.4l6-6a1 1 0 0 1 1.4 0Z" />
+          </svg>
+        </button>
+        <button
+          class="carrusel__control carrusel__control--next slider__btn slider__btn__avanza"
+          type="button"
+          aria-label="Ver diapositiva siguiente"
+          aria-controls={`${uid}-viewport`}
+          data-carrusel-next
+          disabled={!loop && totalSlides <= 1}
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M9.3 18.7a1 1 0 0 1 0-1.4l5.28-5.3-5.3-5.3a1 1 0 0 1 1.42-1.4l6 6a1 1 0 0 1 0 1.4l-6 6a1 1 0 0 1-1.4 0Z" />
+          </svg>
+        </button>
+      </div>
+    )}
   </div>
-  <div class="slider__btn slider__btn__regresa" id="btn-regresa" tabindex="1">
-    &#60;
-  </div>
-  <div class="slider__btn slider__btn__avanza" id="btn-avanza" tabindex="2">
-    &#62;
-  </div>
-  <ul class="puntos">
-    {slides.map((slide, index) => (
-      <li 
-        class={`punto ${index === 0 ? 'activo' : ''}`} 
-        id={`punto${slide.id}`}
-      />
-    ))}
-  </ul>
+
+  {mostrarIndicadores && (
+    <div class="carrusel__dots puntos" role="tablist" aria-label="Elegir diapositiva" data-carrusel-dots>
+      {slides.map((slide, index) => (
+        <button
+          class:list={['carrusel__dot', 'punto', index === 0 && 'is-active', index === 0 && 'activo']}
+          type="button"
+          role="tab"
+          aria-label={`Ir a diapositiva ${index + 1}`}
+          aria-controls={`${uid}-slide-${slide.id ?? index + 1}`}
+          aria-selected={index === 0 ? 'true' : 'false'}
+          data-carrusel-dot={index}
+        />
+      ))}
+    </div>
+  )}
 </section>
 
-<script define:vars={{ id, anchoGaleria }}>
-  document.addEventListener('DOMContentLoaded', function() {
-    const tiempoGaleria = 5000;
-    const sliderCarrusel = document.querySelector(`section.carrusel.container-slider#${id} #sliderCarrusel`);
-    const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
-    const puntos = document.querySelectorAll(`section.carrusel.container-slider#${id} .punto`);
-    const listaPuntos = document.querySelector(`section.carrusel.container-slider#${id} .puntos`);
-    const btnRegresa = document.querySelector(`section.carrusel.container-slider#${id} #btn-regresa`);
-    const btnAvanza = document.querySelector(`section.carrusel.container-slider#${id} #btn-avanza`);
+<script>
+  type CarruselRoot = HTMLElement;
+  type CarruselSlide = HTMLElement;
+  type CarruselDot = HTMLButtonElement;
 
-    if (!sliderCarrusel || !btnRegresa || !btnAvanza) return;
+  const initializeCarrusel = (root: CarruselRoot) => {
+    if (root.dataset.carruselReady === 'true') return;
 
-    const numberOfSlides = sliderSection.length;
-    const anchoGaleriaCalculado = numberOfSlides * 100;
+    const viewport = root.querySelector<HTMLElement>('.carrusel__viewport');
+    const slides = Array.from(root.querySelectorAll<CarruselSlide>('[data-carrusel-slide], .carrusel__slide'));
+    const prevButton = root.querySelector<HTMLButtonElement>('[data-carrusel-prev]');
+    const nextButton = root.querySelector<HTMLButtonElement>('[data-carrusel-next]');
+    const dotsContainer = root.querySelector<HTMLElement>('[data-carrusel-dots]');
+    const loop = root.dataset.loop === 'true';
+    const autoplay = root.dataset.autoplay === 'true';
+    const interval = Number(root.dataset.intervalo) || 7000;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let activeIndex = 0;
+    let autoplayTimer: number | undefined;
 
-    // Configurar el ancho del carrusel dinámicamente
-    if (sliderCarrusel) {
-      sliderCarrusel.style.width = `${anchoGaleriaCalculado}%`;
+    if (!viewport || slides.length === 0) {
+      root.dataset.carruselReady = 'true';
+      return;
     }
 
-    const sliderSectionLast = sliderSection[sliderSection.length - 1];
-    sliderCarrusel.insertAdjacentElement('afterbegin', sliderSectionLast);
+    root.dataset.carruselReady = 'true';
 
-    // Función para ajustar la altura del contenedor al slide activo
-    function ajustarAltura() {
-      const slideActivo = document.querySelector(`section.carrusel.container-slider#${id} .slider__section.activo`);
-      const container = document.querySelector(`section.carrusel.container-slider#${id}`);
-      if (slideActivo && container) {
-        const altura = slideActivo.offsetHeight;
-        container.style.height = altura + 'px';
-        container.style.transition = 'height 0.5s ease';
-      }
+    if (dotsContainer && dotsContainer.children.length === 0) {
+      slides.forEach((slide, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'carrusel__dot punto';
+        dot.type = 'button';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `Ir a diapositiva ${index + 1}`);
+        dot.setAttribute('aria-controls', slide.id || '');
+        dot.dataset.carruselDot = String(index);
+        dotsContainer.append(dot);
+      });
     }
 
-    // Ajustar altura inicial y en cada cambio de ventana
-    ajustarAltura();
-    window.addEventListener('resize', ajustarAltura);
-
-    function avanza() {
-      const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
-      sliderSection.forEach((slide) => slide.classList.remove('activo'));
-      puntos.forEach((punto) => punto.classList.remove('activo'));
-      
-      const sliderSectionFirst = sliderSection[0];
-      sliderCarrusel.style.marginLeft = '-200%';
-      sliderCarrusel.style.transition = 'all 0.5s';
-      
-      setTimeout(function () {
-        sliderCarrusel.style.transition = 'none';
-        sliderCarrusel.insertAdjacentElement('beforeend', sliderSectionFirst);
-        sliderCarrusel.style.marginLeft = '-100%';
-        
-        const actual = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`)[1];
-        const idNum = actual.getAttribute('id').substr(5);
-        actual.classList.add('activo');
-        const punto = document.querySelector(`section.carrusel.container-slider#${id} #punto${idNum}`);
-        if (punto) punto.classList.add('activo');
-        
-        // Ajustar altura después de que el slide esté en su posición
-        setTimeout(ajustarAltura, 50);
-      }, 500);
-    }
-
-    function regresa() {
-      const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
-      sliderSection.forEach((slide) => slide.classList.remove('activo'));
-      puntos.forEach((punto) => punto.classList.remove('activo'));
-      
-      const sliderSectionLast = sliderSection[sliderSection.length - 1];
-      sliderCarrusel.style.marginLeft = '0';
-      sliderCarrusel.style.transition = 'all 0.5s';
-      
-      setTimeout(function () {
-        sliderCarrusel.style.transition = 'none';
-        sliderCarrusel.insertAdjacentElement('afterbegin', sliderSectionLast);
-        sliderCarrusel.style.marginLeft = '-100%';
-        
-        const sliderSectionUpdated = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
-        const actual = sliderSectionUpdated[1];
-        const idNum = actual.getAttribute('id').substr(5);
-        actual.classList.add('activo');
-        const punto = document.querySelector(`section.carrusel.container-slider#${id} #punto${idNum}`);
-        if (punto) punto.classList.add('activo');
-        
-        // Ajustar altura después de que el slide esté en su posición
-        setTimeout(ajustarAltura, 50);
-      }, 500);
-    }
-
-    let bucle;
-    const ciclo = () => {
-      bucle = setInterval(avanza, tiempoGaleria);
+    const dots = Array.from(root.querySelectorAll<CarruselDot>('[data-carrusel-dot]'));
+    const clampIndex = (index: number) => {
+      if (loop) return (index + slides.length) % slides.length;
+      return Math.max(0, Math.min(index, slides.length - 1));
     };
-    
-    ciclo();
 
-    [sliderCarrusel, btnRegresa, btnAvanza, listaPuntos].forEach(el => {
-      el.addEventListener('mouseover', () => clearInterval(bucle));
-      el.addEventListener('mouseout', ciclo);
-    });
+    const updateState = (index: number) => {
+      activeIndex = clampIndex(index);
 
-    btnRegresa.addEventListener('click', regresa);
-    btnAvanza.addEventListener('click', avanza);
+      slides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === activeIndex;
+        slide.classList.toggle('is-active', isActive);
+        slide.classList.toggle('activo', isActive);
+        slide.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+      });
 
-    puntos.forEach((cadaPunto, indicador) => {
-      cadaPunto.addEventListener('click', () => {
-        const listaSlides = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
-        listaSlides.forEach((cadaSlide) => cadaSlide.classList.remove('activo'));
-        puntos.forEach((cadaPunto) => cadaPunto.classList.remove('activo'));
+      dots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === activeIndex;
+        dot.classList.toggle('is-active', isActive);
+        dot.classList.toggle('activo', isActive);
+        dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
 
-        const actual = document.querySelector(`section.carrusel.container-slider#${id} #slide${indicador}`);
-        if (actual) {
-          actual.classList.add('activo');
-          const punto = document.querySelector(`section.carrusel.container-slider#${id} #punto${indicador}`);
-          if (punto) punto.classList.add('activo');
+      if (!loop) {
+        if (prevButton) prevButton.disabled = activeIndex === 0 || slides.length <= 1;
+        if (nextButton) nextButton.disabled = activeIndex === slides.length - 1 || slides.length <= 1;
+      }
+    };
 
-          let previos = 0;
-          const sliderSection = document.querySelectorAll(`section.carrusel.container-slider#${id} .slider__section`);
-          while (!sliderSection[previos].classList.contains('activo')) {
-            previos++;
-          }
+    const goTo = (index: number, behavior: ScrollBehavior = 'smooth') => {
+      const nextIndex = clampIndex(index);
+      const target = slides[nextIndex];
+      if (!target) return;
 
-          sliderCarrusel.style.marginLeft = (previos * -100) + '%';
-          sliderCarrusel.style.transition = 'all 0.5s';
+      viewport.scrollTo({
+        left: target.offsetLeft - viewport.offsetLeft,
+        behavior: reducedMotion ? 'auto' : behavior,
+      });
+      updateState(nextIndex);
+    };
 
-          setTimeout(function () {
-            sliderCarrusel.style.transition = 'none';
-            if (previos == 0) {
-              sliderCarrusel.insertAdjacentElement('afterbegin', sliderSection[sliderSection.length - 1]);
-            } else {
-              for (let ind = 0; ind < (previos - 1); ind++) {
-                sliderCarrusel.insertAdjacentElement('beforeend', sliderSection[ind]);
-              }
-            }
-            sliderCarrusel.style.marginLeft = '-100%';
-            
-            // Ajustar altura después de que el slide esté en su posición
-            setTimeout(ajustarAltura, 50);
-          }, 500);
-        }
+    const syncFromScroll = () => {
+      const nearest = slides.reduce(
+        (closest, slide, index) => {
+          const distance = Math.abs(slide.offsetLeft - viewport.scrollLeft);
+          return distance < closest.distance ? { index, distance } : closest;
+        },
+        { index: activeIndex, distance: Number.POSITIVE_INFINITY }
+      );
+      updateState(nearest.index);
+    };
+
+    let scrollFrame = 0;
+    viewport.addEventListener('scroll', () => {
+      window.cancelAnimationFrame(scrollFrame);
+      scrollFrame = window.requestAnimationFrame(syncFromScroll);
+    }, { passive: true });
+
+    prevButton?.addEventListener('click', () => goTo(activeIndex - 1));
+    nextButton?.addEventListener('click', () => goTo(activeIndex + 1));
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        goTo(Number(dot.dataset.carruselDot));
       });
     });
-  });
-</script>
 
-<!-- fin carrusel -->
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        goTo(activeIndex - 1);
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        goTo(activeIndex + 1);
+      }
+
+      if (event.key === 'Home') {
+        event.preventDefault();
+        goTo(0);
+      }
+
+      if (event.key === 'End') {
+        event.preventDefault();
+        goTo(slides.length - 1);
+      }
+    });
+
+    const stopAutoplay = () => {
+      window.clearInterval(autoplayTimer);
+    };
+
+    const startAutoplay = () => {
+      if (!autoplay || reducedMotion || slides.length <= 1) return;
+      stopAutoplay();
+      autoplayTimer = window.setInterval(() => goTo(activeIndex + 1), interval);
+    };
+
+    root.addEventListener('pointerenter', stopAutoplay);
+    root.addEventListener('pointerleave', startAutoplay);
+    root.addEventListener('focusin', stopAutoplay);
+    root.addEventListener('focusout', startAutoplay);
+    window.addEventListener('resize', () => goTo(activeIndex, 'auto'));
+
+    updateState(0);
+    startAutoplay();
+  };
+
+  const bootCarruseles = () => {
+    document.querySelectorAll<CarruselRoot>('[data-carrusel]').forEach(initializeCarrusel);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootCarruseles, { once: true });
+  } else {
+    bootCarruseles();
+  }
+</script>

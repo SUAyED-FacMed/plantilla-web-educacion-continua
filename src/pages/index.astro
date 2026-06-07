@@ -1,0 +1,70 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Carrusel from "@/components/Carrusel.astro";
+import { siteConfig } from "@/config";
+
+import diabetesGes from "@assets/img/diabetesGes.png";
+import incidenciaDiabetes from "@assets/img/incidencia_diabetes.jpg";
+import gastoSanitario from "@assets/img/gasto_sanitario.jpg";
+---
+
+<Layout recurso={siteConfig.recurso} nombreCurso={siteConfig.nombreCurso}>
+  <section>
+    <h1>Ejemplo de carrusel</h1>
+    <p>
+      Este ejemplo muestra el componente con slides configuradas desde un arreglo:
+      imagen, texto, contenido HTML, pie de imagen y variante visual por slide.
+    </p>
+  </section>
+
+  <Carrusel
+    id="carrusel-ejemplo"
+    titulo="Panorama para el análisis"
+    descripcion="Usa este patrón para presentar pasos, evidencias, casos o comparaciones sin perder lectura en móvil."
+    variante="carta2"
+    ajusteImagen="cover"
+    slides={[
+      {
+        id: "contexto",
+        subtitulo: "Contexto",
+        titulo: "Ubicar el problema antes de interpretarlo",
+        texto: "La primera diapositiva puede funcionar como introducción breve, con una imagen de apoyo y una idea central.",
+        imagen: diabetesGes,
+        alt: "Ilustración sobre diabetes gestacional",
+        pie: "<em>Diabetes gestacional</em> [Ilustración].",
+        variante: "carta2",
+      },
+      {
+        id: "evidencias",
+        subtitulo: "Evidencias",
+        titulo: "Combinar datos con lectura guiada",
+        contenido: `
+          <p>El campo <strong>contenido</strong> acepta HTML para listas, énfasis o bloques breves.</p>
+          <ul>
+            <li>Útil para explicar hallazgos.</li>
+            <li>Compatible con swipe en dispositivos móviles.</li>
+            <li>Controlable con teclado y botones.</li>
+          </ul>
+        `,
+        imagen: incidenciaDiabetes,
+        alt: "Gráfica de incidencia de diabetes",
+        pie: "Imagen de apoyo para revisar tendencias.",
+        variante: "carta1",
+      },
+      {
+        id: "decision",
+        subtitulo: "Aplicación",
+        titulo: "Cerrar cada secuencia con una acción clara",
+        texto: "También puedes agregar un enlace de acción cuando el slide deba llevar a una lectura, actividad o recurso complementario.",
+        imagen: gastoSanitario,
+        alt: "Representación de gasto sanitario",
+        pie: "Imagen de apoyo para discusión.",
+        accion: {
+          href: "#",
+          label: "Revisar actividad",
+        },
+        variante: "carta4",
+      },
+    ]}
+  />
+</Layout>
