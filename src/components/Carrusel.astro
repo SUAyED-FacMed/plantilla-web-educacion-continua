@@ -6,6 +6,7 @@ import '@/styles/carrusel.css';
 type ImagenCarrusel = ImageMetadata | string;
 type VarianteCarrusel = 'carta1' | 'carta2' | 'carta3' | 'carta4' | 'azul' | 'dorado' | 'neutra';
 type AjusteImagen = 'contain' | 'cover';
+type AlineacionImagen = 'top' | 'center' | 'bottom';
 
 interface SlideCarrusel {
   id?: string | number;
@@ -18,6 +19,8 @@ interface SlideCarrusel {
   title?: string;
   pie?: string;
   variante?: VarianteCarrusel;
+  ajusteImagen?: AjusteImagen;
+  alineacionImagen?: AlineacionImagen;
 }
 
 interface Props {
@@ -28,6 +31,7 @@ interface Props {
   ariaLabel?: string;
   variante?: VarianteCarrusel;
   ajusteImagen?: AjusteImagen;
+  alineacionImagen?: AlineacionImagen;
   mostrarControles?: boolean;
   mostrarIndicadores?: boolean;
   loop?: boolean;
@@ -44,6 +48,7 @@ const {
   ariaLabel = titulo ?? 'Carrusel de contenido',
   variante = 'carta1',
   ajusteImagen = 'cover',
+  alineacionImagen = 'center',
   mostrarControles = true,
   mostrarIndicadores = true,
   loop = false,
@@ -56,6 +61,13 @@ const uid = id ?? `carrusel-${Math.random().toString(36).slice(2, 9)}`;
 const totalSlides = slides.length;
 const hasStructuredSlides = totalSlides > 0;
 const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? imagen : imagen?.src;
+const stripHtml = (value = '') => value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+const getSlideCopyLength = (slide: SlideCarrusel) => [
+  slide.subtitulo,
+  slide.titulo,
+  slide.texto,
+  slide.contenido,
+].map((value) => stripHtml(value ?? '')).join(' ').trim().length;
 ---
 
 <section
@@ -85,6 +97,8 @@ const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? im
           const slideVariant = slide.variante ?? variante;
           const imageSrc = getImageSrc(slide.imagen);
           const imageAlt = slide.alt ?? '';
+          const slideImageFit = slide.ajusteImagen ?? ajusteImagen;
+          const slideImageAlignment = slide.alineacionImagen ?? alineacionImagen;
           const safeSlideId = String(slide.id ?? index + 1).replace(/[^a-zA-Z0-9_-]/g, '-');
           const dialogId = `${uid}-imagen-${index}-${safeSlideId}`;
 
@@ -94,6 +108,7 @@ const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? im
                 'carrusel__slide',
                 'slider__section',
                 `carrusel__slide--${slideVariant}`,
+                slide.imagen && getSlideCopyLength(slide) < 190 && 'carrusel__slide--short-copy',
                 index === 0 && 'is-active',
                 index === 0 && 'activo',
               ]}
@@ -104,7 +119,11 @@ const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? im
             >
               <div class:list={['carrusel__slide-grid', slide.imagen && 'has-media']}>
                 {slide.imagen && imageSrc && (
-                  <figure class:list={['carrusel__media', `carrusel__media--${ajusteImagen}`]}>
+                  <figure class:list={[
+                    'carrusel__media',
+                    `carrusel__media--${slideImageFit}`,
+                    `carrusel__media--align-${slideImageAlignment}`,
+                  ]}>
                     <button
                       class="carrusel__image-button"
                       type="button"
@@ -263,6 +282,13 @@ const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? im
       return Math.max(0, Math.min(index, slides.length - 1));
     };
 
+    const syncViewportHeight = () => {
+      const activeSlide = slides[activeIndex];
+      if (!activeSlide) return;
+
+      viewport.style.setProperty('--carrusel-active-height', `${activeSlide.offsetHeight}px`);
+    };
+
     const updateState = (index: number) => {
       activeIndex = clampIndex(index);
 
@@ -284,6 +310,8 @@ const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? im
         if (prevButton) prevButton.disabled = activeIndex === 0 || slides.length <= 1;
         if (nextButton) nextButton.disabled = activeIndex === slides.length - 1 || slides.length <= 1;
       }
+
+      syncViewportHeight();
     };
 
     const goTo = (index: number, behavior: ScrollBehavior = 'smooth') => {
@@ -314,6 +342,19 @@ const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? im
       window.cancelAnimationFrame(scrollFrame);
       scrollFrame = window.requestAnimationFrame(syncFromScroll);
     }, { passive: true });
+
+    const resizeObserver = 'ResizeObserver' in window
+      ? new ResizeObserver(() => syncViewportHeight())
+      : null;
+
+    slides.forEach((slide) => {
+      resizeObserver?.observe(slide);
+      slide.querySelectorAll('img').forEach((image) => {
+        if (!image.complete) {
+          image.addEventListener('load', syncViewportHeight, { once: true });
+        }
+      });
+    });
 
     prevButton?.addEventListener('click', () => goTo(activeIndex - 1));
     nextButton?.addEventListener('click', () => goTo(activeIndex + 1));
@@ -391,9 +432,13 @@ const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? im
     root.addEventListener('pointerleave', startAutoplay);
     root.addEventListener('focusin', stopAutoplay);
     root.addEventListener('focusout', startAutoplay);
-    window.addEventListener('resize', () => goTo(activeIndex, 'auto'));
+    window.addEventListener('resize', () => {
+      goTo(activeIndex, 'auto');
+      window.requestAnimationFrame(syncViewportHeight);
+    });
 
     updateState(0);
+    window.requestAnimationFrame(syncViewportHeight);
     startAutoplay();
   };
 

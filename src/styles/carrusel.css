@@ -12,6 +12,7 @@
     --carrusel-border: rgba(26, 44, 73, 0.2);
     --carrusel-control-bg: #ffffff;
     --carrusel-control-fg: #1A2C49;
+    --carrusel-media-max: clamp(17rem, 34vw, 24rem);
 
     container-type: inline-size;
     width: min(100%, 960px);
@@ -105,6 +106,8 @@
     scrollbar-width: thin;
     scrollbar-color: color-mix(in srgb, var(--carrusel-accent) 48%, transparent) transparent;
     border-radius: 10px;
+    height: var(--carrusel-active-height, auto);
+    transition: height 220ms ease;
 }
 
 .carrusel__viewport:focus-visible {
@@ -114,7 +117,7 @@
 
 .carrusel__track {
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
     gap: 1rem;
 }
 
@@ -168,7 +171,7 @@
 
 .carrusel__slide-grid {
     display: grid;
-    min-height: clamp(22rem, 45vw, 31rem);
+    min-height: 0;
 }
 
 .carrusel__slide-grid:not(.has-media) {
@@ -181,6 +184,10 @@
     align-items: stretch;
 }
 
+.carrusel__slide--short-copy .carrusel__slide-grid.has-media {
+    height: min(72vh, clamp(28rem, 45vw, 36rem));
+}
+
 .carrusel__media {
     position: relative;
     display: flex;
@@ -188,6 +195,7 @@
     align-items: stretch;
     justify-content: stretch;
     min-width: 0;
+    align-self: stretch;
     height: 100%;
     margin: 0;
     background-color: rgba(255, 255, 255, 0.12);
@@ -200,6 +208,7 @@
     flex: 1 1 auto;
     min-height: 0;
     width: 100%;
+    height: 100%;
     padding: 0;
     border: 0;
     background: transparent;
@@ -216,7 +225,6 @@
     display: block;
     width: 100%;
     height: 100%;
-    min-height: clamp(22rem, 45vw, 31rem);
     border-radius: 0;
 }
 
@@ -224,7 +232,24 @@
     object-fit: contain;
 }
 
+.carrusel__media--align-top .carrusel__img {
+    object-position: center top;
+}
+
+.carrusel__media--align-center .carrusel__img {
+    object-position: center center;
+}
+
+.carrusel__media--align-bottom .carrusel__img {
+    object-position: center bottom;
+}
+
+.carrusel__media--cover .carrusel__image-button {
+    min-height: min(18rem, var(--carrusel-media-max));
+}
+
 .carrusel__media--cover .carrusel__img {
+    height: 100%;
     object-fit: cover;
 }
 
@@ -247,7 +272,7 @@
 .carrusel__content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.85rem;
     min-width: 0;
     padding: clamp(1.25rem, 1rem + 1.4vw, 2rem);
@@ -386,6 +411,7 @@
     color: var(--carrusel-muted-local);
     font-size: 0.9rem;
     line-height: 1.45;
+    text-align: center;
     overflow-wrap: anywhere;
 }
 
@@ -506,6 +532,7 @@
     .carrusel__slide-grid,
     .carrusel__slide-grid.has-media {
         grid-template-columns: 1fr;
+        height: auto;
         min-height: 0;
         gap: 0;
         padding: 0;
@@ -517,7 +544,13 @@
     }
 
     .carrusel__img {
-        min-height: 16rem;
+        height: 100%;
+        max-height: 16rem;
+    }
+
+    .carrusel__media--cover .carrusel__image-button {
+        height: 16rem;
+        min-height: 0;
         max-height: 16rem;
     }
 
@@ -543,6 +576,7 @@
 @media (prefers-reduced-motion: reduce) {
     .carrusel__viewport {
         scroll-behavior: auto;
+        transition: none;
     }
 
     .carrusel__control,
