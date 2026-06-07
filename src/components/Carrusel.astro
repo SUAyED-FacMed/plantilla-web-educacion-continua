@@ -7,12 +7,6 @@ type ImagenCarrusel = ImageMetadata | string;
 type VarianteCarrusel = 'carta1' | 'carta2' | 'carta3' | 'carta4' | 'azul' | 'dorado' | 'neutra';
 type AjusteImagen = 'contain' | 'cover';
 
-interface AccionCarrusel {
-  href: string;
-  label: string;
-  target?: '_blank' | '_self';
-}
-
 interface SlideCarrusel {
   id?: string | number;
   titulo?: string;
@@ -24,7 +18,6 @@ interface SlideCarrusel {
   title?: string;
   pie?: string;
   variante?: VarianteCarrusel;
-  accion?: AccionCarrusel;
 }
 
 interface Props {
@@ -50,7 +43,7 @@ const {
   descripcion,
   ariaLabel = titulo ?? 'Carrusel de contenido',
   variante = 'carta1',
-  ajusteImagen = 'contain',
+  ajusteImagen = 'cover',
   mostrarControles = true,
   mostrarIndicadores = true,
   loop = false,
@@ -62,6 +55,7 @@ const {
 const uid = id ?? `carrusel-${Math.random().toString(36).slice(2, 9)}`;
 const totalSlides = slides.length;
 const hasStructuredSlides = totalSlides > 0;
+const getImageSrc = (imagen?: ImagenCarrusel) => typeof imagen === 'string' ? imagen : imagen?.src;
 ---
 
 <section
@@ -89,6 +83,10 @@ const hasStructuredSlides = totalSlides > 0;
           const slideId = `${uid}-slide-${slide.id ?? index + 1}`;
           const slideTitle = slide.titulo ?? `Diapositiva ${index + 1}`;
           const slideVariant = slide.variante ?? variante;
+          const imageSrc = getImageSrc(slide.imagen);
+          const imageAlt = slide.alt ?? '';
+          const safeSlideId = String(slide.id ?? index + 1).replace(/[^a-zA-Z0-9_-]/g, '-');
+          const dialogId = `${uid}-imagen-${index}-${safeSlideId}`;
 
           return (
             <article
@@ -105,29 +103,50 @@ const hasStructuredSlides = totalSlides > 0;
               data-carrusel-slide
             >
               <div class:list={['carrusel__slide-grid', slide.imagen && 'has-media']}>
-                {slide.imagen && (
+                {slide.imagen && imageSrc && (
                   <figure class:list={['carrusel__media', `carrusel__media--${ajusteImagen}`]}>
-                    {typeof slide.imagen === 'string' ? (
-                      <img
-                        src={slide.imagen}
-                        alt={slide.alt ?? ''}
-                        title={slide.title}
-                        loading="lazy"
-                        class="carrusel__img slider__img"
-                      />
-                    ) : (
-                      <Image
-                        src={slide.imagen}
-                        alt={slide.alt ?? ''}
-                        title={slide.title}
-                        widths={[360, 520, 720, 960]}
-                        sizes="(max-width: 720px) 88vw, 44vw"
-                        loading="lazy"
-                        class="carrusel__img slider__img"
-                      />
-                    )}
+                    <button
+                      class="carrusel__image-button"
+                      type="button"
+                      aria-label="Ampliar imagen"
+                      data-dialog-target={dialogId}
+                    >
+                      {typeof slide.imagen === 'string' ? (
+                        <img
+                          src={slide.imagen}
+                          alt={imageAlt}
+                          title={slide.title}
+                          loading="lazy"
+                          class="carrusel__img slider__img"
+                        />
+                      ) : (
+                        <Image
+                          src={slide.imagen}
+                          alt={imageAlt}
+                          title={slide.title}
+                          widths={[360, 520, 720, 960]}
+                          sizes="(max-width: 720px) 100vw, 42vw"
+                          loading="lazy"
+                          class="carrusel__img slider__img"
+                        />
+                      )}
+                      <span class="carrusel__zoom-indicator" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">
+                          <path d="M10.5 4a6.5 6.5 0 0 1 5.15 10.46l4.44 4.45-1.41 1.41-4.45-4.44A6.5 6.5 0 1 1 10.5 4Zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm.75 1.75v2h2v1.5h-2v2h-1.5v-2h-2v-1.5h2v-2h1.5Z"></path>
+                        </svg>
+                      </span>
+                    </button>
                     {slide.pie && <figcaption set:html={slide.pie} />}
                   </figure>
+                )}
+                {slide.imagen && imageSrc && (
+                  <dialog class="carrusel__dialog" id={dialogId} aria-label="Imagen ampliada">
+                    <button class="carrusel__dialog-close" type="button" aria-label="Cerrar imagen ampliada" data-dialog-close>
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <img class="carrusel__dialog-image" src={imageSrc} alt={imageAlt} loading="lazy" />
+                    {slide.pie && <p class="carrusel__dialog-caption" set:html={slide.pie}></p>}
+                  </dialog>
                 )}
 
                 <div class="carrusel__content">
@@ -135,17 +154,7 @@ const hasStructuredSlides = totalSlides > 0;
                   {slide.titulo && <h3 class="carrusel__slide-title">{slide.titulo}</h3>}
                   {slide.texto && <p class="carrusel__texto">{slide.texto}</p>}
                   {slide.contenido && <div class="carrusel__html" set:html={slide.contenido} />}
-                  {slide.accion && (
-                    <a
-                      class="carrusel__accion"
-                      href={slide.accion.href}
-                      target={slide.accion.target}
-                      rel={slide.accion.target === '_blank' ? 'noopener noreferrer' : undefined}
-                    >
-                      {slide.accion.label}
-                    </a>
-                  )}
-                  {!slide.titulo && !slide.texto && !slide.contenido && !slide.accion && (
+                  {!slide.titulo && !slide.texto && !slide.contenido && (
                     <span class="sr-only">{slideTitle}</span>
                   )}
                 </div>
@@ -209,6 +218,7 @@ const hasStructuredSlides = totalSlides > 0;
   type CarruselRoot = HTMLElement;
   type CarruselSlide = HTMLElement;
   type CarruselDot = HTMLButtonElement;
+  type CarruselDialog = HTMLDialogElement;
 
   const initializeCarrusel = (root: CarruselRoot) => {
     if (root.dataset.carruselReady === 'true') return;
@@ -218,6 +228,8 @@ const hasStructuredSlides = totalSlides > 0;
     const prevButton = root.querySelector<HTMLButtonElement>('[data-carrusel-prev]');
     const nextButton = root.querySelector<HTMLButtonElement>('[data-carrusel-next]');
     const dotsContainer = root.querySelector<HTMLElement>('[data-carrusel-dots]');
+    const imageButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('.carrusel__image-button'));
+    const dialogs = Array.from(root.querySelectorAll<CarruselDialog>('.carrusel__dialog'));
     const loop = root.dataset.loop === 'true';
     const autoplay = root.dataset.autoplay === 'true';
     const interval = Number(root.dataset.intervalo) || 7000;
@@ -309,6 +321,37 @@ const hasStructuredSlides = totalSlides > 0;
     dots.forEach((dot) => {
       dot.addEventListener('click', () => {
         goTo(Number(dot.dataset.carruselDot));
+      });
+    });
+
+    const closeDialog = (dialog: CarruselDialog) => {
+      if (typeof dialog.close === 'function') {
+        dialog.close();
+      } else {
+        dialog.removeAttribute('open');
+      }
+    };
+
+    imageButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const targetId = button.dataset.dialogTarget;
+        if (!targetId) return;
+
+        const dialog = document.getElementById(targetId) as CarruselDialog | null;
+        if (!dialog) return;
+
+        if (typeof dialog.showModal === 'function') {
+          dialog.showModal();
+        } else {
+          dialog.setAttribute('open', '');
+        }
+      });
+    });
+
+    dialogs.forEach((dialog) => {
+      dialog.querySelector('[data-dialog-close]')?.addEventListener('click', () => closeDialog(dialog));
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) closeDialog(dialog);
       });
     });
 
