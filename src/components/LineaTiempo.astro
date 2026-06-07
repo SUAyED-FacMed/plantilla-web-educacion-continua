@@ -22,7 +22,6 @@ interface Props {
   accentColor?: string;
   initialIndex?: number;
   ariaLabel?: string;
-  wheelNavigation?: boolean;
 }
 
 const {
@@ -32,7 +31,6 @@ const {
   accentColor,
   initialIndex = 0,
   ariaLabel = 'Linea del tiempo',
-  wheelNavigation = true,
 } = Astro.props;
 
 const timelineId = id ?? `linea-tiempo-${Math.random().toString(36).slice(2, 10)}`;
@@ -47,7 +45,6 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
   style={accentColor ? `--timeline-accent: ${accentColor}` : ''}
   data-orientation={orientation}
   data-initial-index={safeInitialIndex}
-  data-wheel-navigation={wheelNavigation}
   aria-label={ariaLabel}
 >
   {orientation === 'horizontal' && (
@@ -134,7 +131,6 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       this.initialIndex = Number.parseInt(container.dataset.initialIndex || '0', 10);
       this.track = container.querySelector('.linea-tiempo__track');
       this.items = Array.from(container.querySelectorAll('.linea-tiempo__item'));
-      this.wheelNavigation = container.dataset.wheelNavigation !== 'false';
       this.prevButton = container.querySelector('.linea-tiempo__control--prev');
       this.nextButton = container.querySelector('.linea-tiempo__control--next');
       this.progressBar = container.querySelector('.linea-tiempo__progress-bar');
@@ -164,7 +160,6 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       this.nextButton?.addEventListener('click', () => this.scrollToIndex(this.targetIndex + 1));
       this.track.addEventListener('scroll', () => this.requestUpdate(), { passive: true });
       this.track.addEventListener('keydown', (event) => this.handleKeyDown(event));
-      this.container.addEventListener('wheel', (event) => this.handleWheel(event), { passive: true });
       this.images.forEach((image) => {
         if (!image.complete) {
           image.addEventListener('load', () => this.updateHorizontalMetrics(), { once: true });
@@ -275,28 +270,6 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       if (event.key === 'ArrowLeft') this.scrollToIndex(this.targetIndex - 1);
       if (event.key === 'Home') this.scrollToIndex(0);
       if (event.key === 'End') this.scrollToIndex(this.items.length - 1);
-    }
-
-    handleWheel(event) {
-      if (!this.isHorizontalInteractive() || !this.wheelNavigation || !this.track) return;
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-
-      const maxScroll = this.track.scrollWidth - this.track.clientWidth;
-      if (maxScroll <= 0) return;
-
-      const delta = this.getNormalizedWheelDelta(event);
-      const currentLeft = this.track.scrollLeft;
-      const nextLeft = Math.max(0, Math.min(currentLeft + delta, maxScroll));
-      if (nextLeft === currentLeft) return;
-
-      this.track.scrollLeft = nextLeft;
-      this.requestUpdate();
-    }
-
-    getNormalizedWheelDelta(event) {
-      if (event.deltaMode === 1) return event.deltaY * 16;
-      if (event.deltaMode === 2) return event.deltaY * this.track.clientWidth;
-      return event.deltaY;
     }
 
     scrollToIndex(index, moveFocus = false, animated = true) {
