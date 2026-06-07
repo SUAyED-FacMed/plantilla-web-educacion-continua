@@ -22,6 +22,8 @@ interface Props {
   accentColor?: string;
   initialIndex?: number;
   ariaLabel?: string;
+  stickyControls?: boolean;
+  wheelNavigation?: boolean;
 }
 
 const {
@@ -31,6 +33,8 @@ const {
   accentColor,
   initialIndex = 0,
   ariaLabel = 'Linea del tiempo',
+  stickyControls = true,
+  wheelNavigation = true,
 } = Astro.props;
 
 const timelineId = id ?? `linea-tiempo-${Math.random().toString(36).slice(2, 10)}`;
@@ -45,10 +49,11 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
   style={accentColor ? `--timeline-accent: ${accentColor}` : ''}
   data-orientation={orientation}
   data-initial-index={safeInitialIndex}
+  data-wheel-navigation={wheelNavigation}
   aria-label={ariaLabel}
 >
   {orientation === 'horizontal' && (
-    <div class="linea-tiempo__toolbar" aria-label="Controles de navegacion">
+    <div class={`linea-tiempo__toolbar ${stickyControls ? 'linea-tiempo__toolbar--sticky' : ''}`} aria-label="Controles de navegacion">
       <button class="linea-tiempo__control linea-tiempo__control--prev" type="button" aria-label="Ver evento anterior">
         <span aria-hidden="true">&#8592;</span>
       </button>
@@ -97,6 +102,11 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
                         sizes="(max-width: 767px) 72vw, 280px"
                       />
                     )}
+                    <span class="linea-tiempo__zoom-indicator" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M10.5 4a6.5 6.5 0 0 1 5.15 10.46l4.44 4.45-1.41 1.41-4.45-4.44A6.5 6.5 0 1 1 10.5 4Zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm.75 1.75v2h2v1.5h-2v2h-1.5v-2h-2v-1.5h2v-2h1.5Z"></path>
+                      </svg>
+                    </span>
                   </button>
                   {item.pie && <figcaption set:html={item.pie} />}
                 </figure>
@@ -126,6 +136,7 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       this.initialIndex = Number.parseInt(container.dataset.initialIndex || '0', 10);
       this.track = container.querySelector('.linea-tiempo__track');
       this.items = Array.from(container.querySelectorAll('.linea-tiempo__item'));
+      this.wheelNavigation = container.dataset.wheelNavigation !== 'false';
       this.prevButton = container.querySelector('.linea-tiempo__control--prev');
       this.nextButton = container.querySelector('.linea-tiempo__control--next');
       this.progressBar = container.querySelector('.linea-tiempo__progress-bar');
@@ -138,6 +149,7 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       this.frame = null;
       this.isProgrammaticScroll = false;
       this.scrollEndTimer = null;
+      this.wheelScrollTimer = null;
 
       container.dataset.timelineReady = 'true';
       this.init();
@@ -155,6 +167,7 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       this.nextButton?.addEventListener('click', () => this.scrollToIndex(this.targetIndex + 1));
       this.track.addEventListener('scroll', () => this.requestUpdate(), { passive: true });
       this.track.addEventListener('keydown', (event) => this.handleKeyDown(event));
+      this.container.addEventListener('wheel', (event) => this.handleWheel(event), { passive: false });
       this.images.forEach((image) => {
         if (!image.complete) {
           image.addEventListener('load', () => this.updateHorizontalMetrics(), { once: true });
@@ -265,6 +278,27 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       if (event.key === 'ArrowLeft') this.scrollToIndex(this.targetIndex - 1);
       if (event.key === 'Home') this.scrollToIndex(0);
       if (event.key === 'End') this.scrollToIndex(this.items.length - 1);
+    }
+
+    handleWheel(event) {
+      if (!this.isHorizontalInteractive() || !this.wheelNavigation || !this.track) return;
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+
+      const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+      if (maxScroll <= 0) return;
+
+      const currentLeft = this.track.scrollLeft;
+      const nextLeft = Math.max(0, Math.min(currentLeft + event.deltaY, maxScroll));
+      if (nextLeft === currentLeft) return;
+
+      event.preventDefault();
+      this.track.scrollLeft = nextLeft;
+      this.container.classList.add('linea-tiempo--wheel-scrolling');
+      clearTimeout(this.wheelScrollTimer);
+      this.wheelScrollTimer = setTimeout(() => {
+        this.container.classList.remove('linea-tiempo--wheel-scrolling');
+      }, 180);
+      this.requestUpdate();
     }
 
     scrollToIndex(index, moveFocus = false, animated = true) {
