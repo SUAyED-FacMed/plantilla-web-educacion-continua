@@ -12,13 +12,13 @@ export interface Props {
 import { siteConfig } from "@/config";
 import { Image } from "astro:assets";
 
-const { 
-  licenciatura = siteConfig.licenciatura ?? "",
-  nombreCurso = siteConfig.nombreCurso ?? "",
-  unidad = siteConfig.unidad ?? "",
-  recurso = siteConfig.recurso ?? "",
-  autores = siteConfig.autores ?? []
-} = Astro.props;
+// Primero extraemos las props, luego aplicamos defaults
+const props = Astro.props;
+const licenciatura = props.licenciatura ?? siteConfig.licenciatura ?? "";
+const nombreCurso = props.nombreCurso ?? siteConfig.nombreCurso ?? "";
+const unidad = props.unidad ?? siteConfig.unidad ?? "";
+const recurso = props.recurso ?? siteConfig.recurso ?? "";
+const autores = props.autores ?? siteConfig.autores ?? [];
 
 import cornisa from "@assets/img/cornisa.png";
 import unamImg from "@assets/img/unam.png";
