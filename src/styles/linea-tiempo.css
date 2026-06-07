@@ -24,29 +24,6 @@
 	align-items: center;
 	gap: 0.75rem;
 	margin-bottom: 1rem;
-	padding: 0.5rem;
-	border: 1px solid transparent;
-	border-radius: 999px;
-	transition: background-color 180ms var(--timeline-ease), border-color 180ms var(--timeline-ease), box-shadow 180ms var(--timeline-ease), opacity 180ms var(--timeline-ease);
-}
-
-.linea-tiempo--horizontal .linea-tiempo__toolbar--sticky {
-	position: sticky;
-	top: 0.75rem;
-	z-index: 5;
-	background: rgba(255, 255, 255, 0.62);
-	opacity: 0.72;
-	backdrop-filter: blur(8px);
-	-webkit-backdrop-filter: blur(8px);
-}
-
-.linea-tiempo--horizontal .linea-tiempo__toolbar--sticky:hover,
-.linea-tiempo--horizontal .linea-tiempo__toolbar--sticky:focus-within,
-.linea-tiempo--horizontal.linea-tiempo--wheel-scrolling .linea-tiempo__toolbar--sticky {
-	border-color: color-mix(in srgb, var(--timeline-border), transparent 18%);
-	background: rgba(255, 255, 255, 0.94);
-	box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-	opacity: 1;
 }
 
 .linea-tiempo__control {

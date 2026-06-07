@@ -22,7 +22,6 @@ interface Props {
   accentColor?: string;
   initialIndex?: number;
   ariaLabel?: string;
-  stickyControls?: boolean;
   wheelNavigation?: boolean;
 }
 
@@ -33,7 +32,6 @@ const {
   accentColor,
   initialIndex = 0,
   ariaLabel = 'Linea del tiempo',
-  stickyControls = true,
   wheelNavigation = true,
 } = Astro.props;
 
@@ -53,7 +51,7 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
   aria-label={ariaLabel}
 >
   {orientation === 'horizontal' && (
-    <div class={`linea-tiempo__toolbar ${stickyControls ? 'linea-tiempo__toolbar--sticky' : ''}`} aria-label="Controles de navegacion">
+    <div class="linea-tiempo__toolbar" aria-label="Controles de navegacion">
       <button class="linea-tiempo__control linea-tiempo__control--prev" type="button" aria-label="Ver evento anterior">
         <span aria-hidden="true">&#8592;</span>
       </button>
@@ -149,7 +147,6 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       this.frame = null;
       this.isProgrammaticScroll = false;
       this.scrollEndTimer = null;
-      this.wheelScrollTimer = null;
 
       container.dataset.timelineReady = 'true';
       this.init();
@@ -167,7 +164,7 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       this.nextButton?.addEventListener('click', () => this.scrollToIndex(this.targetIndex + 1));
       this.track.addEventListener('scroll', () => this.requestUpdate(), { passive: true });
       this.track.addEventListener('keydown', (event) => this.handleKeyDown(event));
-      this.container.addEventListener('wheel', (event) => this.handleWheel(event), { passive: false });
+      this.container.addEventListener('wheel', (event) => this.handleWheel(event), { passive: true });
       this.images.forEach((image) => {
         if (!image.complete) {
           image.addEventListener('load', () => this.updateHorizontalMetrics(), { once: true });
@@ -287,18 +284,19 @@ const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ?
       const maxScroll = this.track.scrollWidth - this.track.clientWidth;
       if (maxScroll <= 0) return;
 
+      const delta = this.getNormalizedWheelDelta(event);
       const currentLeft = this.track.scrollLeft;
-      const nextLeft = Math.max(0, Math.min(currentLeft + event.deltaY, maxScroll));
+      const nextLeft = Math.max(0, Math.min(currentLeft + delta, maxScroll));
       if (nextLeft === currentLeft) return;
 
-      event.preventDefault();
       this.track.scrollLeft = nextLeft;
-      this.container.classList.add('linea-tiempo--wheel-scrolling');
-      clearTimeout(this.wheelScrollTimer);
-      this.wheelScrollTimer = setTimeout(() => {
-        this.container.classList.remove('linea-tiempo--wheel-scrolling');
-      }, 180);
       this.requestUpdate();
+    }
+
+    getNormalizedWheelDelta(event) {
+      if (event.deltaMode === 1) return event.deltaY * 16;
+      if (event.deltaMode === 2) return event.deltaY * this.track.clientWidth;
+      return event.deltaY;
     }
 
     scrollToIndex(index, moveFocus = false, animated = true) {
