@@ -6,6 +6,7 @@ import '@/styles/linea-tiempo.css';
 type ImagenLineaTiempo = ImageMetadata | string;
 
 interface ItemLineaTiempo {
+  id?: string;
   fecha?: string;
   titulo?: string;
   contenido?: string;
@@ -15,8 +16,8 @@ interface ItemLineaTiempo {
 }
 
 interface Props {
-  id: string;
-  items: ItemLineaTiempo[];
+  id?: string;
+  items?: ItemLineaTiempo[];
   orientation?: 'horizontal' | 'vertical';
   accentColor?: string;
   initialIndex?: number;
@@ -25,20 +26,22 @@ interface Props {
 
 const {
   id,
-  items,
+  items = [],
   orientation = 'vertical',
   accentColor,
   initialIndex = 0,
   ariaLabel = 'Linea del tiempo',
 } = Astro.props;
 
+const timelineId = id ?? `linea-tiempo-${Math.random().toString(36).slice(2, 10)}`;
 const safeInitialIndex = Math.min(Math.max(initialIndex, 0), Math.max(items.length - 1, 0));
 const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' : 'linea-tiempo--vertical';
+const getImageSrc = (imagen?: ImagenLineaTiempo) => typeof imagen === 'string' ? imagen : imagen?.src;
 ---
 
 <section
   class={`linea-tiempo ${timelineClass}`}
-  id={id}
+  id={timelineId}
   style={accentColor ? `--timeline-accent: ${accentColor}` : ''}
   data-orientation={orientation}
   data-initial-index={safeInitialIndex}
@@ -59,34 +62,57 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
   )}
 
   <ol class="linea-tiempo__track" tabindex={orientation === 'horizontal' ? '0' : undefined}>
-    {items.map((item, index) => (
-      <li class={`linea-tiempo__item ${index === safeInitialIndex ? 'linea-tiempo__item--active' : ''}`} data-index={index}>
-        <div class="linea-tiempo__marker" aria-hidden="true">
-          <span class="linea-tiempo__dot"></span>
-          <span class="linea-tiempo__marker-label">{item.fecha ?? index + 1}</span>
-        </div>
-        <article class="linea-tiempo__card" tabindex="-1">
-          {item.fecha && <p class="linea-tiempo__date">{item.fecha}</p>}
-          {item.titulo && <h4 class="linea-tiempo__title" set:html={item.titulo}></h4>}
-          {item.imagen && (
-            <figure class="linea-tiempo__figure">
-              {typeof item.imagen === 'string' ? (
-                <img src={item.imagen} alt={item.alt ?? ''} loading="lazy" />
-              ) : (
-                <Image
-                  src={item.imagen}
-                  alt={item.alt ?? ''}
-                  widths={[320, 520, 760]}
-                  sizes="(max-width: 767px) 82vw, 360px"
-                />
-              )}
-              {item.pie && <figcaption set:html={item.pie} />}
-            </figure>
-          )}
-          {item.contenido && <div class="linea-tiempo__content" set:html={item.contenido}></div>}
-        </article>
-      </li>
-    ))}
+    {items.map((item, index) => {
+      const imageSrc = getImageSrc(item.imagen);
+      const imageAlt = item.alt ?? '';
+      const itemId = String(item.id ?? index).replace(/[^a-zA-Z0-9_-]/g, '-');
+      const dialogId = `${timelineId}-imagen-${index}-${itemId}`;
+
+      return (
+        <li class={`linea-tiempo__item ${index === safeInitialIndex ? 'linea-tiempo__item--active' : ''}`} data-index={index}>
+          <div class="linea-tiempo__marker" aria-hidden="true">
+            <span class="linea-tiempo__dot"></span>
+            <span class="linea-tiempo__marker-label">{item.fecha ?? index + 1}</span>
+          </div>
+          <article class="linea-tiempo__card" tabindex="-1">
+            {item.fecha && <p class="linea-tiempo__date">{item.fecha}</p>}
+            {item.titulo && <h4 class="linea-tiempo__title" set:html={item.titulo}></h4>}
+            {item.contenido && <div class="linea-tiempo__content" set:html={item.contenido}></div>}
+            {item.imagen && imageSrc && (
+              <>
+                <figure class="linea-tiempo__figure">
+                  <button
+                    class="linea-tiempo__image-button"
+                    type="button"
+                    aria-label="Ampliar imagen"
+                    data-dialog-target={dialogId}
+                  >
+                    {typeof item.imagen === 'string' ? (
+                      <img src={item.imagen} alt={imageAlt} loading="lazy" />
+                    ) : (
+                      <Image
+                        src={item.imagen}
+                        alt={imageAlt}
+                        widths={[240, 360, 520]}
+                        sizes="(max-width: 767px) 72vw, 280px"
+                      />
+                    )}
+                  </button>
+                  {item.pie && <figcaption set:html={item.pie} />}
+                </figure>
+                <dialog class="linea-tiempo__dialog" id={dialogId} aria-label="Imagen ampliada">
+                  <button class="linea-tiempo__dialog-close" type="button" aria-label="Cerrar imagen ampliada" data-dialog-close>
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <img class="linea-tiempo__dialog-image" src={imageSrc} alt={imageAlt} loading="lazy" />
+                  {item.pie && <p class="linea-tiempo__dialog-caption" set:html={item.pie}></p>}
+                </dialog>
+              </>
+            )}
+          </article>
+        </li>
+      );
+    })}
   </ol>
 </section>
 
@@ -103,6 +129,10 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       this.prevButton = container.querySelector('.linea-tiempo__control--prev');
       this.nextButton = container.querySelector('.linea-tiempo__control--next');
       this.progressBar = container.querySelector('.linea-tiempo__progress-bar');
+      this.imageButtons = Array.from(container.querySelectorAll('.linea-tiempo__image-button'));
+      this.dialogs = Array.from(container.querySelectorAll('.linea-tiempo__dialog'));
+      this.images = Array.from(container.querySelectorAll('.linea-tiempo__figure img'));
+      this.mobileQuery = window.matchMedia('(max-width: 767px)');
       this.activeIndex = 0;
       this.targetIndex = 0;
       this.frame = null;
@@ -117,6 +147,7 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       if (!this.track || this.items.length === 0) return;
 
       this.setActiveIndex(this.initialIndex);
+      this.initImageDialogs();
 
       if (this.orientation !== 'horizontal') return;
 
@@ -124,21 +155,107 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       this.nextButton?.addEventListener('click', () => this.scrollToIndex(this.targetIndex + 1));
       this.track.addEventListener('scroll', () => this.requestUpdate(), { passive: true });
       this.track.addEventListener('keydown', (event) => this.handleKeyDown(event));
+      this.images.forEach((image) => {
+        if (!image.complete) {
+          image.addEventListener('load', () => this.updateHorizontalMetrics(), { once: true });
+        }
+      });
 
       window.addEventListener('resize', () => {
-        this.updateHorizontalLine();
+        this.updateHorizontalMetrics();
         this.requestUpdate();
       }, { passive: true });
-      window.addEventListener('load', () => this.updateHorizontalLine(), { once: true });
+      this.mobileQuery.addEventListener?.('change', () => {
+        this.updateHorizontalMetrics();
+        this.updateControls();
+      });
+      window.addEventListener('load', () => this.updateHorizontalMetrics(), { once: true });
 
       requestAnimationFrame(() => {
-        this.updateHorizontalLine();
-        this.scrollToIndex(this.initialIndex, false, false);
-        this.updateFromScroll();
+        this.updateHorizontalMetrics();
+        if (this.isHorizontalInteractive()) {
+          this.scrollToIndex(this.initialIndex, false, false);
+          this.updateFromScroll();
+        }
       });
     }
 
+    initImageDialogs() {
+      this.imageButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const targetId = button.dataset.dialogTarget;
+          if (!targetId) return;
+
+          const dialog = document.getElementById(targetId);
+          if (!dialog) return;
+
+          if (typeof dialog.showModal === 'function') {
+            dialog.showModal();
+          } else {
+            dialog.setAttribute('open', '');
+          }
+        });
+      });
+
+      this.dialogs.forEach((dialog) => {
+        dialog.querySelector('[data-dialog-close]')?.addEventListener('click', () => this.closeDialog(dialog));
+        dialog.addEventListener('click', (event) => {
+          if (event.target === dialog) this.closeDialog(dialog);
+        });
+      });
+    }
+
+    closeDialog(dialog) {
+      if (typeof dialog.close === 'function') {
+        dialog.close();
+      } else {
+        dialog.removeAttribute('open');
+      }
+    }
+
+    isHorizontalInteractive() {
+      return this.orientation === 'horizontal' && !this.mobileQuery.matches;
+    }
+
+    updateHorizontalMetrics() {
+      if (!this.isHorizontalInteractive()) return;
+
+      this.updateHorizontalSpaces();
+      this.updateHorizontalLine();
+    }
+
+    updateHorizontalSpaces() {
+      if (!this.track) return;
+
+      let topSpace = 0;
+      let bottomSpace = 0;
+
+      this.items.forEach((item, index) => {
+        const card = item.querySelector('.linea-tiempo__card');
+        if (!card) return;
+
+        const cardStyles = window.getComputedStyle(card);
+        const cardHeight = card.getBoundingClientRect().height;
+        const isTopCard = index % 2 === 0;
+        const margin = isTopCard
+          ? Number.parseFloat(cardStyles.marginBottom)
+          : Number.parseFloat(cardStyles.marginTop);
+        const rowSpace = Math.ceil(cardHeight + (Number.isFinite(margin) ? margin : 0));
+
+        if (isTopCard) {
+          topSpace = Math.max(topSpace, rowSpace);
+        } else {
+          bottomSpace = Math.max(bottomSpace, rowSpace);
+        }
+      });
+
+      this.track.style.setProperty('--timeline-top-space', `${topSpace}px`);
+      this.track.style.setProperty('--timeline-bottom-space', `${bottomSpace}px`);
+    }
+
     handleKeyDown(event) {
+      if (!this.isHorizontalInteractive()) return;
+
       const keys = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
       if (!keys.includes(event.key)) return;
 
@@ -151,6 +268,8 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
     }
 
     scrollToIndex(index, moveFocus = false, animated = true) {
+      if (!this.isHorizontalInteractive()) return;
+
       const nextIndex = Math.min(Math.max(index, 0), this.items.length - 1);
       const item = this.items[nextIndex];
       if (!item) return;
@@ -177,6 +296,10 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
       if (this.frame) return;
       this.frame = requestAnimationFrame(() => {
         this.frame = null;
+        if (!this.isHorizontalInteractive()) {
+          this.updateProgress();
+          return;
+        }
         if (this.isProgrammaticScroll) {
           this.updateProgress();
           return;
@@ -195,6 +318,7 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
     }
 
     updateHorizontalLine() {
+      if (!this.isHorizontalInteractive()) return;
       if (!this.track || this.items.length < 2) return;
 
       const firstMarker = this.items[0].querySelector('.linea-tiempo__marker');
@@ -265,8 +389,9 @@ const timelineClass = orientation === 'horizontal' ? 'linea-tiempo--horizontal' 
     updateControls() {
       if (!this.prevButton || !this.nextButton) return;
 
-      this.prevButton.disabled = this.activeIndex === 0;
-      this.nextButton.disabled = this.activeIndex === this.items.length - 1;
+      const disabledByLayout = !this.isHorizontalInteractive();
+      this.prevButton.disabled = disabledByLayout || this.activeIndex === 0;
+      this.nextButton.disabled = disabledByLayout || this.activeIndex === this.items.length - 1;
     }
 
     updateProgress() {
