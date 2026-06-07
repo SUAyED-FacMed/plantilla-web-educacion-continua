@@ -1,0 +1,17 @@
+---
+import "@/styles/hoja-espiral.css";
+
+interface Props {
+  titulo: string;
+  class?: string;
+}
+
+const { titulo, class: className = "" } = Astro.props;
+---
+
+<article class:list={["hoja-espiral", className]}>
+  <h2 class="hoja-espiral__titulo">{titulo}</h2>
+  <div class="hoja-espiral__contenido">
+    <slot />
+  </div>
+</article>
