@@ -2,6 +2,7 @@
 import type { Autor } from "@/config/site";
 
 export interface Props {
+  licenciatura?: string;
   nombreCurso?: string;
   unidad?: string;
   recurso?: string;
@@ -12,6 +13,7 @@ import { siteConfig } from "@/config";
 import { Image } from "astro:assets";
 
 const { 
+  licenciatura = siteConfig.licenciatura ?? "",
   nombreCurso = siteConfig.nombreCurso ?? "",
   unidad = siteConfig.unidad ?? "",
   recurso = siteConfig.recurso ?? "",
@@ -47,6 +49,9 @@ import secyssImg from "@assets/img/secyss.png";
     </div>
   </div>
   <div class="px-3 py-3 mt-5 align-items-center unidadC gradient-unidad">
+    <p class="text-base lg:text-lg mb-1  leading-snug">
+      <Fragment set:html={licenciatura} />
+    </p>
     <p class="text-base md:text-lg lg:text-xl mb-1 font-medium leading-snug">
       <Fragment set:html={nombreCurso} />
     </p>
