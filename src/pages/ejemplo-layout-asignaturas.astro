@@ -1,0 +1,57 @@
+---
+import LayoutAsignaturas from "@/layouts/LayoutAsignaturas.astro";
+import Bibliografia from "@/components/Bibliografia.astro";
+import Carrusel from "@/components/Carrusel.astro";
+import { siteConfig } from "@/config";
+
+import diabetesGes from "@assets/img/diabetesGes.png";
+import incidenciaDiabetes from "@assets/img/incidencia_diabetes.jpg";
+---
+
+<LayoutAsignaturas
+  recurso={siteConfig.recurso}
+  nombreCurso={siteConfig.nombreCurso}
+  unidad={siteConfig.unidad}
+  licenciatura={siteConfig.licenciatura}
+  autores={siteConfig.autores}
+>
+  <section class="mt-10">
+    <h2>Ejemplo de contenido con Layout Asignaturas</h2>
+    <p>
+      Esta ruta valida que el layout puede envolver contenido normal y componentes
+      de la plantilla sin cambiar el contrato de importación.
+    </p>
+  </section>
+
+  <Carrusel
+    id="carrusel-layout-asignaturas"
+    titulo="Componente dentro del Layout Asignaturas"
+    descripcion="El componente conserva su comportamiento; el layout solo cambia la portada, la tipografía y el tema visual base."
+    variante="carta2"
+    ajusteImagen="cover"
+    slides={[
+      {
+        id: "contexto",
+        subtitulo: "Contexto",
+        titulo: "Integrar componentes existentes",
+        texto: "Los recursos reutilizables pueden seguir importándose desde la página.",
+        imagen: diabetesGes,
+        alt: "Ilustración sobre diabetes gestacional",
+        pie: "Imagen de apoyo.",
+        variante: "carta2",
+      },
+      {
+        id: "evidencia",
+        subtitulo: "Evidencia",
+        titulo: "Mantener lectura en móvil",
+        texto: "La estructura del layout se ajusta para que la pleca y los textos no se salgan del viewport.",
+        imagen: incidenciaDiabetes,
+        alt: "Gráfica de incidencia de diabetes",
+        pie: "Imagen de apoyo para revisar tendencias.",
+        variante: "carta1",
+      },
+    ]}
+  />
+
+  <Bibliografia {...siteConfig} variante="asignaturas" />
+</LayoutAsignaturas>

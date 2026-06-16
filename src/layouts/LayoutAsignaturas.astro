@@ -1,0 +1,112 @@
+---
+export interface Props {
+  titulo?: string;
+  recurso?: string;
+  nombreCurso?: string;
+  unidad?: string;
+  licenciatura?: string;
+  autores?: Array<{
+    nombres: string;
+    apellidos: string;
+  }>;
+  creditos?: boolean;
+}
+
+import { siteConfig } from "@/config";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+import "@/styles/estilos.css";
+import "@/styles/bootstrap.css";
+import "@/styles/aos.css";
+import "@/styles/layout-asignaturas.css";
+
+const {
+  titulo,
+  recurso = siteConfig.recurso ?? "",
+  nombreCurso = siteConfig.nombreCurso ?? "",
+  unidad = siteConfig.unidad ?? "",
+  licenciatura = siteConfig.licenciatura ?? "",
+  autores = siteConfig.autores ?? [],
+  creditos = false,
+} = Astro.props;
+
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, "");
+
+const tituloFinal = titulo
+  ? stripHtml(titulo)
+  : `${recurso ? stripHtml(recurso) + " - " : ""}${nombreCurso ? stripHtml(nombreCurso) + " - " : ""}${siteConfig.titulo}`;
+
+const licenciaturaTexto = stripHtml(licenciatura);
+const licenciaturaPartes = licenciaturaTexto.match(/^(licenciatura\s+de\s+)(.+)$/i);
+const licenciaturaPrefijo = licenciaturaPartes?.[1] ?? "";
+const licenciaturaEnfasis = licenciaturaPartes?.[2] ?? licenciaturaTexto;
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{tituloFinal}</title>
+  </head>
+  <body class="layout-asignaturas">
+    <header class="layout-asignaturas__encabezado mx-auto w-[90%] max-w-[90rem] pt-4 md:pt-5">
+      {licenciaturaTexto && (
+        <div class="layout-asignaturas__pleca" aria-label={licenciaturaTexto}>
+          <div class="layout-asignaturas__pleca-fondo" aria-hidden="true"></div>
+          <div class="layout-asignaturas__pleca-sombra" aria-hidden="true"></div>
+          <div class="layout-asignaturas__pleca-tarjeta" aria-hidden="true"></div>
+          <p class="layout-asignaturas__licenciatura">
+            {licenciaturaPrefijo && <span>{licenciaturaPrefijo.toUpperCase()}</span>}
+            <strong>{licenciaturaEnfasis.toUpperCase()}</strong>
+          </p>
+        </div>
+      )}
+
+      {(nombreCurso || unidad) && (
+        <div class="layout-asignaturas__meta mt-4 md:mt-5">
+          {nombreCurso && (
+            <p>
+              <strong><Fragment set:html={nombreCurso} /></strong>
+            </p>
+          )}
+          {unidad && (
+            <p>
+              <strong><Fragment set:html={unidad} /></strong>
+            </p>
+          )}
+        </div>
+      )}
+
+      {recurso && (
+        <div class="layout-asignaturas__titulo mt-8 md:mt-10">
+          <h1><Fragment set:html={recurso} /></h1>
+          {autores.length > 0 && (
+            <p class="layout-asignaturas__autores mt-7">
+              {autores.map((autor) => (
+                <span>
+                  {autor.nombres} {autor.apellidos}
+                  <br />
+                </span>
+              ))}
+            </p>
+          )}
+        </div>
+      )}
+
+      <div class="layout-asignaturas__separador" aria-hidden="true"></div>
+    </header>
+
+    <main class="layout-asignaturas__contenido">
+      <slot />
+    </main>
+
+    <Footer creditos={creditos} />
+    <script is:inline src="/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -62,6 +62,31 @@ import { siteConfig } from '@/config';
 </Layout>
 ```
 
+### LayoutAsignaturas
+
+- Variante con pleca de licenciatura, tema visual `#146F82` y tipografía de sistema.
+- Mantiene el mismo patrón de uso: se importan componentes dentro del layout.
+- Para el bloque de fuentes con la apariencia de asignaturas, usa `Bibliografia` con `variante="asignaturas"`.
+
+```astro
+---
+import LayoutAsignaturas from '@/layouts/LayoutAsignaturas.astro';
+import Bibliografia from '@/components/Bibliografia.astro';
+import { siteConfig } from '@/config';
+---
+
+<LayoutAsignaturas
+  recurso={siteConfig.recurso}
+  nombreCurso={siteConfig.nombreCurso}
+  unidad={siteConfig.unidad}
+  licenciatura={siteConfig.licenciatura}
+  autores={siteConfig.autores}
+>
+  <slot />
+  <Bibliografia {...siteConfig} variante="asignaturas" />
+</LayoutAsignaturas>
+```
+
 ### Bibliografia
 
 - Toma datos de `src/config/site.ts` (`fuentesInformacion`, `autores`).
