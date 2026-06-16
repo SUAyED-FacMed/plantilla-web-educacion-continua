@@ -139,7 +139,7 @@ body.layout-asignaturas .layout-asignaturas__contenido > .carrusel {
   margin-block: 2rem 3.5rem;
 }
 
-body.layout-asignaturas :where(h1, h2, h3, h4, h5, h6) {
+body.layout-asignaturas :where(h1, h2, h3, h4, h5, h6):not(.carta__titulo) {
   color: var(--layout-asignaturas-acento) !important;
   font-style: normal;
   letter-spacing: 0;
@@ -190,13 +190,29 @@ body.layout-asignaturas h6 {
   line-height: 1.45;
 }
 
+body.layout-asignaturas .carta .carta__titulo {
+  margin: 0;
+  padding: 0;
+  border-bottom: 0;
+  color: var(--carta-fg) !important;
+  font-size: clamp(1.08rem, 0.96rem + 0.34vw, 1.22rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: none;
+}
+
 body.layout-asignaturas h4::before {
   content: none;
 }
 
+body.layout-asignaturas .carta .carta__titulo::before,
 body.layout-asignaturas h5::before,
 body.layout-asignaturas h6::before {
   content: none;
+}
+
+body.layout-asignaturas .carta .carta__encabezado {
+  align-items: center;
 }
 
 body.layout-asignaturas .carrusel .carrusel__titulo {
