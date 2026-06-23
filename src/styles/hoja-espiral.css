@@ -42,7 +42,7 @@
 .hoja-espiral__titulo {
   margin: 0 0 1rem;
   color: var(--hoja-titulo);
-  font-size: 1.45rem;
+  font-size: var(--main-heading-max, 1.25rem);
   font-style: normal;
   font-weight: 760;
   line-height: 1.25;

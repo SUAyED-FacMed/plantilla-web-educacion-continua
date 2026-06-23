@@ -25,7 +25,7 @@ import unamImg from "@assets/img/unam.png";
 import facmedImg from "@assets/img/facmed.png";
 import suayedImg from "@assets/img/suayed.png";
 import ec1Img from "@assets/img/ec1.png";
-import secyssImg from "@assets/img/secyss.png";
+import secyssImg from "@assets/img/seciss-logo.png";
 ---
 
 <!-- unidad titulo -->
@@ -38,31 +38,29 @@ import secyssImg from "@assets/img/secyss.png";
     </div>
 
     <!-- Logos (right on desktop, bottom on mobile) -->
-    <div
-      class="flex flex-wrap flex-row align-center md:flex-1 gap-4"
-      >
-      <Image class="max-h-12 w-auto" src={unamImg} alt="UNAM" />
-      <Image class="max-h-12 w-auto" src={facmedImg} alt="FacMed" />
-      <Image class="max-h-12 w-auto" src={suayedImg} alt="SUAYED" />
-      <Image class="max-h-12 w-auto" src={secyssImg} alt="SecySS" />
-      <Image class="max-h-12 w-auto" src={ec1Img} alt="EC1" />
+    <div class="hero-logos md:flex-1">
+      <Image class="hero-logo hero-logo--seal" src={unamImg} alt="UNAM" />
+      <Image class="hero-logo hero-logo--seal" src={facmedImg} alt="FacMed" />
+      <Image class="hero-logo hero-logo--wide" src={suayedImg} alt="SUAyED" />
+      <Image class="hero-logo hero-logo--wordmark" src={secyssImg} alt="SECISS" />
+      <Image class="hero-logo hero-logo--wide" src={ec1Img} alt="Educación Continua" />
     </div>
   </div>
   <div class="px-3 py-3 mt-5 align-items-center unidadC gradient-unidad">
-    <p class="text-base lg:text-lg mb-1  leading-snug">
+    <p class="mb-1  leading-snug font-bold">
       <Fragment set:html={licenciatura} />
     </p>
-    <p class="text-base md:text-lg lg:text-xl mb-1 font-medium leading-snug">
+    <p class="lg:text-xl mb-1 font-bold leading-snug">
       <Fragment set:html={nombreCurso} />
     </p>
-    <p class="text-sm md:text-base lg:text-lg pt-0 leading-relaxed">
+    <p class="pt-0 leading-relaxed font-bold">
       <Fragment set:html={unidad} />
     </p>
   </div>
   <div class="separacion"></div>
 
   <div class="ml-5 py-3 mt-5 align-items-center unidadC">
-    <h1 class="px-3 text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-3">
+    <h1 class="px-3 font-bold leading-tight mb-3">
       <Fragment set:html={recurso} />
     </h1>
     <p class="px-3 mt-2 subtitulos text-base md:text-lg font-normal leading-relaxed">
@@ -88,3 +86,47 @@ import secyssImg from "@assets/img/secyss.png";
   </div>
   <div class="degradado-bottom"></div>
 </article>
+
+<style>
+  .hero-logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.65rem;
+  }
+
+  .hero-logo {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: grayscale(1) opacity(0.82);
+  }
+
+  .hero-logo--seal {
+    height: 3rem;
+  }
+
+  .hero-logo--wordmark {
+    height: 2.15rem;
+  }
+
+  .hero-logo--wide {
+    height: 2.55rem;
+  }
+
+  @media (max-width: 640px) {
+    .hero-logos {
+      gap: 0.85rem 1.15rem;
+    }
+
+    .hero-logo--seal {
+      height: 2.65rem;
+    }
+
+    .hero-logo--wordmark,
+    .hero-logo--wide {
+      height: 2.15rem;
+    }
+  }
+</style>
