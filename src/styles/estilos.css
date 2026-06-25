@@ -56,6 +56,15 @@
 .subtitulosA{
     color: var(--color-unidad);
 }
+.credito-imagen {
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+}
+.credito-imagen :where(a, .break-all) {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
 /* fuentes información */
 .fuentes {
     color: var(--fuentes);
