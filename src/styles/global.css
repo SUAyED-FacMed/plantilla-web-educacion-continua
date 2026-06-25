@@ -239,12 +239,17 @@ body ul li ul {
   @apply mt-2 mb-0;
 }
 
-body ul li ul li::before {
-  content: "○";
+body ul li ul > li::before {
+  content: "";
+  width: 0.52em;
+  height: 0.52em;
+  border: 2px solid currentColor;
+  border-radius: 50%;
   color: var(--color-dorado3);
-  opacity: 0.7;
-  font-size: 0.8em;
-  top: 0.35em;
+  opacity: 1;
+  font-size: 1em;
+  line-height: 1;
+  top: 0.62em;
 }
 
 body ol li ol {
@@ -263,8 +268,12 @@ body ol li ol > li::before {
 }
 
 /* Listas anidadas - tercer nivel */
-body ul li ul li ul li::before {
+body ul li ul li ul > li::before {
   content: "▪";
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
   color: var(--color-dorado4);
   opacity: 0.6;
   font-size: 0.7em;
