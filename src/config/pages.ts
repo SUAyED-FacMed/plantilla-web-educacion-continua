@@ -1,4 +1,4 @@
-import type { SiteConfig, Autor, SeccionFuentes } from './site';
+import type { SiteConfig, Autor, LogoVisibility, SeccionFuentes } from './site';
 
 /**
  * Helper para crear configuraciones de página personalizadas.
@@ -25,6 +25,8 @@ export function createPageConfig(config: Partial<SiteConfig>): SiteConfig {
     fuentesInformacion: config.fuentesInformacion,
     edicion: config.edicion,
     registroAutor: config.registroAutor,
+    licenciatura: config.licenciatura,
+    logoVisibility: config.logoVisibility,
   };
 }
 
@@ -38,6 +40,7 @@ export interface PageConfigSimple {
   recurso: string;
   autores: Autor[];
   fuentesInformacion?: SeccionFuentes[];
+  logoVisibility?: LogoVisibility;
 }
 
 /**

@@ -87,6 +87,32 @@ import { siteConfig } from '@/config';
 </LayoutAsignaturas>
 ```
 
+### LayoutPLIIS
+
+- Reproduce el Hero de `templates/plantillaPLIIS/` con su paleta azul marino y aqua.
+- Usa `logoVisibility` para activar u ocultar logos por recurso.
+- No requiere `<Hero />`; el layout genera su propio encabezado.
+
+```astro
+---
+import LayoutPLIIS from '@/layouts/LayoutPLIIS.astro';
+import { siteConfig } from '@/config';
+---
+
+<LayoutPLIIS
+  {...siteConfig}
+  logoVisibility={{
+    ...siteConfig.logoVisibility,
+    cuaed: false,
+    pliis: true,
+  }}
+>
+  <slot />
+</LayoutPLIIS>
+```
+
+La guía completa está en [`PLIIS-LAYOUT.md`](./PLIIS-LAYOUT.md).
+
 ### Bibliografia
 
 - Toma datos de `src/config/site.ts` (`fuentesInformacion`, `autores`).

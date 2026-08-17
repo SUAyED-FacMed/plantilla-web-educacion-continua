@@ -1,0 +1,116 @@
+---
+import LayoutPLIIS from "@/layouts/LayoutPLIIS.astro";
+import { siteConfig } from "@/config";
+import Bibliografia from "@/components/Bibliografia.astro";
+
+const pliisConfig = {
+  licenciatura: "Programa de Liderazgo e Innovación Interprofesional en Salud (PLIIS)",
+  nombreCurso: "Innovación y Aplicación de la Tecnología",
+  unidad: "Unidad 3. Inteligencia Artificial, <em>Big Data</em> y Ética en Salud Digital",
+  recurso: "Aprendizaje automático y <em>big data</em> en el campo de la salud",
+  autores: [
+    { nombres: "Alicia", apellidos: "Castillo Martínez" },
+    { nombres: "Montserrat", apellidos: "Ramírez Rivas" },
+  ],
+  logoVisibility: {
+    ...siteConfig.logoVisibility,
+    // Ejemplo: todos los logos de la plantilla PLIIS están activos.
+    cuaed: true,
+    pliis: true,
+  },
+};
+
+const fuentesInformacion = [
+  {
+    tipo: "Bibliografía",
+    items: [
+      {
+        texto:
+          "Russell, S. y Norvig, P. (2021). <em>Artificial Intelligence: A Modern Approach</em> (4.ª ed.). Pearson.",
+      },
+    ],
+  },
+  {
+    tipo: "Documentos electrónicos",
+    items: [
+      {
+        texto:
+          "Organización Mundial de la Salud. (2021). <em>Ethics and governance of artificial intelligence for health</em>.",
+        url: "https://www.who.int/publications/i/item/9789240029200",
+      },
+      {
+        texto:
+          "UNESCO. (2021). <em>Recommendation on the ethics of artificial intelligence</em>.",
+        url: "https://unesdoc.unesco.org/ark:/48223/pf0000381137",
+      },
+    ],
+  },
+];
+
+const comoCitar =
+  "Castillo Martínez, A. y Ramírez Rivas, M. (2026). <em>Aprendizaje automático y big data en el campo de la salud</em>. Innovación y Aplicación de la Tecnología, Unidad 3. Programa de Liderazgo e Innovación Interprofesional en Salud, Facultad de Medicina, UNAM.";
+---
+
+<LayoutPLIIS {...pliisConfig}>
+  <section>
+    <h2>Introducción</h2>
+    <p>
+      Esta página de ejemplo usa el encabezado PLIIS y mantiene los componentes
+      reutilizables de la plantilla para construir un recurso educativo completo.
+    </p>
+
+    <h3>Una jerarquía tipográfica consistente</h3>
+    <p>
+      Los encabezados del contenido conservan la escala vigente de la plantilla,
+      mientras que el Hero usa la composición específica de PLIIS.
+    </p>
+
+    <h4>Contenido dentro del contenedor principal</h4>
+    <p>
+      Después de la pleca de ancho completo, el contenido se organiza dentro del
+      contenedor principal del layout. Aquí pueden colocarse textos, imágenes,
+      tablas y cualquiera de los componentes de la plantilla.
+    </p>
+
+    <h5>Ejemplo de subapartado</h5>
+    <p>
+      La bibliografía y la cita se mantienen al final del recurso para que el
+      material pueda reutilizarse con la configuración de cada página.
+    </p>
+
+    <article class="my-4">
+      <table class="bordes-tabla mb-5 tablas--contenido" style="width: 90%; margin: 0 auto;">
+        <thead>
+          <tr class="listas text-white">
+            <td colspan="2" class="text-center font-weight-bold">
+              Tabla 1. Ejemplo de una tabla con la paleta PLIIS
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="listas2 text-white">
+            <td class="text-center font-weight-bold">Elemento</td>
+            <td class="text-center font-weight-bold">Descripción</td>
+          </tr>
+          <tr>
+            <td>Datos</td>
+            <td>Información organizada en filas y columnas.</td>
+          </tr>
+          <tr>
+            <td>Lectura</td>
+            <td>La estructura facilita la comparación de información.</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+
+  <Bibliografia
+    fuentesInformacion={fuentesInformacion}
+    autores={pliisConfig.autores}
+    nombreCurso={pliisConfig.nombreCurso}
+    recurso={pliisConfig.recurso}
+    comoCitar={comoCitar}
+    variante="base"
+  />
+</LayoutPLIIS>
