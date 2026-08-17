@@ -1,5 +1,5 @@
 ---
-import type { Autor } from "@/config/site";
+import type { Autor, LogoVisibility } from "@/config/site";
 
 export interface Props {
   licenciatura?: string;
@@ -7,6 +7,7 @@ export interface Props {
   unidad?: string;
   recurso?: string;
   autores?: Autor[];
+  logoVisibility?: LogoVisibility;
 }
 
 import { siteConfig } from "@/config";
@@ -19,6 +20,9 @@ const nombreCurso = props.nombreCurso ?? siteConfig.nombreCurso ?? "";
 const unidad = props.unidad ?? siteConfig.unidad ?? "";
 const recurso = props.recurso ?? siteConfig.recurso ?? "";
 const autores = props.autores ?? siteConfig.autores ?? [];
+const logoVisibility = props.logoVisibility ?? siteConfig.logoVisibility ?? {};
+
+const isLogoVisible = (key: keyof LogoVisibility) => logoVisibility[key] ?? true;
 
 import cornisa from "@assets/img/cornisa.png";
 import unamImg from "@assets/img/unam.png";
@@ -38,12 +42,22 @@ import secyssImg from "@assets/img/seciss-logo.png";
     </div>
 
     <!-- Logos (right on desktop, bottom on mobile) -->
-    <div class="hero-logos md:flex-1">
-      <Image class="hero-logo hero-logo--seal" src={unamImg} alt="UNAM" />
-      <Image class="hero-logo hero-logo--seal" src={facmedImg} alt="FacMed" />
-      <Image class="hero-logo hero-logo--wide" src={suayedImg} alt="SUAyED" />
-      <Image class="hero-logo hero-logo--wordmark" src={secyssImg} alt="SECISS" />
-      <Image class="hero-logo hero-logo--wide" src={ec1Img} alt="Educación Continua" />
+    <div class="hero-logos md:flex-1" aria-label="Identidad institucional">
+      {isLogoVisible("unam") && (
+        <Image class="hero-logo hero-logo--seal" src={unamImg} alt="UNAM" />
+      )}
+      {isLogoVisible("facmed") && (
+        <Image class="hero-logo hero-logo--seal" src={facmedImg} alt="Facultad de Medicina" />
+      )}
+      {isLogoVisible("suayed") && (
+        <Image class="hero-logo hero-logo--wide" src={suayedImg} alt="SUAyED" />
+      )}
+      {isLogoVisible("seciss") && (
+        <Image class="hero-logo hero-logo--wordmark" src={secyssImg} alt="SECISS" />
+      )}
+      {isLogoVisible("educacionContinua") && (
+        <Image class="hero-logo hero-logo--wide" src={ec1Img} alt="Educación Continua" />
+      )}
     </div>
   </div>
   <div class="px-3 py-3 mt-5 align-items-center unidadC gradient-unidad">
