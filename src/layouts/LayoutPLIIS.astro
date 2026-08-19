@@ -1,0 +1,137 @@
+---
+import type { Autor, LogoVisibility } from "@/config/site";
+import { siteConfig } from "@/config";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+import "@/styles/estilos.css";
+import "@/styles/bootstrap.css";
+import "@/styles/aos.css";
+import "@/styles/acordeon.css";
+import "@/styles/carrusel.css";
+import "@/styles/enlace-destacado.css";
+import "@/styles/fichero-horizontal.css";
+import "@/styles/fichero-vertical.css";
+import "@/styles/hoja-espiral.css";
+import "@/styles/hotspot.css";
+import "@/styles/linea-tiempo.css";
+import "@/styles/tablas.css";
+import "@/styles/tabs.css";
+import "@/styles/tarjetas-giratorias.css";
+import "@/styles/layout-pliis.css";
+
+import unamLogo from "@assets/img/pliis/unam.svg";
+import facmedLogo from "@assets/img/pliis/facmed.svg";
+import cuaedLogo from "@assets/img/pliis/cuaed2026.svg";
+import suayedLogo from "@assets/img/pliis/suayed.svg";
+import pliisLogo from "@assets/img/pliis/pliis.svg";
+import formaP from "@assets/img/pliis/formaP.svg";
+import senefa from "@assets/img/pliis/senefa.svg";
+
+export interface Props {
+  titulo?: string;
+  licenciatura?: string;
+  nombreCurso?: string;
+  unidad?: string;
+  recurso?: string;
+  autores?: Autor[];
+  logoVisibility?: LogoVisibility;
+  creditos?: boolean;
+}
+
+const {
+  titulo,
+  licenciatura = siteConfig.licenciatura ?? "",
+  nombreCurso = siteConfig.nombreCurso ?? "",
+  unidad = siteConfig.unidad ?? "",
+  recurso = siteConfig.recurso ?? "",
+  autores = siteConfig.autores ?? [],
+  logoVisibility = siteConfig.logoVisibility ?? {},
+  creditos = false,
+} = Astro.props;
+
+const isLogoVisible = (key: keyof LogoVisibility) =>
+  logoVisibility[key] ?? siteConfig.logoVisibility?.[key] ?? true;
+
+const stripHtml = (html: string) => html.replace(/<[^>]*>/g, "");
+const tituloFinal = titulo
+  ? stripHtml(titulo)
+  : `${recurso ? stripHtml(recurso) + " - " : ""}${nombreCurso ? stripHtml(nombreCurso) + " - " : ""}${siteConfig.titulo}`;
+---
+
+<!doctype html>
+<html lang={siteConfig.idioma ?? "es-MX"}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{tituloFinal}</title>
+  </head>
+  <body class="layout-pliis">
+    <main class="layout-pliis__page">
+      <header class="layout-pliis__hero">
+        <div class="layout-pliis__hero-inner">
+          <div class="layout-pliis__logos" role="group" aria-label="Identidad institucional">
+            {isLogoVisible("unam") && (
+              <img class="layout-pliis__logo" src={unamLogo.src} alt="UNAM" width="30" height="45" />
+            )}
+            {isLogoVisible("facmed") && (
+              <img class="layout-pliis__logo" src={facmedLogo.src} alt="Facultad de Medicina" width="43" height="42" />
+            )}
+            {isLogoVisible("cuaed") && (
+              <img class="layout-pliis__logo layout-pliis__logo--cuaed" src={cuaedLogo.src} alt="CUAED" width="612" height="221" />
+            )}
+            {isLogoVisible("suayed") && (
+              <img class="layout-pliis__logo" src={suayedLogo.src} alt="SUAyED" width="84" height="37" />
+            )}
+            {isLogoVisible("pliis") && (
+              <img class="layout-pliis__logo layout-pliis__logo--pliis" src={pliisLogo.src} alt="PLIIS" width="521" height="235" />
+            )}
+          </div>
+
+          {(licenciatura || nombreCurso || unidad) && (
+            <div class="layout-pliis__meta" aria-label="Datos del recurso">
+              {licenciatura && <p><Fragment set:html={licenciatura} /></p>}
+              {nombreCurso && <p><Fragment set:html={nombreCurso} /></p>}
+              {unidad && <p><Fragment set:html={unidad} /></p>}
+            </div>
+          )}
+
+          <div
+            class="layout-pliis__title-block"
+            style={`--pliis-shape: url("${formaP.src}")`}
+          >
+            <div class="layout-pliis__title-content">
+              {recurso && <h1><Fragment set:html={recurso} /></h1>}
+              {autores.length > 0 && (
+                <p class="layout-pliis__authors">
+                  {autores.map((autor) => (
+                    <span>
+                      {autor.nombres} {autor.apellidos}<br />
+                    </span>
+                  ))}
+                </p>
+              )}
+            </div>
+          </div>
+
+        </div>
+
+        <div class="layout-pliis__hero-spacer" aria-hidden="true"></div>
+
+        <div
+          class="layout-pliis__separator"
+          style={`--pliis-senefa: url("${senefa.src}")`}
+          aria-hidden="true"
+        ></div>
+      </header>
+
+      <div class="layout-pliis__content">
+        <slot />
+      </div>
+    </main>
+
+    <Footer creditos={creditos} />
+    <script is:inline src="/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

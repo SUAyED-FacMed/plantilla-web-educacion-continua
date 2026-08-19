@@ -13,6 +13,21 @@ export interface Autor {
   apellidos: string; // Uno o más apellidos (e.g., "Ortega Jordá Rodríguez")
 }
 
+/**
+ * Controla qué marcas institucionales aparecen en los encabezados.
+ * Las claves son opcionales para que cada layout pueda conservar sus
+ * defaults y una página solo tenga que declarar las excepciones.
+ */
+export interface LogoVisibility {
+  unam?: boolean;
+  facmed?: boolean;
+  suayed?: boolean;
+  seciss?: boolean;
+  educacionContinua?: boolean;
+  cuaed?: boolean;
+  pliis?: boolean;
+}
+
 export interface SiteConfig {
   titulo: string;
   descripcion?: string;
@@ -26,6 +41,7 @@ export interface SiteConfig {
   edicion?: string; // e.g., "Primera edición, 2022"
   registroAutor?: string; // e.g., "En trámite"
   licenciatura?: string;
+  logoVisibility?: LogoVisibility;
 }
 
 export const siteConfig: SiteConfig = {
@@ -40,6 +56,17 @@ export const siteConfig: SiteConfig = {
   nombreCurso: 'Curso Actualización en Infecciones Respiratorias para Médicas y Médicos de Primer Contacto',
   unidad: 'Unidad 6. Infección Pulmonar por Mycobacterium Tuberculosis en Personas Adultas',
   recurso: 'Manejo integral de la tuberculosis pulmonar en la persona adulta: complicaciones, criterios de referencia y prevención',
+  logoVisibility: {
+    // Logos institucionales habituales del encabezado Educación Continua.
+    unam: true,
+    facmed: true,
+    suayed: true,
+    seciss: true,
+    educacionContinua: true,
+    // Logos específicos del layout PLIIS.
+    cuaed: true,
+    pliis: true,
+  },
   fuentesInformacion: [
     {
       tipo: 'Bibliografía',
