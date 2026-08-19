@@ -73,8 +73,7 @@
     margin-left: 2.2em;
 }
 .enlace-fuentes {
-    color: var(--dorado2);
-    text-decoration: none;
+    color: var(--color-azul4);
 }
 /* fuentes información */
 .clip {
